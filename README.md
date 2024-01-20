@@ -46,5 +46,21 @@
 npm install express@4
 npm install socket.io
 npm install socketio-file-upload
+npm install mysql2;
 ```
+
+### DB 설정
+
+
+``` js
+export default{
+    host : '',
+    user : '',
+    port: '',
+    password : '',
+    database : '' 
+}
+```
+루트 디렉토리에 dbconfig.js 파일 생성 후 자신의 설정에 맞게 기입
+
 
