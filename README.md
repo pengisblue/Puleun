@@ -45,5 +45,6 @@
 ``` bash
 npm install express@4
 npm install socket.io
-
+npm install socketio-file-upload
 ```
+
