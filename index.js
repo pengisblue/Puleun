@@ -43,30 +43,14 @@ io.on('connection', socket => {
             if(err) socket.emit("error", "에러가 발생했습니다.");
             else connection.query(selectSql, (rows) => {
                 console.log(rows);
-            });
-        });
-    });
-
-    socket.on("user register", array => {
-        let sql = `INSERT INTO user(nickname, birth_DT, gender, profile_img_url) VALUES (?, ?, ?, ?)`;
-        let selectSql = 'SELECT * FROM user';
-        connection.execute(sql, array, (err, rows, fields) => {
-            if(err) console.error(err);
-            else connection.query(selectSql, (rows) => {
-                console.log(rows);
-            });
-        });
-
-    });
+            })
+        } )
+    })
 });
 
 app.get("/", (req, res) => {
     res.sendFile(__dirname + `/index.html`);
 });
-
-app.get("/user", (req, res) => {
-    res.sendFile(__dirname + "/user_register.html");
-})
 
 server.listen(3000, () => {
     console.log('Server is Running on *:3000');
