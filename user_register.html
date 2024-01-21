@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <ul>
+        <li><input type="text" id="nickname" placeholder="닉네임"></li>
+        <li><input type="date" id="birth_DT"></li>
+        <li><input type="radio" name="gender" value="F" checked>여성</li>
+        <li><input type="radio" name="gender" value="M">남성</li>
+        <li> 프로필 사진 <input type="file" id="file"></li>
+        <button id="submitButton">쿼리 발사!</button>
+    </ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script src="/siofu/client.js"></script>
+    <script>
+        const socket = io();
+        const uploader = new SocketIOFileUpload(socket);
+        
+        const nickname = document.querySelector("#nickname");
+        const birth_DT = document.querySelector("#birth_DT");
+        const gender = document.querySelector("input[name='gender']");
+        const profileImg = document.querySelector("#file")
+
+        const array = [nickname, birth_DT, gender, profileImg];
+
+        document.querySelector("#submitButton").onclick = () => {
+            alert(nickname.value);
+            socket.emit('user register', [nickname.value, birth_DT.value, gender.value, profileImg.value]);
+        }
+    </script>
+</body>
+</html>
