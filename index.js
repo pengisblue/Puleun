@@ -26,6 +26,7 @@ io.on('connection', socket => {
     const uploader = new siofu();
     uploader.dir = __dirname + `/uploads`;
     const ip = socket.request.connection.remoteAddress;
+    console.log(`ip주소 받아오기 ${ip}`)
     console.log(socket.handshake.time);
     console.log(`client is  ${ip}`);
     uploader.listen(socket);
