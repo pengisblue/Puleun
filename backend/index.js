@@ -1,17 +1,25 @@
-import express from 'express';
-import http from 'http';
-import {Server} from "socket.io";
-import siofu from 'socketio-file-upload';
-import path from 'path';
-import mysql2 from 'mysql2';
-import dbconfig from './dbconfig.js';
-import fs from "fs"
+// import express from 'express';
+// import http from 'http';
+// import {Server} from "socket.io";
+// import siofu from 'socketio-file-upload';
+// import path from 'path';
+// import mysql2 from 'mysql2';
+// import dbconfig from './dbconfig.js';
+// import fs from "fs"
+
+const express = require('express');
+const http = require('http');
+const Server = require('socket.io').Server;
+const siofu = require('socketio-file-upload');
+const mysql2 = require('mysql2');
+const dbconfig = require('./dbconfig.js');
+const fs = require('fs');
 
 const app = express().use(siofu.router);
 const server = http.createServer(app);
 const io = new Server(server);
-const __dirname = path.resolve();
 const connection = mysql2.createConnection(dbconfig);
+
 
 const makeFoler = (dir) => {
     if(!fs.existsSync(dir)){
@@ -38,7 +46,6 @@ io.on('connection', socket => {
     const ip = socket.request.connection.remoteAddress;
     console.log(`ip주소 받아오기 ${ip}`)
     console.log(socket.handshake.time);
-    console.log(`client is  ${ip}`);
     uploader.listen(socket);
 
     uploader.on('saved', (event) => {
