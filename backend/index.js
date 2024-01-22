@@ -5,12 +5,22 @@ import siofu from 'socketio-file-upload';
 import path from 'path';
 import mysql2 from 'mysql2';
 import dbconfig from './dbconfig.js';
+import fs from "fs"
 
 const app = express().use(siofu.router);
 const server = http.createServer(app);
 const io = new Server(server);
 const __dirname = path.resolve();
 const connection = mysql2.createConnection(dbconfig);
+
+const makeFoler = (dir) => {
+    if(!fs.existsSync(dir)){
+        fs.mkdirSync(dir);
+    };
+};
+
+makeFoler(__dirname + '/uploads')
+
 
 /* db 연결 테스트
 connection.connect();
