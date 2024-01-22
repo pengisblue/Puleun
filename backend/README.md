@@ -37,3 +37,30 @@
 |chore|빌드 업무 수정, 패키지 매니저 수정, 패키지 관리자 구성 등 업데이트, <br/>Production Code 변경 없음|
 |rename|파일 혹은 폴더명을 수정하거나 옮기는 작업만 수행한 경우|
 |remove|파일을 삭제하는 작업만 수행한 경우|
+
+
+
+
+### install
+``` bash
+npm install express@4
+npm install socket.io
+npm install socketio-file-upload
+npm install mysql2;
+```
+
+### DB 설정
+
+
+``` js
+export default{
+    host : '',
+    user : '',
+    port: '',
+    password : '',
+    database : '' 
+}
+```
+루트 디렉토리에 dbconfig.js 파일 생성 후 자신의 설정에 맞게 기입
+
+
