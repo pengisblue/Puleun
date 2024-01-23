@@ -36,6 +36,12 @@ source myenv/bin/activate
 
 ---------
 
+### 호출어 (Hot-word)
+```bash
+# efficientword-net 파이썬 라이브러리 설치
+pip install EfficientWord-Net
+```
+
 ### 블루투스
 
 1. 라즈베리와 아두이노 블루투스 연결
