@@ -9,12 +9,12 @@ export const databaseProviders = [
         host: 'localhost',
         port: 3306,
         username: 'root',
-        password: '1234',
+        password: '0000',
         database: 'test',
         entities: [
             __dirname + '/../**/*.entity{.ts,.js}',
         ],
-        synchronize: true,
+        synchronize: false,
       });
 
       return dataSource.initialize();

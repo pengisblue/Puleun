@@ -1,4 +1,4 @@
-from bluetooth import *
+from embedded.RaspberryPi.src.bluetooth import *
 
 socket = BluetoothSocket( RFCOMM)
 socket.connect(("00:19:10:08:58:70", 1))

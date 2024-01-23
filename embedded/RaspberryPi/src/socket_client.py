@@ -1,7 +1,7 @@
 import socketio
 from dotenv import load_dotenv
 import os
-from bluetooth import read_bluetooth_data
+from embedded.RaspberryPi.src.bluetooth import read_bluetooth_data
 
 load_dotenv()
 
