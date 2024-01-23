@@ -1,4 +1,4 @@
-from bluetooth import *
+from embedded.RaspberryPi.src.bluetooth import *
 
 socket = BluetoothSocket( RFCOMM)
 
