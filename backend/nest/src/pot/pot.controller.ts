@@ -1,6 +1,7 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { PotService } from './pot.service';
 import { Pot } from './pot.entity';
+import { CreatePotDto } from './create-pot.dto';
 
 @Controller('pot')
 export class PotController {
@@ -9,6 +10,11 @@ export class PotController {
     @Get()
     async findAll(): Promise<Pot[]> {
         return this.potService.findAll();
+    }
+
+    @Post()
+    async createPot(@Body() createPotDto: CreatePotDto): Promise<Pot>{
+        return this.potService.createPot(createPotDto);
     }
 
 }
