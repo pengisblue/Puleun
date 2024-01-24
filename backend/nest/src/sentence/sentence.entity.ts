@@ -1,10 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { Talk } from '../talk/talk.entity';
 
 @Entity()
 export class Sentence {
-  @PrimaryGeneratedColumn()
-  sentence_id: bigint;
+  @PrimaryGeneratedColumn({type: 'int'})
+  sentence_id: number;
 
   @Column({ length: 100, nullable: false })
   content: string;
@@ -16,10 +16,11 @@ export class Sentence {
   sentence_DTN: Date;
 
   @Column({ type: 'tinyint', nullable: false })
-  talker_FG: number;
+  talker_FG: boolean;
 
   @ManyToOne(() => Talk)
-  talk: Talk;
+  @JoinColumn({name: 'talk_id'})
+  talk_id: Talk;
 
   // Other columns and relationships can be added as needed.
 }

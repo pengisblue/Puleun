@@ -1,5 +1,5 @@
-export class CreatePotDto {
+export class PotDto {
     potName: string;
-    potId: bigint;
+    potId: number;
     potSpecies: string;
   }

@@ -1,10 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 import { Pot } from '../pot/pot.entity';
 
 @Entity()
 export class PotState {
-  @PrimaryGeneratedColumn()
-  pot_state_id: bigint;
+  @PrimaryGeneratedColumn({type: 'int'})
+  pot_state_id: number;
 
   @Column({ type: 'double', nullable: false })
   temperature: number;
@@ -15,8 +15,7 @@ export class PotState {
   @Column({ type: 'double', nullable: false })
   moisture: number;
 
-  @ManyToOne(() => Pot, pot => pot.potStates)
-  pot: Pot;
-
-  // Other columns and relationships can be added as needed.
+  @ManyToOne(() => Pot)
+  @JoinColumn({name: 'pot_id'})
+  pot_id: Pot;
 }
