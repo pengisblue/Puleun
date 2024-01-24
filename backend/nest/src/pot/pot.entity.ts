@@ -28,28 +28,36 @@ export class Pot {
   @Column({ type: 'date', nullable: false })
   created_DT: Date;
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ type: 'date', nullable: false })
   end_DT: Date;
 
   @Column({ length: 200, nullable: false })
   pot_img_url: string;
 
   @ManyToOne(() => User, user => user.pots)
-  @JoinColumn({ name: 'user_id' }) // 외래키 식별자로 사용될 컬럼명
+  @JoinColumn({ name: 'user_id'}) // 외래키 식별자로 사용될 컬럼명
   user: User;
 
   @ManyToOne(() => User, kid => kid.pots)
-  @JoinColumn({ name: 'kid_id' }) // 외래키 식별자로 사용될 컬럼명
+  @JoinColumn({ name: 'kid_id'}) // 외래키 식별자로 사용될 컬럼명
   kid: User;
 
   @OneToMany(() => PotState, potState => potState.pot)
   potStates: PotState[];
 
-  @Column({ type: 'int', nullable: false })
+  @Column({ type: 'int', nullable: false})
   happy_cnt: number;
 
   @Column({ type: 'tinyint', nullable: false })
   collection_FG: number;
 
-  // Other columns and relationships can be added as needed.
+
+  static createPot(potName: string, potId: bigint, potSpecies: string): Pot {
+    const pot = new Pot();
+    pot.pot_name = potName;
+    pot.pot_id = potId;
+    pot.pot_species = potSpecies;
+    // Set other properties as needed
+    return pot;
+  }
 }
