@@ -15,7 +15,7 @@ export class User {
   @Column({ length: 1, nullable: false })
   gender: string;
 
-  @Column({ length: 200, nullable: false })
+  @Column({ length: 200, nullable: true })
   profile_img_url: string;
 
   @ManyToOne(() => User, { nullable: true })
