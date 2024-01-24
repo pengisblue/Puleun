@@ -3,17 +3,23 @@ import { UserService } from './user.service';
 import { User } from './user.entity';
 import { CreateChildDto } from './createChilid.dto';
 import { UpdateUserDto } from './updateUser.dto';
+import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('user')
+@ApiTags('User')
 export class UserController {
     constructor(private readonly userService: UserService){}
 
     @Get()
+    @ApiOperation({ summary: '유저 전체 조회'})
+    @ApiOkResponse({type:User, description: '전체 유저 조회'})
     async findAll():Promise<User[]>{
         return this.userService.findAll()
     }
     
     @Get(':user_id')
+    @ApiOperation({ summary: 'user_id로 유저 조회'})
+    @ApiOkResponse({type:User, description:'유저 Read'})
     async find(@Param('user_id') user_id:number):Promise<User>{
         return this.userService.find(user_id)
     }
