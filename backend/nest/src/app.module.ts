@@ -27,7 +27,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       password: '1234',
       database: 'test',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: false, // 개발 환경에서만 사용 (production에서는 비활성화 권장)
+      synchronize: true, // 개발 환경에서만 사용 (production에서는 비활성화 권장)
     }),
   ],
   controllers: [AppController],

@@ -4,7 +4,7 @@ import { User } from '../user/user.entity';
 @Entity()
 export class UserLogin {
   @PrimaryGeneratedColumn()
-  user_id: bigint;
+  user_id: number;
 
   @Column({ length: 10, nullable: false })
   user_name: string;

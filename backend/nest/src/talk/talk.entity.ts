@@ -6,7 +6,7 @@ import { Sentence } from '../sentence/sentence.entity';
 @Entity()
 export class Talk {
   @PrimaryGeneratedColumn()
-  talk_id: bigint;
+  talk_id: number;
 
   @Column({ length: 30, nullable: false })
   talk_title: string;

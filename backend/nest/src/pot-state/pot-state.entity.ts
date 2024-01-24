@@ -4,15 +4,15 @@ import { Pot } from '../pot/pot.entity';
 @Entity()
 export class PotState {
   @PrimaryGeneratedColumn()
-  pot_state_id: bigint;
+  pot_state_id: number;
 
-  @Column({ type: 'double', nullable: false })
+  @Column({ type: 'int', nullable: false })
   temperature: number;
 
   @Column({ type: 'datetime', nullable: false })
   measure_DT: Date;
 
-  @Column({ type: 'double', nullable: false })
+  @Column({ type: 'int', nullable: false })
   moisture: number;
 
   @ManyToOne(() => Pot, pot => pot.potStates)

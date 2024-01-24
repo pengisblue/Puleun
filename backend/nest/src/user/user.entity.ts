@@ -4,7 +4,7 @@ import { Pot } from '../pot/pot.entity';
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  user_id: bigint;
+  user_id: number;
 
   @Column({ length: 10, nullable: false })
   nickname: string;

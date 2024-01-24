@@ -5,7 +5,7 @@ import { CalenderCode } from '../calender-code/calender-code.entity';
 @Entity()
 export class Calender {
   @PrimaryGeneratedColumn()
-  calender_id: bigint;
+  calender_id: number;
 
   @Column({ type: 'date', nullable: false })
   date: Date;
