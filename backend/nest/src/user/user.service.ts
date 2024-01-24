@@ -1,4 +1,4 @@
-import { Get, Controller, Post, Body, Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -19,8 +19,9 @@ export class UserService {
     async find(user_id: number): Promise<User>{
         const user = await this.UserRepository.findOneBy({user_id})
 
-        if (!user) throw new HttpException('NotFound', HttpStatus.NOT_FOUND)
-        else return user;
+        if (!user) throw new HttpException('Check User_Id', HttpStatus.BAD_REQUEST)
+        
+        return user;
     }
 
     async save(data: CreateChildDto): Promise<number>{
@@ -29,8 +30,7 @@ export class UserService {
             await this.UserRepository.save(user)
             return 1;
         }catch(e){
-            console.log(e)
-            return -1;
+            throw new HttpException('Bad_REQUEST', HttpStatus.BAD_REQUEST)
         }
     }
 
@@ -39,7 +39,7 @@ export class UserService {
             user_id
         })
 
-        if (!user) throw new HttpException('NotFound', HttpStatus.NOT_FOUND)
+        if (!user) throw new HttpException('Bad_REQUEST', HttpStatus.NOT_FOUND)
         try{
             this.UserRepository.update(user_id, {...data})
             return 1;
@@ -53,7 +53,7 @@ export class UserService {
             await this.UserRepository.delete(user_id)
             return 1;
         }catch(e){
-            return -1;
+            throw new HttpException('Bad_REQUEST', HttpStatus.BAD_REQUEST)
         }
     }
 }
