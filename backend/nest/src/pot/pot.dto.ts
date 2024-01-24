@@ -8,7 +8,16 @@ export class CreatePotDto {
     potSpecies: string;
 
     @IsDate()
-    birth_DT: Date;
+    @IsOptional()
+    createdAt ? : Date
+
+    @IsDate()
+    @IsOptional()
+    deletedAt ? : Date
+
+    @IsDate()
+    @IsOptional()
+    updatedAt ? : Date
     
     @IsInt()
     @IsOptional()
