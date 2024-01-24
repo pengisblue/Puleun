@@ -2,8 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Pot } from './pot.entity';
 import { Repository } from 'typeorm';
-import { PotDto } from './pot.dto';
-import { create } from 'domain';
+import { CreatePotDto } from './pot.dto';
 
 @Injectable()
 export class PotService {
@@ -15,10 +14,9 @@ export class PotService {
         return this.potRepository.find();
     }   
 
-    async createPot(potDto: PotDto) {
+    async createPot(potDto: CreatePotDto) {
         const pot = new Pot();
         pot.pot_name = potDto.potName;
-        pot.pot_id = potDto.potId;
         pot.pot_species = potDto.potSpecies;
         await this.potRepository.save(pot);
     }
