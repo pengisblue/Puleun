@@ -4,7 +4,7 @@ import { Talk } from '../talk/talk.entity';
 @Entity()
 export class Sentence {
   @PrimaryGeneratedColumn()
-  sentence_id: bigint;
+  sentence_id: number;
 
   @Column({ length: 100, nullable: false })
   content: string;

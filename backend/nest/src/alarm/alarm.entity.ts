@@ -4,7 +4,7 @@ import { Pot } from '../pot/pot.entity'
 @Entity()
 export class Alarm {
   @PrimaryGeneratedColumn()
-  alarm_id: bigint;
+  alarm_id: number;
 
   @Column({ length: 30, nullable: true })
   alarm_name: string;
