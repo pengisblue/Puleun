@@ -24,7 +24,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       port: 3306,
       username: 'root',
       password: '1234',
-      database: 'entity_test',
+      database: 'test',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true, // 개발 환경에서만 사용 (production에서는 비활성화 권장)
     }),
