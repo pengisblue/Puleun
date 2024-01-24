@@ -1,23 +1,28 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from 'typeorm';
-import { User } from '../user/user.entity';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from 'typeorm';
+import { Pot } from '../pot/pot.entity';
 
 @Entity()
-export class UserLogin {
+export class User {
   @PrimaryGeneratedColumn()
   user_id: number;
 
   @Column({ length: 10, nullable: false })
-  user_name: string;
+  nickname: string;
 
-  @Column({ length: 30, nullable: false })
-  user_email: string;
+  @Column({ type: 'date', nullable: false })
+  birth_DT: Date;
 
-  @Column({ length: 30, nullable: false })
-  user_password: string;
+  @Column({ length: 1, nullable: false })
+  gender: string;
 
-  @OneToOne(() => User)
-  @JoinColumn()
-  user: User;
+  @Column({ length: 200, nullable: true })
+  profile_img_url: string;
+
+  @ManyToOne(() => User, { nullable: true })
+  parent: User;
+
+  @OneToMany(() => Pot, pot => pot.kid)
+  pots: Pot[];
 
   // Other columns and relationships can be added as needed.
 }
