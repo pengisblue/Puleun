@@ -82,7 +82,8 @@ def main():
 
     # 환경설정
     args.access_key=access_key
-    args.keyword_paths=['베리야_ko_windows_v3_0_0.ppn'] # 나중에 이 부분이 바뀌어야함
+    args.keyword_paths=['베리야_ko_windows_v3_0_0.ppn', '푸른아_ko_windows_v3_0_0.ppn'] # 호출어 추가 시 이 부분이 바뀌어야함, 윈도우용
+    # args.keyword_paths=['방울아_ko_raspberry-pi_v3_0_0.ppn', '푸른아_ko_raspberry-pi_v3_0_0.ppn'] # 라즈베리파이 용
     args.model_path='porcupine_params_ko.pv' # 한국어 파일
 
     if args.show_audio_devices:
@@ -166,9 +167,11 @@ def main():
             if wav_file is not None:
                 wav_file.writeframes(struct.pack("h" * len(pcm), *pcm))
 
+
             if result >= 0:
                 print('[%s] Detected %s' % (str(datetime.now()), keywords[result]))
                 # 이 자리에 녹음 시작하는 코드 넣기
+                return True
 
     except KeyboardInterrupt:
         print('Stopping ...')
