@@ -11,7 +11,7 @@ export class UserController {
 
     @Get('child/:user_id')
     @ApiOperation({ summary: '아이 전체 조회'})
-    @ApiOkResponse({type:User, description: 'user_id를 부모로하는 아이들 조회'})
+    @ApiOkResponse({type:UserListDto, description: 'user_id를 부모로하는 아이들 조회'})
     async findAll(@Param('user_id') user_id:number):Promise<UserListDto[]>{
         return this.userService.findByParent(user_id)
     }

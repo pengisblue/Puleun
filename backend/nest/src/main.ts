@@ -6,9 +6,9 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: "192.168.30.*",
+    origin: ["http://172.23.48.1:3000/","192.168.30.*"],
     credentials: true,
-    exposedHeaders: ['Authorization'], // * 사용할 헤더 추가.
+    exposedHeaders: ['Authorization','*'], // * 사용할 헤더 추가.
   });
   const config = new DocumentBuilder()
     .setTitle('pliends')
