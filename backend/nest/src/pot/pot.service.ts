@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Pot } from './pot.entity';
 import { Repository } from 'typeorm';
 import { CreatePotDto, SelectPotDto, UpdatePotDto } from './pot.dto';
-import { User } from 'src/user/user.entity';
 
 @Injectable()
 export class PotService {
