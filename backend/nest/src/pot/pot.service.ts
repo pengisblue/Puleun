@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Pot } from './pot.entity';
-import { Repository } from 'typeorm';
-import { CreatePotDto, SelectPotDto, UpdatePotDto } from './pot.dto';
+import { Equal, IsNull, Not, Repository } from 'typeorm';
+import { CollectionDto, CreatePotDto, SelectPotDto, UpdatePotDto } from './pot.dto';
+import { isDate } from 'util/types';
+
 
 @Injectable()
 export class PotService {
@@ -15,15 +17,10 @@ export class PotService {
         return this.potRepository.find();
     }   
 
-    /**
-     * 
-     * @param potDto 
-     *  {
-            "pot_name":"",
-            "pot_species":"",
-            "pot_img_url": ""
-        }
-     */
+    async potDetail(pot_id: number): Promise<Pot>{
+        return await this.potRepository.findOneBy({pot_id});
+    }
+
     async save(potDto: CreatePotDto) {
         const testPot = this.potRepository.create(potDto)
         await this.potRepository.save(testPot);
@@ -38,8 +35,31 @@ export class PotService {
     }
 
     async delete(pot_id: number){
-        await this.potRepository.delete(pot_id);
+        await this.potRepository.softDelete(pot_id);
     }
 
+    async findCollection(user_id: number): Promise<CollectionDto[]>{
+        const collection = await this.potRepository.find({
+            withDeleted: true,
+            where: {
+                deletedAt: Not(IsNull()),
+                user_id: user_id
+            }
+        });
 
+        return collection.map((pot) => CollectionDto.fromEntity(pot));
+    }
+
+    async collectionDetail(pot_id: number, user_id: number): Promise<CollectionDto>{
+        const collectionPot = await this.potRepository.findOne({
+            withDeleted: true,
+            where: {
+                user_id,
+                pot_id,
+                deletedAt: Not(IsNull())
+            }
+        });
+        console.log(collectionPot);
+        return CollectionDto.fromEntity(collectionPot);
+    }
 }

@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { PotService } from './pot.service';
 import { Pot } from './pot.entity';
-import { CreatePotDto, UpdatePotDto } from './pot.dto';
+import { CollectionDto, CreatePotDto, UpdatePotDto } from './pot.dto';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('pot')
@@ -14,6 +14,13 @@ export class PotController {
     @ApiOkResponse({ type:Pot, description:'현재 존재하는 모든 화분 조회' })
     async findAll(): Promise<Pot[]>{
         return this.potService.findAll();
+    }
+
+    @Get(':pot_id')
+    @ApiOperation({ summary: "화분(식물) 상세 조회"})
+    @ApiOkResponse({ type:Pot, description:'선택한 화분의 모든 정보 조회' })
+    async potDetail(@Param('pot_id') pot_id: number): Promise<Pot>{
+        return this.potService.potDetail(pot_id);
     }
 
     @Post()
@@ -38,5 +45,19 @@ export class PotController {
     async delete(@Param('pot_id') user_id: number): Promise<number>{
         await this.potService.delete(user_id);
         return 1;
+    }
+
+    @Get('collections/:user_id')
+    @ApiOperation({ summary: '컬렉션 조회'})
+    @ApiOkResponse({ type:CollectionDto, description:'유저의 컬렉션 정보 조회' })
+    async findCollection(@Param('user_id') user_id: number): Promise<CollectionDto[]>{
+        return await this.potService.findCollection(user_id);
+    }
+
+    @Get('collection/:user_id/:pot_id')
+    @ApiOperation({ summary: '컬렉션 조회'})
+    @ApiOkResponse({ type:CollectionDto, description:'유저의 컬렉션 정보 조회' })
+    async collectionDetail(@Param('user_id') user_id: number, @Param('pot_id') pot_id: number): Promise<CollectionDto>{
+        return await this.potService.collectionDetail(user_id, pot_id);
     }
 }
