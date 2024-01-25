@@ -124,5 +124,5 @@ export class SelectPotDto{
     // user_id가 존재한다면 아이가 키우고 있다는 것
     @IsInt()
     @IsOptional()
-    user_id ? : number = 0;
+    user_id ? : number = 0;    
 }
