@@ -167,10 +167,9 @@ def main():
             if wav_file is not None:
                 wav_file.writeframes(struct.pack("h" * len(pcm), *pcm))
 
-
+            # 호출어가 인식 된 경우
             if result >= 0:
                 print('[%s] Detected %s' % (str(datetime.now()), keywords[result]))
-                # 이 자리에 녹음 시작하는 코드 넣기
                 return True
 
     except KeyboardInterrupt:
