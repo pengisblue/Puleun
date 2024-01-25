@@ -159,3 +159,35 @@ export class SelectPotDto{
     @ApiProperty()
     user_id ? : number = 0;    
 }
+
+export class CollectionDto{
+    @IsString()
+    @Length(1,10)
+    @ApiProperty()
+    pot_name: string;
+
+    @IsString()
+    @Length(1,10)
+    @ApiProperty()
+    pot_species: string;
+
+    @IsDate()
+    @IsOptional()
+    @ApiProperty()
+    createdAt ? : Date
+
+    @IsDate()
+    @IsOptional()
+    @ApiProperty()
+    deletedAt ? : Date
+
+    @IsString()
+    @Length(1, 200)
+    @ApiProperty()
+    pot_img_url: string;
+
+    @IsInt()
+    @IsOptional()
+    @ApiProperty()
+    happy_cnt ? : number;
+}

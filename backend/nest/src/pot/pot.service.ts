@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Pot } from './pot.entity';
-import { Repository } from 'typeorm';
-import { CreatePotDto, SelectPotDto, UpdatePotDto } from './pot.dto';
+import { Equal, Repository } from 'typeorm';
+import { CollectionDto, CreatePotDto, SelectPotDto, UpdatePotDto } from './pot.dto';
+
 
 @Injectable()
 export class PotService {
@@ -15,15 +16,6 @@ export class PotService {
         return this.potRepository.find();
     }   
 
-    /**
-     * 
-     * @param potDto 
-     *  {
-            "pot_name":"",
-            "pot_species":"",
-            "pot_img_url": ""
-        }
-     */
     async save(potDto: CreatePotDto) {
         const testPot = this.potRepository.create(potDto)
         await this.potRepository.save(testPot);
@@ -41,5 +33,23 @@ export class PotService {
         await this.potRepository.delete(pot_id);
     }
 
+    async findCollection(user_id: number): Promise<CollectionDto[]>{
+        const collection = this.potRepository.find({
+            where: {
+                collection_FG: Equal(true),
+                user_id: Equal(user_id)
+            }
+        });
 
+        const collectionDto: CollectionDto[] = (await collection).map((pot) => ({
+            'pot_name':pot.pot_name,
+            'pot_species':pot.pot_species,
+            'createdAt':pot.createdAt,
+            'deletedAt':pot.deletedAt,
+            'pot_img_url':pot.pot_img_url,
+            'happy_cnt':pot.happy_cnt,
+        }));
+ 
+        return collectionDto;
+    }
 }

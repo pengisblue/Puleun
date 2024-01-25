@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { PotService } from './pot.service';
 import { Pot } from './pot.entity';
-import { CreatePotDto, UpdatePotDto } from './pot.dto';
+import { CollectionDto, CreatePotDto, UpdatePotDto } from './pot.dto';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('pot')
@@ -39,4 +39,12 @@ export class PotController {
         await this.potService.delete(user_id);
         return 1;
     }
+
+    @Get('collection/:user_id')
+    @ApiOperation({ summary: '컬렉션 조회'})
+    @ApiOkResponse({ type:CollectionDto, description:'유저의 컬렉션 정보 조회' })
+    async findCollection(@Param('user_id') user_id: number): Promise<CollectionDto[]>{
+        return await this.potService.findCollection(user_id);
+    }
+
 }
