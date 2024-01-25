@@ -1,10 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { Pot } from '../pot/pot.entity'
 
 @Entity()
 export class Alarm {
   @PrimaryGeneratedColumn()
-  alarm_id: bigint;
+  alarm_id: number;
 
   @Column({ length: 30, nullable: true })
   alarm_name: string;
@@ -21,7 +21,8 @@ export class Alarm {
   @Column({ type: 'tinyint', nullable: false })
   routine: number;
 
-  @ManyToOne(() => Pot)
+  @ManyToOne(() => Pot, pot => pot.pot_id, {cascade: ['update', 'remove']})
+  @JoinColumn({name: "pot_id"})
   pot: Pot;
 
   // Other columns and relationships can be added as needed.

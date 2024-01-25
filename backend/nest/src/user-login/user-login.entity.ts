@@ -1,10 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToOne } from 'typeorm';
 import { User } from '../user/user.entity';
 
 @Entity()
 export class UserLogin {
   @PrimaryGeneratedColumn()
-  user_id: bigint;
+  user_id: number;
 
   @Column({ length: 10, nullable: false })
   user_name: string;
@@ -18,6 +18,9 @@ export class UserLogin {
   @OneToOne(() => User)
   @JoinColumn()
   user: User;
+
+  @ManyToOne(() => User, { nullable: true })
+  parent: User;
 
   // Other columns and relationships can be added as needed.
 }
