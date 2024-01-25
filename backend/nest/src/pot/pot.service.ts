@@ -24,7 +24,7 @@ export class PotService {
             "pot_img_url": ""
         }
      */
-    async createPot(potDto: CreatePotDto) {
+    async save(potDto: CreatePotDto) {
         const testPot = this.potRepository.create(potDto)
         await this.potRepository.save(testPot);
     }
