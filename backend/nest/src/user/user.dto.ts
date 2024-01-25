@@ -1,6 +1,5 @@
 import { IsDate, IsOptional, IsString } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
-import { User } from "src/user/user.entity";
 
 export class CreateChildDto{
     @ApiProperty()
@@ -13,7 +12,7 @@ export class CreateChildDto{
     gender: string;
 
     @ApiProperty()
-    parent: User;
+    parent_id: number;
 
     @ApiProperty()
     @IsOptional()

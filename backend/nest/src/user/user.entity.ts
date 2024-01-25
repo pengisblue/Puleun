@@ -4,7 +4,7 @@ import { Pot } from '../pot/pot.entity';
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  @OneToMany(type => User, user => user.parent_id)
+  @OneToMany(() => User, (user) => user.parent_id)
   user_id: number;
 
   @Column({ length: 10, nullable: false })
@@ -19,9 +19,16 @@ export class User {
   @Column({ length: 200, nullable: true })
   profile_img_url: string;
 
-  @ManyToOne(type => User, user => user.user_id, { nullable: true })
-  @JoinColumn({name: 'parent_id'})
-  parent_id: User;
+  @ManyToOne(() => User, (user) => user.user_id)
+  @JoinColumn({name:'parent_id'})
+  parent: User;
+
+  @Column({ nullable: true })
+  parent_id: number
+
+  @OneToMany(() => Pot, (pot) => pot.user_id)
+  @JoinColumn()
+  Pots: Pot[];
 
   // Other columns and relationships can be added as needed.
 }

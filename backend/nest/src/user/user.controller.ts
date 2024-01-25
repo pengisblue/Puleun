@@ -9,11 +9,12 @@ import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nest
 export class UserController {
     constructor(private readonly userService: UserService){}
 
-    @Get()
-    @ApiOperation({ summary: '유저 전체 조회'})
-    @ApiOkResponse({type:User, description: '전체 유저 조회'})
-    async findAll():Promise<User[]>{
-        return this.userService.findAll()
+    @Get('child/:user_id')
+    @ApiOperation({ summary: '아이 전체 조회'})
+    @ApiOkResponse({type:User, description: 'user_id를 부모로하는 아이들 조회'})
+    @ApiNotFoundResponse({ description: '아이가 없는 경우' })
+    async findAll(@Param('user_id') user_id:number):Promise<User[]>{
+        return this.userService.findByParent(user_id)
     }
     
     @Get(':user_id')

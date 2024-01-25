@@ -11,13 +11,17 @@ export class UserService {
         private readonly UserRepository: Repository<User>
     ){}
 
-    async findAll():Promise<User[]>{
-        return this.UserRepository.find()
+    async findByParent(user_id: number):Promise<User[]>{
+        const child = await this.UserRepository.findBy({parent_id:user_id})
+
+        if (!child) throw new HttpException(`No data from ${user_id} `, HttpStatus.BAD_REQUEST)
+        
+        return child;
     }
 
     async find(user_id: number): Promise<User>{
         const user = await this.UserRepository.findOneBy({user_id})
-
+        
         if (!user) throw new HttpException('Check User_Id', HttpStatus.BAD_REQUEST)
         
         return user;
