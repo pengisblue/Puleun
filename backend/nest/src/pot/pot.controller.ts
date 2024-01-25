@@ -16,6 +16,13 @@ export class PotController {
         return this.potService.findAll();
     }
 
+    @Get(':pot_id')
+    @ApiOperation({ summary: "화분(식물) 상세 조회"})
+    @ApiOkResponse({ type:Pot, description:'선택한 화분의 모든 정보 조회' })
+    async potDetail(@Param('pot_id') pot_id: number): Promise<Pot>{
+        return this.potService.potDetail(pot_id);
+    }
+
     @Post()
     @ApiOperation({ summary: '화분 등록'})
     @ApiOkResponse({ type:'1', description:'1 for SUCCESS' })
@@ -40,11 +47,17 @@ export class PotController {
         return 1;
     }
 
-    @Get('collection/:user_id')
+    @Get('collections/:user_id')
     @ApiOperation({ summary: '컬렉션 조회'})
     @ApiOkResponse({ type:CollectionDto, description:'유저의 컬렉션 정보 조회' })
     async findCollection(@Param('user_id') user_id: number): Promise<CollectionDto[]>{
         return await this.potService.findCollection(user_id);
     }
 
+    @Get('collection/:user_id/:pot_id')
+    @ApiOperation({ summary: '컬렉션 조회'})
+    @ApiOkResponse({ type:CollectionDto, description:'유저의 컬렉션 정보 조회' })
+    async collectionDetail(@Param('user_id') user_id: number, @Param('pot_id') pot_id: number): Promise<CollectionDto>{
+        return await this.potService.collectionDetail(user_id, pot_id);
+    }
 }

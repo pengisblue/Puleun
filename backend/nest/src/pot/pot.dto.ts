@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsDate, IsInt, IsOptional, IsString, Length } from "class-validator";
+import { Pot } from "./pot.entity";
 
 export class CreatePotDto {
     @IsString()
@@ -161,6 +162,18 @@ export class SelectPotDto{
 }
 
 export class CollectionDto{
+
+    static fromEntity(entity: Pot): CollectionDto {
+        const potDto = new Pot();
+        potDto.pot_name = entity.pot_name;
+        potDto.pot_species = entity.pot_species;
+        potDto.createdAt = entity.createdAt;
+        potDto.deletedAt = entity.deletedAt;
+        potDto.pot_img_url = entity.pot_img_url;
+        potDto.happy_cnt = entity.happy_cnt;
+        return potDto;
+    }
+
     @IsString()
     @Length(1,10)
     @ApiProperty()

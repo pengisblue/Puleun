@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Pot } from './pot.entity';
-import { Equal, Repository } from 'typeorm';
+import { Equal, IsNull, Not, Repository } from 'typeorm';
 import { CollectionDto, CreatePotDto, SelectPotDto, UpdatePotDto } from './pot.dto';
+import { isDate } from 'util/types';
 
 
 @Injectable()
@@ -15,6 +16,10 @@ export class PotService {
     async findAll(): Promise<Pot[]>{
         return this.potRepository.find();
     }   
+
+    async potDetail(pot_id: number): Promise<Pot>{
+        return await this.potRepository.findOneBy({pot_id});
+    }
 
     async save(potDto: CreatePotDto) {
         const testPot = this.potRepository.create(potDto)
@@ -30,26 +35,31 @@ export class PotService {
     }
 
     async delete(pot_id: number){
-        await this.potRepository.delete(pot_id);
+        await this.potRepository.softDelete(pot_id);
     }
 
     async findCollection(user_id: number): Promise<CollectionDto[]>{
-        const collection = this.potRepository.find({
+        const collection = await this.potRepository.find({
+            withDeleted: true,
             where: {
-                collection_FG: Equal(true),
-                user_id: Equal(user_id)
+                deletedAt: Not(IsNull()),
+                user_id: user_id
             }
         });
 
-        const collectionDto: CollectionDto[] = (await collection).map((pot) => ({
-            'pot_name':pot.pot_name,
-            'pot_species':pot.pot_species,
-            'createdAt':pot.createdAt,
-            'deletedAt':pot.deletedAt,
-            'pot_img_url':pot.pot_img_url,
-            'happy_cnt':pot.happy_cnt,
-        }));
- 
-        return collectionDto;
+        return collection.map((pot) => CollectionDto.fromEntity(pot));
+    }
+
+    async collectionDetail(pot_id: number, user_id: number): Promise<CollectionDto>{
+        const collectionPot = await this.potRepository.findOne({
+            withDeleted: true,
+            where: {
+                user_id,
+                pot_id,
+                deletedAt: Not(IsNull())
+            }
+        });
+        console.log(collectionPot);
+        return CollectionDto.fromEntity(collectionPot);
     }
 }
