@@ -34,12 +34,12 @@ export class Pot {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Column({ length: 200, nullable: false })
+  @Column({ length: 200, nullable: false, default: 'noimage.png' })
   pot_img_url: string;
 
   @ManyToOne(() => User)
   @JoinColumn({name: 'user_id'}) // 외래키 식별자로 사용될 컬럼명
-  user_id: User;
+  user_id: number;
 
   @Column({ type: 'int', nullable: true})
   happy_cnt: number;
