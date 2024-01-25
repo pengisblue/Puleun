@@ -2,8 +2,7 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateChildDto } from './createChilid.dto';
-import { UpdateUserDto } from './updateUser.dto';
+import { CreateChildDto, UpdateUserDto, UserListDto } from './user.dto';
 
 @Injectable()
 export class UserService {
@@ -12,13 +11,14 @@ export class UserService {
         private readonly UserRepository: Repository<User>
     ){}
 
-    async findAll():Promise<User[]>{
-        return this.UserRepository.find()
+    async findByParent(user_id: number):Promise<UserListDto[]>{
+        const child = await this.UserRepository.findBy({parent_id:user_id})
+        return child;
     }
 
     async find(user_id: number): Promise<User>{
         const user = await this.UserRepository.findOneBy({user_id})
-
+        
         if (!user) throw new HttpException('Check User_Id', HttpStatus.BAD_REQUEST)
         
         return user;
@@ -27,6 +27,7 @@ export class UserService {
     async save(data: CreateChildDto): Promise<number>{
         const user = this.UserRepository.create(data)
         try{
+            if (user.parent_id == null || user.parent_id == 0) user.parent_id = null // parent_id==null인 경우 사용자 본인
             await this.UserRepository.save(user)
             return 1;
         }catch(e){
