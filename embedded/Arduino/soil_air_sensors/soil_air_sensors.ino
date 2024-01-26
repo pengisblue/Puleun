@@ -26,8 +26,9 @@ void readHumiditySensor() {
 
   Serial.print("Humidity: ");
   Serial.print(humidity);
-  Serial.print("%, Temp: ");
-  Serial.println(temperature);
+  Serial.print(" %, Temp: ");
+  Serial.print(temperature);
+  Serial.println(" C");
 }
 
 // 토양 수분 센서 데이터 읽기 및 급변 감지
@@ -46,7 +47,7 @@ void readMoistureSensor() {
   lastMoistureLevel = moistureLevel;
 }
 
-Task taskReadHumidity(3600000, TASK_FOREVER, &readHumiditySensor);
+Task taskReadHumidity(1000, TASK_FOREVER, &readHumiditySensor);
 Task taskReadMoisture(1000, TASK_FOREVER, &readMoistureSensor); // 1초마다 수분 센서 읽기
 
 void setup() {
