@@ -13,6 +13,7 @@ import { SentenceModule } from './sentence/sentence.module';
 import { AlarmModule } from './alarm/alarm.module';
 import { CalenderCodeModule } from './calender-code/calender-code.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { SocketGateway } from './socket/socket.gateway';
 
 @Module({
   imports: [UserModule, PotModule, 
@@ -30,6 +31,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, SocketGateway],
 })
 export class AppModule {}
