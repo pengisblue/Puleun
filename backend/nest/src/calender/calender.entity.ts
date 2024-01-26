@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToOne } from 'typeorm';
 import { Pot } from '../pot/pot.entity';
 import { CalenderCode } from '../calender-code/calender-code.entity';
 
@@ -13,10 +13,11 @@ export class Calender {
   @Column({ length: 1, nullable: false })
   code: string;
 
-  @ManyToOne(() => Pot)
+  @ManyToOne(() => Pot, pot => pot.pot_id)
+  @JoinColumn({name: 'pot_id'})
   pot: Pot;
 
-  @ManyToOne(() => CalenderCode)
+  @OneToOne(() => CalenderCode)
   @JoinColumn({ name: 'code' })
   calenderCode: CalenderCode;
 

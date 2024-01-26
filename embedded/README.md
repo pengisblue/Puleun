@@ -36,6 +36,22 @@ source myenv/bin/activate
 
 ---------
 
+### 호출어 (Hot-word)
+```bash
+# demo 실행해보기
+# efficientword-net 파이썬 라이브러리 설치
+pip install EfficientWord-Net
+
+# 위 라이브러리 설치 오류 시 해결을 위한 설치들
+pip install pyproject
+
+pip install pipwin
+pipwin install pyaudio
+
+# 실행
+python -m eff_word_net.engine
+```
+
 ### 블루투스
 
 1. 라즈베리와 아두이노 블루투스 연결

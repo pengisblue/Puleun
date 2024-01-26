@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { CatsModule } from './cats/cats.module';
 import { UserModule } from './user/user.module';
 import { PotModule } from './pot/pot.module';
 import { PotStateModule } from './pot-state/pot-state.module';
@@ -16,7 +15,7 @@ import { CalenderCodeModule } from './calender-code/calender-code.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports: [CatsModule, UserModule, PotModule, 
+  imports: [UserModule, PotModule, 
     PotStateModule, SpeciesModule, UserLoginModule, DeviceModule, 
     CalenderModule, TalkModule, SentenceModule, AlarmModule, CalenderCodeModule,
     TypeOrmModule.forRoot({
