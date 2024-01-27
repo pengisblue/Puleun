@@ -3,7 +3,7 @@ import PotList from "./components/PotList";
 
 function App() {
   return (
-    <div>
+    <div className="bg-amber-overlay">
       <PotList />
     </div>
   );

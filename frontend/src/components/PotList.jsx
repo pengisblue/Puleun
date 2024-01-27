@@ -1,7 +1,7 @@
 import PotCardDetail from "./PotCardDetail";
 import PotCardSimple from "./PotCardSimple";
-import potImg1 from "../test/pot1.jpg";
-import potImg2 from "../test/pot2.jpg";
+import potImg1 from "../test/plant1.png";
+import potImg2 from "../test/plant2.png";
 import kidImg1 from "../test/kid1.png";
 import kidImg2 from "../test/kid2.png";
 
@@ -9,7 +9,7 @@ const potList = [
   {
     potId: 1,
     kidImgUrl: kidImg1,
-    kidName: "성주",
+    kidName: "성준",
     potName: "방울이",
     potImgUrl: potImg1,
     potSpecies: "방울토마토",
@@ -24,8 +24,8 @@ const potList = [
   {
     potId: 2,
     kidImgUrl: kidImg2,
-    kidName: "성주2",
-    potName: "방울이2",
+    kidName: "성주성주성주성주성2",
+    potName: "방울방울방울방울방울",
     potImgUrl: potImg2,
     potSpecies: "방울토마토",
     nowTemprature: 22,
@@ -43,12 +43,12 @@ export default function PotList() {
     <div>
       <div>
         {potList.map((pot) => (
-          <PotCardDetail {...pot} />
+          <PotCardDetail key={pot.potId} {...pot} />
         ))}
       </div>
-      <div>
+      <div className="flex w-5/6 mx-auto flex-wrap">
         {potList.map((pot) => (
-          <PotCardSimple {...pot} />
+          <PotCardSimple key={pot.potId} {...pot} />
         ))}
       </div>
     </div>
