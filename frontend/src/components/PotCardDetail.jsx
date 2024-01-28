@@ -1,4 +1,4 @@
-import PotCardStyle from "./PotCardDetailStyle";
+import PotCardDetailStyle from "./PotCardDetailStyle";
 import PotProfileImage from "./PotProfileImage";
 
 export default function PotDetail({
@@ -32,7 +32,7 @@ export default function PotDetail({
   }
 
   return (
-    <PotCardStyle>
+    <PotCardDetailStyle>
       <div className="flex flex-col gap-1">
         <h1 className="flex flex-wrap text-lg font-bold">
           <span className="me-2">
@@ -43,7 +43,7 @@ export default function PotDetail({
         </h1>
 
         <div className="flex h-full items-center gap-4 font-semibold">
-          <div className="basis-2/5">
+          <div className="basis-2/5 overflow-hidden rounded-xl">
             <PotProfileImage imgUrl={potImgUrl} />
           </div>
 
@@ -74,6 +74,6 @@ export default function PotDetail({
           </ul>
         </div>
       </div>
-    </PotCardStyle>
+    </PotCardDetailStyle>
   );
 }

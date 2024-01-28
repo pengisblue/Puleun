@@ -1,9 +1,24 @@
-import PotCardDetail from "./PotCardDetail";
+// import PotCardDetail from "./PotCardDetail";
 import PotCardSimple from "./PotCardSimple";
+import plus from "../asset/plus_slate.svg";
+import cog from "../asset/cog-8-tooth.svg";
 import potImg1 from "../test/plant1.png";
 import potImg2 from "../test/plant2.png";
 import kidImg1 from "../test/kid1.png";
 import kidImg2 from "../test/kid2.png";
+// import PotAddDetail from "./PotAddDetail";
+import PotAddSimple from "./PotAddSimple";
+
+const userList = [
+  {
+    userId: 1,
+    userName: "성준"
+  },
+  {
+    userId: 2,
+    userName: "성주성주성주성주성2"
+  }
+]
 
 const potList = [
   {
@@ -40,16 +55,30 @@ const potList = [
 
 export default function PotList() {
   return (
-    <div>
+    <div className="pt-16">
+      <header className="mx-6 my-4 flex justify-between items-center">
+        <h1 className="text-title">화분 목록</h1>
+        <div className="flex gap-2">
+          <img src={plus} alt="plus" className="w-7" />
+          <img src={cog} alt="cog" className="w-7" />
+        </div>
+      </header>
+
       <div>
-        {potList.map((pot) => (
-          <PotCardDetail key={pot.potId} {...pot} />
-        ))}
+        <select className="form-select">
+          <option>전체</option>
+          {userList.map((user) => (
+            <option key={user.userId}>{user.userName}</option>
+          ))}
+        </select>
       </div>
-      <div className="flex w-5/6 mx-auto flex-wrap">
+
+      {/* 화분 카드 */}
+      <div className="mx-auto my-6 flex w-10/12 flex-wrap">
         {potList.map((pot) => (
           <PotCardSimple key={pot.potId} {...pot} />
         ))}
+        <PotAddSimple />
       </div>
     </div>
   );

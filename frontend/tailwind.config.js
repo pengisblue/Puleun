@@ -9,6 +9,14 @@ module.exports = {
         'amber-overlay': 'rgba(255, 253, 247, 1)', // Amber-50에 흰색 투명도 60%를 적용한 색상
       }
     },
+    fontSize: {
+      'title': ['1.875rem', {
+        lineHeight: '2.25rem',
+        fontWeight: '700',
+      }],
+    },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/forms'),
+  ],
 }
