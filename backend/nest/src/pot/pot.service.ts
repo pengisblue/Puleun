@@ -40,7 +40,7 @@ export class PotService {
         const collection = await this.potRepository.find({
             withDeleted: true,
             where: {
-                deletedAt: Not(IsNull()),
+                collection_FG: true,
                 user_id: user_id
             }
         });
@@ -54,7 +54,7 @@ export class PotService {
             where: {
                 user_id,
                 pot_id,
-                deletedAt: Not(IsNull())
+                collection_FG: true,
             }
         });
         console.log(collectionPot);
