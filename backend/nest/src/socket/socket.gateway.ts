@@ -4,8 +4,8 @@ import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSo
 import { Server, Socket } from 'socket.io';
 import { CreatePotStateDto } from 'src/pot-state/pot-state-insert.dto';
 import { PotState } from 'src/pot-state/pot-state.entity';
-import { PotStateService } from 'src/pot-state/pot-state.service';
 import { Repository } from 'typeorm';
+import { SocketService } from "./socket.service";
 
 @WebSocketGateway(8080, {
   cors: { origin: ["http://172.23.48.1:3000/","192.168.30.*"], },
@@ -17,8 +17,7 @@ export class SocketGateway {
   server: Server;
 
   constructor(
-    @InjectRepository(PotState)
-    private readonly potStateRepository: Repository<PotState>,
+    private readonly socketService: SocketService,
   ){}
 
   handleConnection(client: Socket){
@@ -30,9 +29,9 @@ export class SocketGateway {
     client.emit('message',{ result: `${message} accepted`})
   }
 
-  @SubscribeMessage('pot-status')
+  @SubscribeMessage('pot-state')
   async handleMessage( @MessageBody() inputDto: CreatePotStateDto): Promise<number>{
-    await this.potStateRepository.save(inputDto);
+    await this.socketService.saveState(inputDto);
     return 1;
   }
 

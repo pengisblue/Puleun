@@ -25,7 +25,7 @@ import { SocketModule } from './socket/socket.module';
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: '1234',
+      password: 'qeqe2w2',
       database: 'test',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true, // 개발 환경에서만 사용 (production에서는 비활성화 권장)

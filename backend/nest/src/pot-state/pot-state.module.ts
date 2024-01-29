@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 @Module({
   imports:[TypeOrmModule.forFeature([PotState])],
   controllers: [PotStateController],
-  providers: [PotStateService]
+  providers: [PotStateService],
+  exports: [PotStateService],
 })
 export class PotStateModule {}
