@@ -13,9 +13,9 @@ import { SentenceModule } from './sentence/sentence.module';
 import { AlarmModule } from './alarm/alarm.module';
 import { CalenderCodeModule } from './calender-code/calender-code.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { SocketGateway } from './socket/socket.gateway';
 import { FileGateway } from './file/file.gateway';
 import { FileController } from './file/file.controller';
+import { SocketModule } from './socket/socket.module';
 
 @Module({
   imports: [UserModule, PotModule, 
@@ -31,8 +31,9 @@ import { FileController } from './file/file.controller';
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true, // 개발 환경에서만 사용 (production에서는 비활성화 권장)
     }),
+    SocketModule,
   ],
   controllers: [AppController, FileController],
-  providers: [AppService, SocketGateway, FileGateway],
+  providers: [AppService, FileGateway],
 })
 export class AppModule {}

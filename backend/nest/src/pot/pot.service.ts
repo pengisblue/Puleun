@@ -1,10 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Pot } from './pot.entity';
-import { Equal, IsNull, Not, Repository } from 'typeorm';
-import { CollectionDto, CreatePotDto, SelectPotDto, UpdatePotDto } from './pot.dto';
-import { isDate } from 'util/types';
-
+import { IsNull, Not, Repository } from 'typeorm';
+import { CollectionDto, CreatePotDto, UpdatePotDto } from './pot.dto';
 
 @Injectable()
 export class PotService {

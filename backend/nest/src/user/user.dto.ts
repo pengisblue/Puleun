@@ -1,5 +1,6 @@
 import { IsDate, IsNumber, IsOptional, IsString } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
+import { Type } from "class-transformer";
 
 export class UserListDto{
     @ApiProperty()
@@ -20,6 +21,7 @@ export class CreateChildDto{
 
     @ApiProperty()
     @IsDate()
+    @Type(() => Date)
     birth_DT: Date;
 
     @ApiProperty()
@@ -41,6 +43,7 @@ export class UpdateUserDto{
     nickname: string;
 
     @IsDate()
+    @Type(() => Date)
     birth_DT: Date;
 
     @IsString()
