@@ -1,17 +1,19 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
-import { CreateChildDto , UpdateUserDto, UserListDto } from './user.dto';
+import { CreateUserDto, UpdateUserDto, UserListDto } from './user.dto';
 import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiExtraModels } from "@nestjs/swagger";
 
 @Controller('user')
 @ApiTags('User')
+@ApiExtraModels(UserListDto, CreateUserDto, UpdateUserDto)
 export class UserController {
     constructor(private readonly userService: UserService){}
 
     @Get('child/:user_id')
     @ApiOperation({ summary: '아이 전체 조회'})
-    @ApiOkResponse({type:UserListDto, description: 'user_id를 부모로하는 아이들 조회'})
+    @ApiOkResponse({ type:UserListDto, description: 'user_id를 부모로하는 아이들 조회' })
     async findAll(@Param('user_id') user_id:number):Promise<UserListDto[]>{
         return this.userService.findByParent(user_id)
     }
@@ -27,14 +29,14 @@ export class UserController {
     @ApiOperation({ summary: '유저 등록 & 아이 등록'})
     @ApiOkResponse({ type:'1', description:'1 for SUCCESS' })
     @ApiNotFoundResponse({ description:'wrong data request' })
-    async save(@Body() child:CreateChildDto): Promise<number>{
+    async save(@Query() @Body() child:CreateUserDto): Promise<number>{
         return this.userService.save(child)
     }
 
     @Put(':user_id')
     @ApiOperation({ summary: '유저 & 아이 정보 수정'})
     @ApiOkResponse({ type:'1', description:'1 for SUCCESS'})
-    async update(@Param('user_id') user_id:number, @Body() child:UpdateUserDto): Promise<number>{
+    async update(@Query() @Param('user_id') user_id:number, @Query() @Body() child:UpdateUserDto): Promise<number>{
         return this.userService.update(user_id, child)
     }
     

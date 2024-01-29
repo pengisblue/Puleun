@@ -2,7 +2,7 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateChildDto, UpdateUserDto, UserListDto } from './user.dto';
+import { CreateUserDto, UpdateUserDto, UserListDto } from './user.dto';
 
 @Injectable()
 export class UserService {
@@ -24,7 +24,7 @@ export class UserService {
         return user;
     }
 
-    async save(data: CreateChildDto): Promise<number>{
+    async save(data: CreateUserDto): Promise<number>{
         const user = this.UserRepository.create(data)
         try{
             if (user.parent_id == null || user.parent_id == 0) user.parent_id = null // parent_id==null인 경우 사용자 본인
