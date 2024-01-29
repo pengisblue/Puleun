@@ -13,12 +13,11 @@ import { SentenceModule } from './sentence/sentence.module';
 import { AlarmModule } from './alarm/alarm.module';
 import { CalenderCodeModule } from './calender-code/calender-code.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { FileGateway } from './file/file.gateway';
-import { FileController } from './file/file.controller';
+import { FileModule } from './file/file.module';
 import { SocketModule } from './socket/socket.module';
 
 @Module({
-  imports: [UserModule, PotModule, 
+  imports: [UserModule, PotModule, FileModule,
     PotStateModule, SpeciesModule, UserLoginModule, DeviceModule, 
     CalenderModule, TalkModule, SentenceModule, AlarmModule, CalenderCodeModule,
     TypeOrmModule.forRoot({
@@ -33,7 +32,7 @@ import { SocketModule } from './socket/socket.module';
     }),
     SocketModule,
   ],
-  controllers: [AppController, FileController],
-  providers: [AppService, FileGateway],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
