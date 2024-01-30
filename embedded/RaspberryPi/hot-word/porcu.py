@@ -83,8 +83,9 @@ def main():
     # 환경설정
     args.access_key=access_key
     args.keyword_paths=['베리야_ko_windows_v3_0_0.ppn', '푸른아_ko_windows_v3_0_0.ppn'] # 호출어 추가 시 이 부분이 바뀌어야함, 윈도우용
-    # args.keyword_paths=['방울아_ko_raspberry-pi_v3_0_0.ppn', '푸른아_ko_raspberry-pi_v3_0_0.ppn'] # 라즈베리파이 용
-    args.model_path='porcupine_params_ko.pv' # 한국어 파일
+    # args.keyword_paths=['Desktop/plantz/hot-word/방울아_ko_raspberry-pi_v3_0_0.ppn', 'Desktop/plantz/hot-word/푸른아_ko_raspberry-pi_v3_0_0.ppn'] # 라즈베리파이 용
+    # args.model_path='Desktop/plantz/hot-word/porcupine_params_ko.pv' # 한국어 파일 라즈베리용
+    args.model_path='porcupine_params_ko.pv'
 
     if args.show_audio_devices:
         for i, device in enumerate(PvRecorder.get_available_devices()):
