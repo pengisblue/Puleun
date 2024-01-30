@@ -1,13 +1,13 @@
-FROM nginx
-
-RUN mkdir /frontend
+FROM node:20.10.0-alpine
 
 WORKDIR /frontend
 
-RUN mkdir ./build
+COPY package.json .
 
-ADD ./build ./build
+RUN npm install
 
-EXPOSE 80
+COPY . .
 
-CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 3000
+
+CMD ["npm", "start"]
