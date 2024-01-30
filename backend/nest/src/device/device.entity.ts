@@ -1,6 +1,7 @@
-import { Entity, PrimaryColumn, Column, ManyToOne, PrimaryGeneratedColumn, OneToOne } from 'typeorm';
+import { Entity, PrimaryColumn, Column, ManyToOne, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm';
 import { UserLogin } from '../user-login/user-login.entity';
 import { Pot } from '../pot/pot.entity';
+import { User } from 'src/user/user.entity';
 
 @Entity()
 export class Device {
@@ -13,15 +14,18 @@ export class Device {
   @Column({ type: 'tinyint', nullable: false })
   empty_FG: boolean;
 
-  @ManyToOne(() => UserLogin)
-  @Column({type: 'int', name: 'user_id', nullable: false})
-  user: UserLogin;
+  @ManyToOne(() => User, (user) => user.user_id)
+  @JoinColumn({name:'user_id'})
+  user: User;
+
+  @Column({ nullable: false })
+  user_id: number
 
   @OneToOne(() => Pot)
-  @Column({type: 'int', name: 'pot_id', nullable: false})
+  @JoinColumn({ name: 'pot_id' })
   pot: Pot;
 
-
-
+  @Column({type: 'int', nullable: false})
+  pot_id: number;
   // Other columns and relationships can be added as needed.
 }

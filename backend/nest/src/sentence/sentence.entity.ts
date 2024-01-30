@@ -20,7 +20,10 @@ export class Sentence {
 
   @ManyToOne(() => Talk)
   @JoinColumn({name: 'talk_id'})
-  talk_id: Talk;
+  talk: Talk;
+
+  @Column({type: 'int', nullable: false})
+  talk_id: number;
 
   // Other columns and relationships can be added as needed.
 }
