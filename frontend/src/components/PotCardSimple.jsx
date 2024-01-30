@@ -16,7 +16,7 @@ export default function PotSimple({ kidName, kidImgUrl, potName, potImgUrl }) {
           <div className="basis-1/3 overflow-hidden rounded-full border border-amber-500">
             <UserProfileImage imgUrl={kidImgUrl} />
           </div>
-          <div className="basis-3/4">{potName}</div>
+          <div className="basis-3/4 text-">{potName}</div>
         </div>
       </div>
     </PotCardSimpleStyle>

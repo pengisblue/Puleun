@@ -12,13 +12,13 @@ import PotAddSimple from "./PotAddSimple";
 const userList = [
   {
     userId: 1,
-    userName: "성준"
+    userName: "성준",
   },
   {
     userId: 2,
-    userName: "성주성주성주성주성2"
-  }
-]
+    userName: "성주성주성주성주성2",
+  },
+];
 
 const potList = [
   {
@@ -55,8 +55,8 @@ const potList = [
 
 export default function PotList() {
   return (
-    <div className="pt-16">
-      <header className="mx-6 my-4 flex justify-between items-center">
+    <div className="">
+      <header className="m-2 flex items-center justify-between">
         <h1 className="text-title">화분 목록</h1>
         <div className="flex gap-2">
           <img src={plus} alt="plus" className="w-7" />
@@ -64,8 +64,12 @@ export default function PotList() {
         </div>
       </header>
 
-      <div>
-        <select className="form-select">
+      {/* 주인 선택 필터 */}
+      <div className="mx-auto mt-8 w-11/12">
+        <select
+          className="ms-auto block w-full max-w-60 rounded-md border-gray-300 text-gray-600 shadow-sm
+        focus:border-amber-300 focus:ring focus:ring-amber-200 focus:ring-opacity-50"
+        >
           <option>전체</option>
           {userList.map((user) => (
             <option key={user.userId}>{user.userName}</option>
@@ -74,7 +78,7 @@ export default function PotList() {
       </div>
 
       {/* 화분 카드 */}
-      <div className="mx-auto my-6 flex w-10/12 flex-wrap">
+      <div className="my-6 grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-4 place-items-center">
         {potList.map((pot) => (
           <PotCardSimple key={pot.potId} {...pot} />
         ))}
