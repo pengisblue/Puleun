@@ -1,5 +1,5 @@
 import "./App.css";
-import PotList from "./components/PotList";
+import PotList from "./components/Pots/PotList";
 
 function App() {
   return (

@@ -1,9 +1,9 @@
-import PotCardSimple from "./PotCardSimple";
-import plus from "../asset/plus_slate.svg";
-import cog from "../asset/cog-8-tooth.svg";
-import PotAddSimple from "./PotAddSimple";
-import { potSimpleList } from "../test/potList";
-import { userList } from "../test/userList";
+import PotSimpleCard from "./PotSimpleCard";
+import PotAddSimpleCard from "./PotAddSimpleCard";
+import plus from "../../asset/plus_slate.svg";
+import cog from "../../asset/cog-8-tooth.svg";
+import { potSimpleList } from "../../test/potList";
+import { userList } from "../../test/userList";
 import { useEffect, useState } from "react";
 
 // 필요한 데이터 = [
@@ -77,9 +77,9 @@ export default function PotDetailList() {
       {/* 화분 카드 */}
       <div className="my-6 grid w-full grid-cols-2 place-items-center md:grid-cols-3 lg:grid-cols-4">
         {filteredPots.map((pot) => (
-          <PotCardSimple key={pot.potId} {...pot} />
+          <PotSimpleCard key={pot.potId} {...pot} />
         ))}
-        <PotAddSimple />
+        <PotAddSimpleCard />
       </div>
     </div>
   );
