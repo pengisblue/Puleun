@@ -22,14 +22,13 @@ import { useEffect, useState } from "react";
 //         화분 이름,
 //         화분 사진,
 //         주인 아이디,
-//         주인 이름,
 //         주인 사진
 //       },
 //     ]
 //   }
 // ]
 
-export default function PotDetailList() {
+export default function PotList() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [filteredPots, setFilteredPots] = useState([]);
 

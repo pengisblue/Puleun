@@ -1,10 +1,15 @@
-import SimpleCard from "../UI/SimpleCard";
-import PotProfileImage from "../UI/PotProfileImage";
-import UserProfileImage from "../UI/UserProfileImage";
+import PotProfileImage from "./PotProfileImage";
+import BaseSimpleCard from "../UI/BaseSimpleCard";
+import UserProfileImage from "../Users/UserProfileImage";
 
-export default function PotSimple({ userName, userImgUrl, potName, potImgUrl }) {
+export default function PotSimpleCard({
+  userName,
+  userImgUrl,
+  potName,
+  potImgUrl,
+}) {
   return (
-    <SimpleCard>
+    <BaseSimpleCard>
       <div className="flex h-full flex-col justify-evenly">
         {/* 화분 사진 */}
         <div className="mx-auto w-full overflow-hidden rounded-lg">
@@ -16,9 +21,9 @@ export default function PotSimple({ userName, userImgUrl, potName, potImgUrl }) 
           <div className="basis-1/3 overflow-hidden rounded-full border border-amber-500">
             <UserProfileImage imgUrl={userImgUrl} />
           </div>
-          <div className="basis-3/4 text-">{potName}</div>
+          <div className="text- basis-3/4">{potName}</div>
         </div>
       </div>
-    </SimpleCard>
+    </BaseSimpleCard>
   );
 }

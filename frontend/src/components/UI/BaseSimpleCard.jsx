@@ -1,4 +1,4 @@
-export default function PotCardStyle(props) {
+export default function BaseSimpleCard(props) {
   return (
     <div
       className="mx-3 my-4 aspect-[3/4] w-36 sm:w-48 rounded-lg bg-emerald-100 px-4 py-2

@@ -1,4 +1,4 @@
-export default function PotCardDetailStyle(props) {
+export default function BaseDetailCard(props) {
   return (
     <div
       className="m-4 aspect-[16/9] w-80  rounded-xl bg-amber-50 py-3 px-4
