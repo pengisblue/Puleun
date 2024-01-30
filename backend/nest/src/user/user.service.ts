@@ -2,8 +2,8 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateUserDto, UpdateUserDto } from './user-res.dto';
-import { UserListDto } from './user-req.dto';
+import { CreateUserDto, UpdateUserDto } from './user-req.dto';
+import { UserDetailDto, UserListDto } from './user-res.dto';
 
 @Injectable()
 export class UserService {
@@ -17,7 +17,7 @@ export class UserService {
         return child;
     }
 
-    async find(user_id: number): Promise<User>{
+    async find(user_id: number): Promise<UserDetailDto>{
         const user = await this.UserRepository.findOneBy({user_id})
         
         if (!user) throw new HttpException('Check User_Id', HttpStatus.BAD_REQUEST)

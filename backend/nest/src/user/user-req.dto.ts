@@ -1,28 +1,43 @@
+import { IsDate, IsNumber, IsOptional, IsString } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
+import { Type } from "class-transformer";
 
-export class UserListDto{
-    @ApiProperty()
-    user_id: number;
 
-    @ApiProperty()
+export class CreateUserDto{
+    @ApiProperty({example:'박지예'})
+    @IsString()
     nickname: string;
+
+    @ApiProperty({example:'1997-02-04'})
+    @IsDate()
+    @Type(() => Date)
+    birth_DT: Date;
+
+    @ApiProperty({example:'1', description:'1 for male'})
+    @IsString()
+    gender: string;
+
+    @ApiProperty({example:0, description:'if user is parent'})
+    @IsNumber()
+    @Type(()=>Number)
+    parent_id: number;
 
     profile_img_url?: string="";
 }
 
-export class UserDetailDto{
-    @ApiProperty()
-    user_id: number;
-
-    @ApiProperty()
+export class UpdateUserDto{
+    @ApiProperty({example:'박지예'})
+    @IsString()
     nickname: string;
 
-    @ApiProperty()
+    @ApiProperty({example:'1997-02-04'})
+    @IsDate()
+    @Type(() => Date)
     birth_DT: Date;
 
-    @ApiProperty()
+    @ApiProperty({example:'1', description:'1 for male'})
+    @IsString()
     gender: string;
 
     profile_img_url?: string="";
-
 }

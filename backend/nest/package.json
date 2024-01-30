@@ -35,7 +35,7 @@
     "rxjs": "^7.8.1",
     "socketio-file-upload": "^0.7.3",
     "start": "^5.1.0",
-    "typeorm": "^0.3.19"
+    "typeorm": "^0.3.20"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",

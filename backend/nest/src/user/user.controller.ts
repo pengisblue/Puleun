@@ -1,10 +1,10 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
-import { CreateUserDto, UpdateUserDto } from './user-res.dto';
+import { CreateUserDto, UpdateUserDto } from './user-req.dto';
 import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ApiExtraModels } from "@nestjs/swagger";
-import { UserListDto } from './user-req.dto';
+import { UserDetailDto, UserListDto } from './user-res.dto';
 
 @Controller('user')
 @ApiTags('User')
@@ -21,8 +21,8 @@ export class UserController {
     
     @Get(':user_id')
     @ApiOperation({ summary: 'user_id로 유저 조회' })
-    @ApiOkResponse({ type:User, description:'유저 상세 조회' })
-    async find(@Param('user_id') user_id:number):Promise<User>{
+    @ApiOkResponse({ type:UserDetailDto, description:'유저 상세 조회' })
+    async find(@Param('user_id') user_id:number):Promise<UserDetailDto>{
         return this.userService.find(user_id)
     }
 
