@@ -1,7 +1,7 @@
 import socketio
 from dotenv import load_dotenv
 import os
-from embedded.RaspberryPi.src.bluetooth import read_bluetooth_data
+
 
 load_dotenv()
 
@@ -19,6 +19,11 @@ def connect():
 def disconnect():
     print('Disconnect from server')
 
-if __name__ == '__main__':
+if __name__ == '__main__': # 메인 실행문
     server_url = os.getenv('SERVER_URL')
     sio.connect(server_url)
+    while True:
+        pass
+
+
+
