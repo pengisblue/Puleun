@@ -1,10 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Pot } from './pot.entity';
-import { Equal, IsNull, Not, Repository } from 'typeorm';
-import { CollectionDto, CreatePotDto, SelectPotDto, UpdatePotDto } from './pot.dto';
-import { isDate } from 'util/types';
-
+import { IsNull, Not, Repository } from 'typeorm';
+import { CollectionDto, CreatePotDto, UpdatePotDto } from './pot.dto';
 
 @Injectable()
 export class PotService {
@@ -42,7 +40,7 @@ export class PotService {
         const collection = await this.potRepository.find({
             withDeleted: true,
             where: {
-                deletedAt: Not(IsNull()),
+                collection_FG: true,
                 user_id: user_id
             }
         });
@@ -56,7 +54,7 @@ export class PotService {
             where: {
                 user_id,
                 pot_id,
-                deletedAt: Not(IsNull())
+                collection_FG: true,
             }
         });
         console.log(collectionPot);

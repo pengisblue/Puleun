@@ -16,11 +16,8 @@ export class UserLogin {
   user_password: string;
 
   @OneToOne(() => User)
-  @JoinColumn()
+  @JoinColumn({name: 'user_id'})
   user: User;
-
-  @ManyToOne(() => User, { nullable: true })
-  parent: User;
 
   // Other columns and relationships can be added as needed.
 }
