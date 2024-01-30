@@ -1,6 +1,8 @@
 // ormconfig.ts 파일 내용 예시
 import { DataSourceOptions } from 'typeorm';
-import 'dotenv/config'; // dotenv를 사용하여 환경 변수 로드
+import * as dotenv from 'dotenv';
+
+dotenv.config(); // dotenv 설정
 
 const typeOrmConfig: DataSourceOptions = {
   type: 'mysql',

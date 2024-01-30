@@ -37,3 +37,16 @@
 |chore|빌드 업무 수정, 패키지 매니저 수정, 패키지 관리자 구성 등 업데이트, <br/>Production Code 변경 없음|
 |rename|파일 혹은 폴더명을 수정하거나 옮기는 작업만 수행한 경우|
 |remove|파일을 삭제하는 작업만 수행한 경우|
+
+
+### .env 파일 작성법
+nest 폴더에 .env 파일을 만든다.
+```
+DB_HOST=
+DB_PORT=
+DB_USERNAME=
+DB_PASSWORD=
+DB_DATABASE=
+
+GPT_API_KEY=
+```

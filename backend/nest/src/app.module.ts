@@ -15,22 +15,14 @@ import { CalenderCodeModule } from './calender-code/calender-code.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FileModule } from './file/file.module';
 import { SocketModule } from './socket/socket.module';
+import typeOrmConfig from './ormconfig';
 
 @Module({
   imports: [UserModule, PotModule, FileModule,
     PotStateModule, SpeciesModule, UserLoginModule, DeviceModule, 
     CalenderModule, TalkModule, SentenceModule, AlarmModule, CalenderCodeModule,
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '1234',
-      database: 'test',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true, // 개발 환경에서만 사용 (production에서는 비활성화 권장)
-    }),
-    SocketModule,
+    TypeOrmModule.forRoot(typeOrmConfig),
+    SocketModule
   ],
   controllers: [AppController],
   providers: [AppService],
