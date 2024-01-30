@@ -27,7 +27,6 @@ export class User {
   parent_id: number
 
   @OneToMany(() => Pot, (pot) => pot.user_id)
-  @JoinColumn()
   Pots: Pot[];
 
   // Other columns and relationships can be added as needed.
