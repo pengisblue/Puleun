@@ -17,15 +17,25 @@ import { FileModule } from './file/file.module';
 import { SocketModule } from './socket/socket.module';
 
 @Module({
-  imports: [UserModule, PotModule, FileModule,
-    PotStateModule, SpeciesModule, UserLoginModule, DeviceModule, 
-    CalenderModule, TalkModule, SentenceModule, AlarmModule, CalenderCodeModule,
+  imports: [
+    UserModule,
+    PotModule,
+    FileModule,
+    PotStateModule,
+    SpeciesModule,
+    UserLoginModule,
+    DeviceModule,
+    CalenderModule,
+    TalkModule,
+    SentenceModule,
+    AlarmModule,
+    CalenderCodeModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
+      host: 'i10e101.p.ssafy.io',
       port: 3306,
-      username: 'root',
-      password: 'qeqe2w2',
+      username: 'pjt1',
+      password: 'dlxldpdl101',
       database: 'test',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true, // 개발 환경에서만 사용 (production에서는 비활성화 권장)
