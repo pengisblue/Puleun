@@ -3,7 +3,7 @@ import PotProfileImage from "./PotProfileImage";
 
 export default function PotDetail({
   potId,
-  kidName,
+  userName,
   potName,
   potImgUrl,
   potSpecies,
@@ -36,8 +36,8 @@ export default function PotDetail({
       <div className="flex flex-col gap-1">
         <h1 className="flex flex-wrap text-lg font-bold">
           <span className="me-2">
-            {kidName}
-            {selectPostposition(kidName)}
+            {userName}
+            {selectPostposition(userName)}
           </span>
           <span>{potName}</span>
         </h1>

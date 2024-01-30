@@ -1,59 +1,53 @@
-// import PotCardDetail from "./PotCardDetail";
 import PotCardSimple from "./PotCardSimple";
 import plus from "../asset/plus_slate.svg";
 import cog from "../asset/cog-8-tooth.svg";
-import potImg1 from "../test/plant1.png";
-import potImg2 from "../test/plant2.png";
-import kidImg1 from "../test/kid1.png";
-import kidImg2 from "../test/kid2.png";
-// import PotAddDetail from "./PotAddDetail";
 import PotAddSimple from "./PotAddSimple";
+import { potSimpleList } from "../test/potList";
+import { userList } from "../test/userList";
+import { useEffect, useState } from "react";
 
-const userList = [
-  {
-    userId: 1,
-    userName: "성준",
-  },
-  {
-    userId: 2,
-    userName: "성주성주성주성주성2",
-  },
-];
+// 필요한 데이터 = [
+//   {
+//     유저 리스트: [
+//       {
+//         유저 아이디,
+//         유저 이름
+//       },
+//     ]
+//   },
+//   {
+//     화분 리스트: [
+//       {
+//         화분 아이디,
+//         화분 이름,
+//         화분 사진,
+//         주인 아이디,
+//         주인 이름,
+//         주인 사진
+//       },
+//     ]
+//   }
+// ]
 
-const potList = [
-  {
-    potId: 1,
-    kidImgUrl: kidImg1,
-    kidName: "성준",
-    potName: "방울이",
-    potImgUrl: potImg1,
-    potSpecies: "방울토마토",
-    nowTemprature: 22,
-    tempratureStatus: "적정",
-    nowMoisture: 50,
-    moistureStatus: "적정",
-    daysSinceWatering: 3,
-    plantDate: "2024-01-12",
-    daysSincePlanting: 14,
-  },
-  {
-    potId: 2,
-    kidImgUrl: kidImg2,
-    kidName: "성주성주성주성주성2",
-    potName: "방울방울방울방울방울",
-    potImgUrl: potImg2,
-    potSpecies: "방울토마토",
-    nowTemprature: 22,
-    tempratureStatus: "적정",
-    nowMoisture: 50,
-    moistureStatus: "적정",
-    daysSinceWatering: 3,
-    plantDate: "2024-01-12",
-    daysSincePlanting: 14,
-  },
-];
+export default function PotDetailList() {
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [filteredPots, setFilteredPots] = useState([]);
 
-export default function PotList() {
+  useEffect(() => {
+    if (selectedUser) {
+      setFilteredPots(
+        potSimpleList.filter((pot) => pot.userId === selectedUser),
+      );
+    } else {
+      setFilteredPots(potSimpleList);
+    }
+  }, [selectedUser]);
+
+  const handleUserChange = (event) => {
+    console.log(event.target.value);
+    setSelectedUser(Number(event.target.value));
+  };
+
   return (
     <div className="">
       <header className="m-2 flex items-center justify-between">
@@ -67,19 +61,22 @@ export default function PotList() {
       {/* 주인 선택 필터 */}
       <div className="mx-auto mt-8 w-11/12">
         <select
+          onChange={handleUserChange}
           className="ms-auto block w-full max-w-60 rounded-md border-gray-300 text-gray-600 shadow-sm
         focus:border-amber-300 focus:ring focus:ring-amber-200 focus:ring-opacity-50"
         >
-          <option>전체</option>
+          <option value="">전체</option>
           {userList.map((user) => (
-            <option key={user.userId}>{user.userName}</option>
+            <option key={user.userId} value={user.userId}>
+              {user.userName}
+            </option>
           ))}
         </select>
       </div>
 
       {/* 화분 카드 */}
-      <div className="my-6 grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-4 place-items-center">
-        {potList.map((pot) => (
+      <div className="my-6 grid w-full grid-cols-2 place-items-center md:grid-cols-3 lg:grid-cols-4">
+        {filteredPots.map((pot) => (
           <PotCardSimple key={pot.potId} {...pot} />
         ))}
         <PotAddSimple />
