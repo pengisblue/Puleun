@@ -1,9 +1,10 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
-import { CreateUserDto, UpdateUserDto, UserListDto } from './user.dto';
+import { CreateUserDto, UpdateUserDto } from './user-res.dto';
 import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ApiExtraModels } from "@nestjs/swagger";
+import { UserListDto } from './user-req.dto';
 
 @Controller('user')
 @ApiTags('User')
