@@ -44,7 +44,7 @@ ENV NODE_ENV production
 
 # Custom
 
-ENV DB_HOST localhost
+ENV DB_HOST 172.17.0.3
 ENV DB_PORT 3306
 ENV DB_USERNAME pjt1
 ENV DB_PASSWORD dlxldpdl101
