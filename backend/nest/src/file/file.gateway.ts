@@ -2,7 +2,7 @@ import { OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGa
 import { Server, Socket } from 'socket.io';
 import * as siofu from 'socketio-file-upload';
 
-@WebSocketGateway(4000, {cors: 'localhost:3000'})
+@WebSocketGateway(4000, {cors: 'i10e101.p.ssafy.io:3000'})
 export class FileGateway implements OnGatewayConnection, OnGatewayDisconnect{
   @WebSocketServer() server: Server;
 
