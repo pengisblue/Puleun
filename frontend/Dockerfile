@@ -1,22 +1,16 @@
 # Base image
-FROM node:20.10.0
+FROM node:20.10.0-alpine As build
 
-# Create app directory
-WORKDIR /backend
+WORKDIR /frontend
 
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-COPY package*.json ./
+COPY package.json .
 
-# Install app dependencies
 RUN npm install
 
-# Bundle app source
 COPY . .
 
-EXPOSE 80
-
-# Creates a "dist" folder with the production build
 RUN npm run build
 
-# Start the server using the production build
-CMD [ "node", "dist/src/main.js" ]
+FROM nginx-alpine
+
+COPY --from=build /frontend/build /usr/share/nginx/html
