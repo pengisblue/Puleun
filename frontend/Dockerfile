@@ -1,13 +1,22 @@
-FROM node:20.10.0-alpine
+# Base image
+FROM node:20.10.0
 
-WORKDIR /frontend
+# Create app directory
+WORKDIR /backend
 
-COPY package.json .
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+COPY package*.json ./
 
+# Install app dependencies
 RUN npm install
 
+# Bundle app source
 COPY . .
 
 EXPOSE 80
 
-CMD ["npm", "start"]
+# Creates a "dist" folder with the production build
+RUN npm run build
+
+# Start the server using the production build
+CMD [ "node", "dist/src/main.js" ]
