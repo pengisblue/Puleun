@@ -2,7 +2,12 @@ import socketio
 from dotenv import load_dotenv
 import os
 import requests
-
+import base64
+import time
+import sys
+from stt import record_wav, speech_to_text
+sys.path.append('../hot-word')
+import porcu
 
 load_dotenv()
 
@@ -11,6 +16,7 @@ sio = socketio.Client()
 pot_id = None # 디바이스 id
 is_owner = False # 주인 연결 여부
 is_connected = False # 백과 연결 여부
+talk_id = None # 대화 번호
 
 # 라즈베리와 백엔드 연결
 @sio.event
@@ -49,9 +55,26 @@ def emotion(): # 표정 상태값
 
 #--------------- 보내기 ---------------
 
-@sio.on('stt')
+def hot_word(): # 호출어 인식
+    talk_start = porcu()
+    sio.emit('hot_word', {
+        'talk_start': talk_start,
+    })
+
 def stt(): # 텍스트, 음성파일
-    pass
+    wav_file_path = "recorded_audio.wav"
+    record_wav(wav_file_path)
+    transcript = speech_to_text(wav_file_path)
+
+    # WAV 파일을 Base64 인코딩하여 전송
+    with open(wav_file_path, "rb") as wav_file:
+        encoded_wav = base64.b64encode(wav_file.read()).decode('utf-8')
+
+    sio.emit('stt', {
+        'talk_id': talk_id, # 대화 번호
+        'text': transcript, # STT text
+        'file': encoded_wav # wav file
+    })
 
 
 @sio.on('')
