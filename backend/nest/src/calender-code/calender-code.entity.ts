@@ -1,4 +1,5 @@
-import { Entity, PrimaryColumn, Column } from 'typeorm';
+import { Calender } from 'src/calender/calender.entity';
+import { Entity, PrimaryColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 
 @Entity()
 export class CalenderCode {
@@ -7,6 +8,4 @@ export class CalenderCode {
 
   @Column({ length: 20, nullable: false })
   code_detail: string;
-
-  // Other columns and relationships can be added as needed.
 }
