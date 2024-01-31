@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { PotService } from './pot.service';
 import { Pot } from './pot.entity';
-import { CollectionDto, CreatePotDto, UpdatePotDto } from './pot.dto';
+import { CollectionDto, CreatePotDto, SelectPotDto, UpdatePotDto } from './pot.dto';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('pot')
@@ -19,8 +19,9 @@ export class PotController {
     @Get(':pot_id')
     @ApiOperation({ summary: "화분(식물) 상세 조회"})
     @ApiOkResponse({ type:Pot, description:'선택한 화분의 모든 정보 조회' })
-    async potDetail(@Param('pot_id') pot_id: number): Promise<Pot>{
-        return this.potService.potDetail(pot_id);
+    async potDetail(@Param('pot_id') pot_id: number): Promise<SelectPotDto>{
+        console.log(await this.potService.potDetail(pot_id));
+        return await this.potService.potDetail(pot_id);
     }
 
     @Post()
