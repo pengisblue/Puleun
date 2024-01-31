@@ -7,4 +7,7 @@ import { Repository } from 'typeorm';
 export class CalenderService {
     constructor(@InjectRepository(Calender) private readonly calenderRepository: Repository<Calender>){}
     
+    async findAll(): Promise<Calender[]>{
+        return await this.calenderRepository.find();
+    }
 }

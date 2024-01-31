@@ -25,10 +25,7 @@ export class Alarm {
   @Column({ type: 'tinyint', nullable: true })
   routine: number;
 
-  @ManyToOne(() => Pot, pot => pot.pot_id, {cascade: ['update', 'remove']})
+  @ManyToOne(() => Pot, pot => pot.pot_id, {onDelete: 'CASCADE', onUpdate: 'CASCADE'})
   @JoinColumn({name: "pot_id"})
   pot_id: number;
-
-
-  // Other columns and relationships can be added as needed.
 }

@@ -3,30 +3,19 @@ import { IsDate, IsInt, IsOptional, IsString, Length } from "class-validator";
 import { Pot } from "./pot.entity";
 
 export class CreatePotDto {
+    @IsInt()
+    @ApiProperty()
+    user_id: number;
+
     @IsString()
     @Length(1,10)
-    @ApiProperty()
+    @ApiProperty({example: '푸른'})
     pot_name: string;
 
     @IsString()
     @Length(1,10)
-    @ApiProperty()
+    @ApiProperty({example: '소나무'})
     pot_species: string;
-
-    @IsDate()
-    @IsOptional()
-    @ApiProperty()
-    createdAt ? : Date
-
-    @IsDate()
-    @IsOptional()
-    @ApiProperty()
-    deletedAt ? : Date
-
-    @IsDate()
-    @IsOptional()
-    @ApiProperty()
-    updatedAt ? : Date
     
     @IsInt()
     @IsOptional()
@@ -52,11 +41,6 @@ export class CreatePotDto {
     @Length(1, 200)
     @ApiProperty()
     pot_img_url: string;
-
-    @IsInt()
-    @IsOptional()
-    @ApiProperty()
-    happy_cnt ? : number;
 }
 
 export class UpdatePotDto{
@@ -97,7 +81,7 @@ export class UpdatePotDto{
 
     @IsString()
     @Length(1, 200)
-    @ApiProperty()
+    @ApiProperty({example: 'noimage.jpg'})
     pot_img_url: string;
 }
 
