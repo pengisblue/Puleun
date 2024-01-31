@@ -14,12 +14,17 @@ export class SocketService {
         private readonly potStateRepository: Repository<PotState>,
     ){}
 
-    // 온도,습도 DB 저장
+    async login(serialNum: string): Promise<number>{
+      return 1;
+    }
+
+    /** 온도,습도 DB 저장 */
     async saveState(inputDto: CreatePotStateDto): Promise<number>{
         await this.potStateRepository.save(inputDto)
         return 1;
     }
 
+    /** stt 받아서 tts로 return */
     async stt(txt: string, base64Data: string): Promise<string>{
         // txt 파일 저장 -> redis
 
@@ -41,4 +46,7 @@ export class SocketService {
         
         return Buffer.from(content).toString('base64')
     }
+
+  /** 페이지 요청시 온습도 재측정 요청 */
+  async refresh(){}
 }

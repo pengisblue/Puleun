@@ -24,8 +24,9 @@ export class SocketGateway {
   }
 
   @SubscribeMessage('login')
-  handleClientConnect(@ConnectedSocket() client: Socket, @MessageBody('message') message: JSON) {
-    client.emit('message',{ result: `${message} accepted`})
+  handleClientConnect(@ConnectedSocket() client: Socket, @MessageBody('serialNum') serialNum: string){
+    // this.socketService.login(serialNum)
+    client.emit('login-result',{ result: `${serialNum} accepted`})
   }
 
   @SubscribeMessage('pot-state')
