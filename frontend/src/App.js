@@ -1,9 +1,12 @@
 import "./App.css";
 import PotList from "./components/Pots/PotList";
+import CreatePot from "./components/Pots/CreatePot";
+// import Example from "./components/Example";
 
 function App() {
   return (
-    <div className="bg-amber-overlay min-h-screen px-6 pt-16">
+    <div className="min-h-screen bg-amber-overlay px-6 pt-16">
+      <CreatePot />
       <PotList />
     </div>
   );
