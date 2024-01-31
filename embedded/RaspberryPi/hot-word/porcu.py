@@ -180,7 +180,8 @@ def main():
         porcupine.delete()
         if wav_file is not None:
             wav_file.close()
-
+    
+    return 1
 
 if __name__ == '__main__':
     main()
