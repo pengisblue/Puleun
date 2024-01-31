@@ -6,27 +6,17 @@ import { potSimpleList } from "../../test/potList";
 import { userList } from "../../test/userList";
 import { useEffect, useState } from "react";
 
-// 필요한 데이터 = [
-//   {
-//     유저 리스트: [
-//       {
-//         유저 아이디,
-//         유저 이름
-//       },
-//     ]
-//   },
-//   {
-//     화분 리스트: [
-//       {
-//         화분 아이디,
-//         화분 이름,
-//         화분 사진,
-//         주인 아이디,
-//         주인 사진
-//       },
-//     ]
-//   }
-// ]
+// api1 = {
+//   화분 아이디,
+//   화분 이름,
+//   화분 사진,
+//   주인 아이디,
+//   주인 사진
+// },
+// api2 = {
+//   유저 아이디,
+//   유저 이름
+// }
 
 export default function PotList() {
   const [selectedUser, setSelectedUser] = useState(null);
