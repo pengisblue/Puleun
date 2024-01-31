@@ -29,5 +29,4 @@ export class UserDetailDto{
     gender: string;
 
     profile_img_url?: string="";
-
 }
