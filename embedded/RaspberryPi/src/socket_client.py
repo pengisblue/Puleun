@@ -8,6 +8,10 @@ load_dotenv()
 
 sio = socketio.Client()
 
+pot_id = None # 디바이스 id
+is_owner = False # 주인 연결 여부
+is_connected = False # 백과 연결 여부
+
 # 라즈베리와 백엔드 연결
 @sio.event
 def connect():
@@ -20,11 +24,39 @@ def connect():
 def disconnect():
     print('Disconnect from server')
 
-# 얘도 이벤트 핸들러가 필요한가? ㄴㄴ
-def tts(): # 음성파일 받기
-    mp3 = requests.get("http://192.168.30.209:3000/file/ETA.mp3")
-    goToServer = requests.post("http://192.168.209.194:3000/file")
-    open("sample.mp3", "wb").write(mp3.content)
+
+# def tts_http(): # http로 음성파일 받기
+#     mp3 = requests.get("http://192.168.30.209:3000/file/ETA.mp3")
+#     goToServer = requests.post("http://192.168.209.194:3000/file")
+#     open("sample.mp3", "wb").write(mp3.content)
+
+#---------------- 받기 --------------
+
+@sio.on('tts')
+def tts(): # 음성 파일 받기
+    pass
+
+
+@sio.on('')
+def refresh(): # 새로고침 신호
+    pass
+
+
+@sio.on('')
+def emotion(): # 표정 상태값
+    pass
+
+
+#--------------- 보내기 ---------------
+
+@sio.on('stt')
+def stt(): # 텍스트, 음성파일
+    pass
+
+
+@sio.on('')
+def pot_state(): # 아두이노 측정값 + 물줬을때
+    pass
 
 
 
