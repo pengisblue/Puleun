@@ -5,6 +5,7 @@ import requests
 import base64
 import time
 import pygame
+import serial
 
 
 load_dotenv()
@@ -89,6 +90,11 @@ def owner_change(data): # 주인 변했을때 == 주인이 생겼을때/없어�
     is_owner = data
     print("owner status changed")
 
+
+@sio.on('')
+def get_talk_id(talk_id):
+    talk_id = talk_id
+
 #--------------- 보내기 ---------------
 
 @sio.on('stt')
@@ -96,9 +102,18 @@ def stt(): # 텍스트, 음성파일
     pass
 
 
-@sio.on('')
+
 def pot_state(): # 아두이노 측정값 + 물줬을때
-    pass
+    # 시리얼 통신 객체 생성
+    ser = serial.Serial('/dev/ttyUSB0', 9600)  # 아두이노와의 통신 속도에 맞게 설정
+
+    if ser.in_waiting > 0:
+        sensor_value = ser.readline().decode('utf-8').strip()
+        print(f'측정값: {sensor_value}')
+
+        # Socket.IO로 데이터 전송
+        sio.emit('sensor_data', {'value': sensor_value})
+
 
 
 
