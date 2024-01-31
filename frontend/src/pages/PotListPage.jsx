@@ -1,9 +1,9 @@
-import PotSimpleCard from "./PotSimpleCard";
-import PotAddSimpleCard from "./PotAddSimpleCard";
-import plus from "../../asset/plus_slate.svg";
-import cog from "../../asset/cog-8-tooth.svg";
-import { potSimpleList } from "../../test/potList";
-import { userList } from "../../test/userList";
+import PotSimpleCard from "../components/Pots/PotSimpleCard";
+import PotAddSimpleCard from "../components/Pots/PotAddSimpleCard";
+import plus from "../asset/plus_slate.svg";
+import cog from "../asset/cog-8-tooth.svg";
+import { potSimpleList } from "../test/potList";
+import { userList } from "../test/userList";
 import { useEffect, useState } from "react";
 
 // api1 = {
@@ -18,7 +18,7 @@ import { useEffect, useState } from "react";
 //   유저 이름
 // }
 
-export default function PotList() {
+export default function PotListPage() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [filteredPots, setFilteredPots] = useState([]);
 
