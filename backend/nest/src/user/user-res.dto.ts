@@ -1,12 +1,17 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Exclude, Expose } from "class-transformer";
 
+@Exclude()
 export class UserListDto{
     @ApiProperty()
+    @Expose()
     user_id: number;
 
     @ApiProperty()
+    @Expose()
     nickname: string;
 
+    @Expose()
     profile_img_url?: string="";
 }
 

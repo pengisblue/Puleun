@@ -2,13 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Pot } from './pot.entity';
 import { IsNull, Not, Repository } from 'typeorm';
-import { CollectionDto, CreatePotDto, UpdatePotDto } from './pot.dto';
+import { CollectionDto, CreatePotDto, SelectPotDto, UpdatePotDto } from './pot.dto';
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class PotService {
     constructor(
         @InjectRepository(Pot)
         private readonly potRepository: Repository<Pot>,
+        // @InjectRepository(SelectPotDto)
+        // private readonly dtoRepository: Repository<SelectPotDto>,
     ){}
         
     async findAll(): Promise<Pot[]>{
@@ -17,8 +20,14 @@ export class PotService {
         });
     }   
 
-    async potDetail(pot_id: number): Promise<Pot>{
-        return await this.potRepository.findOneBy({pot_id});
+    async potDetail(pot_id: number): Promise<SelectPotDto>{
+        const dto = await this.potRepository.createQueryBuilder('pot')
+            .where({pot_id: pot_id, collection_FG: false})
+            // pot.user AS user라는 뜻
+            .leftJoinAndSelect('pot.user', 'user', 'user.user_id = pot.user_id')
+            .select(['pot', 'user.user_id', 'user.nickname'])
+            .getOne();
+        return plainToClass(SelectPotDto, dto);
     }
 
     async save(potDto: Pot) {
