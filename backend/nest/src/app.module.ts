@@ -11,16 +11,17 @@ import { CalenderModule } from './calender/calender.module';
 import { TalkModule } from './talk/talk.module';
 import { SentenceModule } from './sentence/sentence.module';
 import { AlarmModule } from './alarm/alarm.module';
-import { CalenderCodeModule } from './calender-code/calender-code.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FileModule } from './file/file.module';
 import { SocketModule } from './socket/socket.module';
 import { ConfigModule } from '@nestjs/config';
+import { TtsModule } from './tts/tts.module';
+
 
 @Module({
   imports: [UserModule, PotModule, FileModule, SocketModule,
     PotStateModule, SpeciesModule, UserLoginModule, DeviceModule, 
-    CalenderModule, TalkModule, SentenceModule, AlarmModule, CalenderCodeModule,
+    CalenderModule, TalkModule, SentenceModule, AlarmModule,
     // 얘가 있어야 .env 파일을 nest에서 읽을 수 있음
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
@@ -37,7 +38,7 @@ import { ConfigModule } from '@nestjs/config';
       migrations: ['src/migrations/*.ts'],
       subscribers: ['src/subscribers/*.ts'],
     }),
-    
+    TtsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -5,6 +5,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { IoAdapter } from '@nestjs/platform-socket.io';
 
 async function bootstrap() {
+  console.log(process.env);
   const app = await NestFactory.create(AppModule);
   app.enableCors({
     origin: ["http://172.23.48.1:3000/","192.168.30.*"],
@@ -21,6 +22,6 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document)
   app.useGlobalPipes(new ValidationPipe());
   app.useWebSocketAdapter(new IoAdapter(app));
-  await app.listen(3000);
+  await app.listen(3001);
 }
 bootstrap();
