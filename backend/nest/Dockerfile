@@ -59,7 +59,7 @@ COPY --chown=node:node --from=build /usr/src/app/dist ./dist
 
 RUN ls
 
-COPY /.env ./
+COPY /home/ubuntu/.env ./
 
 # ENV DB_HOST i10e101.p.ssafy.io
 # ENV DB_PORT 3306
