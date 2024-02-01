@@ -8,7 +8,7 @@ export default function MainPage() {
   const navigate = useNavigate();
 
   const goPotList = function() {
-    navigate("/pots")
+    navigate("/pot")
   }
 
   return (

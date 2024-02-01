@@ -11,7 +11,7 @@ export default function Navigation() {
       <ul className="me-4">
         <li>
           <NavLink
-            to="/pots"
+            to="/pot"
             className={({ isActive }) =>
               `${isActive ? "underline" : ""}
               mx-2`
