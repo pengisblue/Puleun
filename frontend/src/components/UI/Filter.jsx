@@ -14,12 +14,17 @@ export default function Filter({
     <div>
       <select
         onChange={handleChange}
-        className="mt-6 block w-full rounded-md border-gray-300 text-gray-600 shadow-sm
-        focus:border-amber-300 focus:ring focus:ring-amber-200 focus:ring-opacity-50"
+        className="mt-6 block w-full rounded-lg border-gray-100 text-gray-800 shadow-md
+        focus:border-amber-100 focus:ring focus:ring-amber-200 focus:ring-opacity-50"
       >
+        <option value="" className={"hidden"}>
+          선택
+        </option>
+
         <option value="" className={allTarget ? "" : "hidden"}>
           전체
         </option>
+
         {targetList.map((target) => (
           <option key={target[filterKey]} value={target[filterValue]}>
             {target[option]}
