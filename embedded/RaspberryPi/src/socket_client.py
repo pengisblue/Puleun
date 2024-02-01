@@ -9,9 +9,9 @@ import serial
 import sys
 from serial_number import get_serial_number
 from stt import record_wav, speech_to_text
-# sys.path.append('../hot-word')
-sys.path.append('C:\\Users\\SSAFY\\Desktop\\S10P12E101\\embedded\\RaspberryPi\\hot-word')
-import porcu
+from hot_word.porcu import hotword
+# from hot_word.porcu import hotword
+print("현재 작업 디렉토리:", os.getcwd())
 
 load_dotenv()
 
@@ -21,8 +21,8 @@ pot_id = None # 식물 id
 is_owner = False # 주인 연결 여부
 is_connected = False # 백과 연결 여부
 talk_id = None # 대화 번호
-serial_number = get_serial_number() # 시리얼 번호
-# serial_number = 'jkfjksdjs12331'
+# serial_number = get_serial_number() # 시리얼 번호
+serial_number = 'jkfjksdjs12331'
 transcript = None # stt 텍스트
 encoded_wav = None # stt 음성파일
 
@@ -99,6 +99,10 @@ def tts(data):
         print("File play done")
         pygame.mixer.quit()
 
+# 알람이 왔을 때 tts 실행
+@sio.on('alarm')
+def alarm(data):
+    tts(data)
 
 # 새로고침 시 보낼 데이터
 @sio.on('refresh')
@@ -128,11 +132,10 @@ def get_talk_id(talk_id):
 #--------------- 보내기 ---------------
     
 # 호출어 인식
-def hot_word(): 
-    talk_start = porcu()
-    sio.emit('hot_word', {
-        'talk_start': talk_start,
-    })
+def keyword(): 
+    hotword()
+    sio.emit('hot_word') # 서버에게 hot_word 요청
+    stt()   # 호출어 인식이 되면 stt 실행
 
 # 텍스트, 음성파일
 def stt(): 
@@ -170,7 +173,7 @@ def pot_state():
 if __name__ == '__main__': 
     server_url = os.getenv('SERVER_URL')
     sio.connect(server_url)
-    # hot_word() # 호출어 인식 테스트
+    keyword() # 호출어 인식 테스트
     # stt()  # STT 실행문 테스트
 
     # 메인 루프
