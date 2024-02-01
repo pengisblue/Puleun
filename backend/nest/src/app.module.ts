@@ -24,7 +24,7 @@ import { ConfigModule } from '@nestjs/config';
     // 얘가 있어야 .env 파일을 nest에서 읽을 수 있음
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
-      type: 'mysql2',
+      type: 'mysql',
       host: process.env.DB_HOST,
       port: parseInt(process.env.DB_PORT, 10),
       username: process.env.DB_USERNAME,
