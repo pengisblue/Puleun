@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import MainPage from "./pages/MainPage";
 import PotListPage from "./pages/PotListPage";
 import RootLayout from "./pages/Root";
+import CreatePot from "./pages/CreatePot";
 
 const router = createBrowserRouter([
   {
@@ -10,7 +11,8 @@ const router = createBrowserRouter([
     element: <RootLayout />,
     children: [
       { path: "/", element: <MainPage /> },
-      { path: "/pots", element: <PotListPage /> },
+      { path: "/pot", element: <PotListPage /> },
+      { path: "/pot/create", element: <CreatePot />},
     ],
   },
 ]);
