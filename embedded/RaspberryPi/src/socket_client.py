@@ -7,8 +7,10 @@ import time
 import pygame
 import serial
 import sys
+from serial_number import get_serial_number
 from stt import record_wav, speech_to_text
-sys.path.append('../hot-word')
+# sys.path.append('../hot-word')
+sys.path.append('C:\\Users\\SSAFY\\Desktop\\S10P12E101\\embedded\\RaspberryPi\\hot-word')
 import porcu
 
 load_dotenv()
@@ -19,29 +21,52 @@ pot_id = None # 식물 id
 is_owner = False # 주인 연결 여부
 is_connected = False # 백과 연결 여부
 talk_id = None # 대화 번호
+serial_number = get_serial_number() # 시리얼 번호
+# serial_number = 'jkfjksdjs12331'
+transcript = None # stt 텍스트
+encoded_wav = None # stt 음성파일
 
 # 라즈베리와 백엔드 연결
 @sio.event
 def connect():
+    global serial_number
+    print(serial_number)
     print('Connect')
-    # data = read_bluetooth_data()
-    sio.emit('from_raspberry', 'Im raspberry')
-    # sio.emit('from_raspberry', data)
 
+    # 시리얼 넘버 보내기
+    sio.emit('login', {
+        'serial_number': serial_number,
+    })
+
+# 연결 끊기
 @sio.event
 def disconnect():
     print('Disconnect from server')
 
+
+# login 확인 시 받을 data
+@sio.on('login_result')
+def login_result(data):
+    global is_owner
+    global pot_id
+
+    print(data)
+    # 주인 연결 여부 받기
+    is_owner = data['is_owner']
+    # 화분 고유 id 받기
+    pot_id = data['pot_id']
 
 # def tts_http(): # http로 음성파일 받기
 #     mp3 = requests.get("http://192.168.30.209:3000/file/ETA.mp3")
 #     goToServer = requests.post("http://192.168.209.194:3000/file")
 #     open("sample.mp3", "wb").write(mp3.content)
 
-#---------------- 받기 --------------
 
+#---------------- 받기 ----------------
+    
+# 음성 파일 받기
 @sio.on('tts')
-def tts(data): # 음성 파일 받기
+def tts(data): 
     # .wav 디코딩해서 재생하기
     
     print("receive")
@@ -58,7 +83,7 @@ def tts(data): # 음성 파일 받기
 
     # 오디오 재생
     pygame.mixer.init()
-    file_path = "/received_file.wav"
+    file_path = "received_file.wav"
 
     try:
         pygame.mixer.music.load(file_path)
@@ -75,6 +100,7 @@ def tts(data): # 음성 파일 받기
         pygame.mixer.quit()
 
 
+# 새로고침 시 보낼 데이터
 @sio.on('refresh')
 def refresh(): # 새로고침 신호
     # state로 지금 측정한 데이터를 보내주면 됨
@@ -83,34 +109,38 @@ def refresh(): # 새로고침 신호
     print("refreshing...")
     pass
 
-
+# 표정 상태값
 @sio.on('')
-def emotion(): # 표정 상태값
+def emotion():
     pass
 
-
+# 주인 변했을때 == 주인이 생겼을때/없어졌을때
 @sio.on('owner_change')
-def owner_change(data): # 주인 변했을때 == 주인이 생겼을때/없어졌을때
+def owner_change(data): 
     is_owner = data
     print("owner status changed")
 
-
-@sio.on('')
+# 대화 id 받기
+@sio.on('talk_id')
 def get_talk_id(talk_id):
     talk_id = talk_id
 
 #--------------- 보내기 ---------------
-
-def hot_word(): # 호출어 인식
+    
+# 호출어 인식
+def hot_word(): 
     talk_start = porcu()
     sio.emit('hot_word', {
         'talk_start': talk_start,
     })
 
-def stt(): # 텍스트, 음성파일
+# 텍스트, 음성파일
+def stt(): 
+    global transcript, talk_id, encoded_wav
     wav_file_path = "recorded_audio.wav"
     record_wav(wav_file_path)
     transcript = speech_to_text(wav_file_path)
+    print(transcript)
 
     # WAV 파일을 Base64 인코딩하여 전송
     with open(wav_file_path, "rb") as wav_file:
@@ -119,14 +149,14 @@ def stt(): # 텍스트, 음성파일
     sio.emit('stt', {
         'talk_id': talk_id, # 대화 번호
         'text': transcript, # STT text
-        'file': encoded_wav # wav file
+        'file': encoded_wav, # wav file
     })
 
 
-
-def pot_state(): # 아두이노 측정값 + 물줬을때
+# 아두이노 측정값 + 물줬을때
+def pot_state(): 
     # 시리얼 통신 객체 생성
-    ser = serial.Serial('/dev/ttyUSB0', 9600)  # 아두이노와의 통신 속도에 맞게 설정
+    ser = serial.Serial('serial_number/dev/ttyUSB0', 9600)  # 아두이노와의 통신 속도에 맞게 설정
 
     if ser.in_waiting > 0:
         sensor_value = ser.readline().decode('utf-8').strip()
@@ -136,13 +166,14 @@ def pot_state(): # 아두이노 측정값 + 물줬을때
         sio.emit('sensor_data', {'value': sensor_value})
 
 
-
-
-if __name__ == '__main__': # 메인 실행문
+# 메인 실행문
+if __name__ == '__main__': 
     server_url = os.getenv('SERVER_URL')
     sio.connect(server_url)
+    # hot_word() # 호출어 인식 테스트
+    # stt()  # STT 실행문 테스트
+
+    # 메인 루프
     while True:
         pass
-
-
 
