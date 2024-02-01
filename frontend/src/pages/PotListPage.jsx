@@ -6,6 +6,7 @@ import { potSimpleList } from "../test/potList";
 import { userList } from "../test/userList";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Filter from "../components/UI/Filter";
 
 // api1 = {
 //   화분 아이디,
@@ -24,9 +25,9 @@ export default function PotListPage() {
   const [filteredPots, setFilteredPots] = useState([]);
   const navigate = useNavigate();
 
-  const goCreatPot = function() {
-    navigate("/pot/create")
-  }
+  const goCreatPot = function () {
+    navigate("/pot/create");
+  };
 
   // 주인 필터링 확인
   useEffect(() => {
@@ -40,9 +41,9 @@ export default function PotListPage() {
   }, [selectedUser]);
 
   // 필터링된 주인 화분만 띄우기
-  const handleUserChange = (event) => {
-    console.log(event.target.value);
-    setSelectedUser(Number(event.target.value));
+  const handleUserChange = (value) => {
+    console.log(value);
+    setSelectedUser(value);
   };
 
   return (
@@ -56,19 +57,15 @@ export default function PotListPage() {
       </header>
 
       {/* 주인 선택 필터 */}
-      <div className="mx-auto mt-8 w-11/12">
-        <select
-          onChange={handleUserChange}
-          className="ms-auto block w-full max-w-60 rounded-md border-gray-300 text-gray-600 shadow-sm
-        focus:border-amber-300 focus:ring focus:ring-amber-200 focus:ring-opacity-50"
-        >
-          <option value="">전체</option>
-          {userList.map((user) => (
-            <option key={user.userId} value={user.userId}>
-              {user.userName}
-            </option>
-          ))}
-        </select>
+      <div className="ms-auto w-60">
+        <Filter
+          targetList={userList}
+          filterKey="userId"
+          filterValue="userId"
+          option="userName"
+          onFilterChange={handleUserChange}
+          allTarget={true}
+        />
       </div>
 
       {/* 화분 카드 */}
