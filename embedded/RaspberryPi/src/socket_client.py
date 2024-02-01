@@ -9,11 +9,11 @@ import serial
 import sys
 import datetime
 
-# sys.path.append('../hot-word')
-sys.path.append('C:\\Users\\SSAFY\\Desktop\\S10P12E101\\embedded\\RaspberryPi\\hot-word')
-# print(sys.path)
+from serial_number import get_serial_number
 from stt import record_wav, speech_to_text
-import porcu
+from hot_word.porcu import hotword
+# from hot_word.porcu import hotword
+print("현재 작업 디렉토리:", os.getcwd())
 
 load_dotenv()
 
@@ -23,29 +23,52 @@ pot_id = None # 식물 id
 is_owner = False # 주인 연결 여부
 is_connected = False # 백과 연결 여부
 talk_id = None # 대화 번호
+# serial_number = get_serial_number() # 시리얼 번호
+serial_number = 'jkfjksdjs12331'
+transcript = None # stt 텍스트
+encoded_wav = None # stt 음성파일
 
 # 라즈베리와 백엔드 연결
 @sio.event
 def connect():
+    global serial_number
+    print(serial_number)
     print('Connect')
-    # data = read_bluetooth_data()
-    sio.emit('from_raspberry', 'Im raspberry')
-    # sio.emit('from_raspberry', data)
 
+    # 시리얼 넘버 보내기
+    sio.emit('login', {
+        'serial_number': serial_number,
+    })
+
+# 연결 끊기
 @sio.event
 def disconnect():
     print('Disconnect from server')
 
+
+# login 확인 시 받을 data
+@sio.on('login_result')
+def login_result(data):
+    global is_owner
+    global pot_id
+
+    print(data)
+    # 주인 연결 여부 받기
+    is_owner = data['is_owner']
+    # 화분 고유 id 받기
+    pot_id = data['pot_id']
 
 # def tts_http(): # http로 음성파일 받기
 #     mp3 = requests.get("http://192.168.30.209:3000/file/ETA.mp3")
 #     goToServer = requests.post("http://192.168.209.194:3000/file")
 #     open("sample.mp3", "wb").write(mp3.content)
 
-#---------------- 받기 --------------
 
+#---------------- 받기 ----------------
+    
+# 음성 파일 받기
 @sio.on('tts')
-def tts(data): # 음성 파일 받기
+def tts(data): 
     # .wav 디코딩해서 재생하기
     
     print("receive")
@@ -62,7 +85,7 @@ def tts(data): # 음성 파일 받기
 
     # 오디오 재생
     pygame.mixer.init()
-    file_path = "/received_file.wav"
+    file_path = "received_file.wav"
 
     try:
         pygame.mixer.music.load(file_path)
@@ -78,7 +101,12 @@ def tts(data): # 음성 파일 받기
         print("File play done")
         pygame.mixer.quit()
 
+# 알람이 왔을 때 tts 실행
+@sio.on('alarm')
+def alarm(data):
+    tts(data)
 
+# 새로고침 시 보낼 데이터
 @sio.on('refresh')
 def refresh(): # 새로고침 신호
     # 측정값을 받아서 보낸다. > pot_state
@@ -86,34 +114,37 @@ def refresh(): # 새로고침 신호
     pot_state()
 
 
-
+# 표정 상태값
 @sio.on('')
-def emotion(): # 표정 상태값
+def emotion():
     pass
 
-
+# 주인 변했을때 == 주인이 생겼을때/없어졌을때
 @sio.on('owner_change')
-def owner_change(data): # 주인 변했을때 == 주인이 생겼을때/없어졌을때
+def owner_change(data): 
     is_owner = data
     print("owner status changed")
 
-
-@sio.on('')
+# 대화 id 받기
+@sio.on('talk_id')
 def get_talk_id(talk_id):
     talk_id = talk_id
 
 #--------------- 보내기 ---------------
+    
+# 호출어 인식
+def keyword(): 
+    hotword()
+    sio.emit('hot_word') # 서버에게 hot_word 요청
+    stt()   # 호출어 인식이 되면 stt 실행
 
-def hot_word(): # 호출어 인식
-    talk_start = porcu()
-    sio.emit('hot_word', {
-        'talk_start': talk_start,
-    })
-
-def stt(): # 텍스트, 음성파일
+# 텍스트, 음성파일
+def stt(): 
+    global transcript, talk_id, encoded_wav
     wav_file_path = "recorded_audio.wav"
     record_wav(wav_file_path)
     transcript = speech_to_text(wav_file_path)
+    print(transcript)
 
     # WAV 파일을 Base64 인코딩하여 전송
     with open(wav_file_path, "rb") as wav_file:
@@ -122,7 +153,7 @@ def stt(): # 텍스트, 음성파일
     sio.emit('stt', {
         'talk_id': talk_id, # 대화 번호
         'text': transcript, # STT text
-        'file': encoded_wav # wav file
+        'file': encoded_wav, # wav file
     })
 
 
@@ -148,8 +179,8 @@ def pot_state(): # 아두이노 측정값 + 물줬을때, 아두이노에서 측
         # Socket.IO로 데이터 전송
         sio.emit('pot_state', {'pot_id' : pot_id, 'data': sensor_value, 'isTemp_FG': is_temp})
 
-
-if __name__ == '__main__': # 메인 실행문
+# 메인 실행문
+if __name__ == '__main__': 
     server_url = os.getenv('SERVER_URL')
     sio.connect(server_url)
 
@@ -161,6 +192,10 @@ if __name__ == '__main__': # 메인 실행문
     ser = serial.Serial(arduino_port, 9600)  # 아두이노와의 통신 속도에 맞게 설정
 
     # -----------
+    keyword() # 호출어 인식 테스트
+    # stt()  # STT 실행문 테스트
+
+    # 메인 루프
     while True:
         # water 들어오면 emit하기
         while ser.in_waiting > 0:

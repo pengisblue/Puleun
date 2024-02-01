@@ -30,10 +30,12 @@ from pvrecorder import PvRecorder
 
 from dotenv import load_dotenv
 
+current_dir = os.path.dirname(os.path.realpath(__file__))
+
 load_dotenv()
 
 
-def main():
+def hotword():
     access_key=os.getenv("ACCESS_KEY")
     parser = argparse.ArgumentParser()
 
@@ -82,10 +84,18 @@ def main():
 
     # 환경설정
     args.access_key=access_key
-    args.keyword_paths=['베리야_ko_windows_v3_0_0.ppn', '푸른아_ko_windows_v3_0_0.ppn'] # 호출어 추가 시 이 부분이 바뀌어야함, 윈도우용
+    # args.keyword_paths=['베리야_ko_windows_v3_0_0.ppn', '푸른아_ko_windows_v3_0_0.ppn'] # 호출어 추가 시 이 부분이 바뀌어야함, 윈도우용
     # args.keyword_paths=['Desktop/plantz/hot-word/방울아_ko_raspberry-pi_v3_0_0.ppn', 'Desktop/plantz/hot-word/푸른아_ko_raspberry-pi_v3_0_0.ppn'] # 라즈베리파이 용
     # args.model_path='Desktop/plantz/hot-word/porcupine_params_ko.pv' # 한국어 파일 라즈베리용
-    args.model_path='porcupine_params_ko.pv'
+    # args.model_path='porcupine_params_ko.pv'
+
+    # 절대 경로 노출 X
+    keyword_path1 = os.path.join(current_dir, '베리야_ko_windows_v3_0_0.ppn')
+    keyword_path2 = os.path.join(current_dir, '푸른아_ko_windows_v3_0_0.ppn')
+
+    args.keyword_paths=[keyword_path1, keyword_path2]
+    args.model_path = os.path.join(current_dir, 'porcupine_params_ko.pv')
+
 
     if args.show_audio_devices:
         for i, device in enumerate(PvRecorder.get_available_devices()):
@@ -180,8 +190,7 @@ def main():
         porcupine.delete()
         if wav_file is not None:
             wav_file.close()
-    
-    return 1
+            
 
 if __name__ == '__main__':
-    main()
+    hotword()
