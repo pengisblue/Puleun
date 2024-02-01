@@ -57,15 +57,11 @@ FROM node:20.10.0-alpine As production
 COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node --from=build /usr/src/app/dist ./dist
 
-RUN ls
-
-COPY /home/ubuntu/.env ./
-
-# ENV DB_HOST i10e101.p.ssafy.io
-# ENV DB_PORT 3306
-# ENV DB_USERNAME pjt1
-# ENV DB_PASSWORD dlxldpdl101
-# ENV DB_DATABASE test
+ENV DB_HOST i10e101.p.ssafy.io
+ENV DB_PORT 3306
+ENV DB_USERNAME pjt1
+ENV DB_PASSWORD dlxldpdl101
+ENV DB_DATABASE test
 
 # Start the server using the production build
 CMD [ "node", "dist/main.js" ]
