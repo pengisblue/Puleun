@@ -1,8 +1,8 @@
 import { IsDate, IsNumber, IsOptional, IsString } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
-import { Type } from "class-transformer";
+import { Exclude, Type } from "class-transformer";
 
-
+@Exclude()
 export class CreateUserDto{
     @ApiProperty({example:'박지예'})
     @IsString()

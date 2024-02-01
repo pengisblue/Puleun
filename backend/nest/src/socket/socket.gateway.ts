@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { CreatePotStateDto } from 'src/pot-state/pot-state-insert.dto';
-
 import { SocketService } from "./socket.service";
+import { PotStateService } from 'src/pot-state/pot-state.service';
 
 @WebSocketGateway(8080, {
   cors: { origin: ["http://172.23.48.1:3000/","192.168.30.*"],},
@@ -16,6 +16,7 @@ export class SocketGateway {
 
   constructor(
     private readonly socketService: SocketService,
+    private readonly potStateService: PotStateService,
   ){}
 
   handleConnection(@ConnectedSocket() client: Socket){
@@ -24,22 +25,22 @@ export class SocketGateway {
   }
 
   @SubscribeMessage('login')
-  handleClientConnect(@ConnectedSocket() client: Socket, @MessageBody('serialNum') serialNum: string){
-    // this.socketService.login(serialNum)
-    client.emit('login-result',{ result: `${serialNum} accepted`})
+  async handleClientConnect(@ConnectedSocket() client: Socket, @MessageBody('serial_number') serial_number: string){
+    const result = await this.socketService.login(serial_number)
+    client.emit('login_result',result)
   }
 
   @SubscribeMessage('pot-state')
   async handleMessage( @MessageBody() inputDto: CreatePotStateDto): Promise<number>{
-    await this.socketService.saveState(inputDto);
+    await this.potStateService.save(inputDto);
     return 1;
   }
 
   @SubscribeMessage('stt')
-  async saveSttFile( @ConnectedSocket() client: Socket, @MessageBody('txt') txt: string, @MessageBody('file') base64Data: string): Promise<string>{
-    if (txt==null) txt=""
+  async saveSttFile( @ConnectedSocket() client: Socket, @MessageBody('text') text: string, @MessageBody('talk_id') talk_id: number, @MessageBody('file') base64Data: string): Promise<string>{
+    if (text==null) text=""
     if (base64Data==null) base64Data=""
-    const returnData = await this.socketService.stt(txt, base64Data)
+    const returnData = await this.socketService.stt(text, talk_id, base64Data)
     try{
       client.emit('tts', {base64Data:returnData} );
     } catch (error) {
