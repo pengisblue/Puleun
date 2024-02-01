@@ -28,6 +28,7 @@ export default function PotListPage() {
     navigate("/pot/create")
   }
 
+  // 주인 필터링 확인
   useEffect(() => {
     if (selectedUser) {
       setFilteredPots(
@@ -38,6 +39,7 @@ export default function PotListPage() {
     }
   }, [selectedUser]);
 
+  // 필터링된 주인 화분만 띄우기
   const handleUserChange = (event) => {
     console.log(event.target.value);
     setSelectedUser(Number(event.target.value));
