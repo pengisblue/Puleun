@@ -22,9 +22,7 @@ import { ConfigModule } from '@nestjs/config';
     PotStateModule, SpeciesModule, UserLoginModule, DeviceModule, 
     CalenderModule, TalkModule, SentenceModule, AlarmModule, CalenderCodeModule,
     // 얘가 있어야 .env 파일을 nest에서 읽을 수 있음
-    ConfigModule.forRoot({
-      envFilePath: '.env.dev',
-    }),
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DB_HOST,
