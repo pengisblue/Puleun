@@ -7,6 +7,7 @@ import { Calender } from './calender.entity';
 @Module({
   imports:[TypeOrmModule.forFeature([Calender])],
   controllers: [CalenderController],
-  providers: [CalenderService]
+  providers: [CalenderService],
+  exports: [CalenderService],
 })
 export class CalenderModule {}

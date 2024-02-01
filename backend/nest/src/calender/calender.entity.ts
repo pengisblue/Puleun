@@ -1,6 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToOne, OneToMany, CreateDateColumn } from 'typeorm';
 import { Pot } from '../pot/pot.entity';
-import { CalenderCode } from '../calender-code/calender-code.entity';
 
 @Entity()
 export class Calender {
@@ -17,4 +16,7 @@ export class Calender {
   @ManyToOne(() => Pot, pot => pot.pot_id, {onDelete:'CASCADE', onUpdate:'CASCADE'})
   @JoinColumn({name: 'pot_id'})
   pot: Pot;
+
+  @Column()
+  pot_id: number;
 }

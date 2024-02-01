@@ -7,6 +7,7 @@ import { Sentence } from './sentence.entity';
 @Module({
   imports:[TypeOrmModule.forFeature([Sentence])],
   controllers: [SentenceController],
-  providers: [SentenceService]
+  providers: [SentenceService],
+  exports: [SentenceService],
 })
 export class SentenceModule {}
