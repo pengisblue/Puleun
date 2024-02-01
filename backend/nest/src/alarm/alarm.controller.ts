@@ -1,8 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { AlarmService } from './alarm.service';
 import { Alarm } from './alarm.entity';
 import { ApiBody, ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger';
-import { AlarmDto } from './alarm.dto';
+import { AlarmDto, CreateAlarmDto } from './alarm.dto';
 
 @Controller('alarm')
 @ApiTags('alarm')
@@ -11,15 +11,17 @@ export class AlarmController {
 
     @Post()
     @ApiOperation({ summary: "알람 저장"})
-    async save(@Body() alarm:Alarm, @Body() pot_id: number): Promise<number>{
-        await this.alarmService.addAlarm(alarm, pot_id);
+    @ApiProperty({examples: {
+        "alarm_name": "알람1",
+        "alarm_content": "내용1",
+        "active_FG": 0,
+        'alarm_date': '2024-01-30',
+        'pot':2
+    }})
+    async save(@Body() alarm:CreateAlarmDto): Promise<number>{
+        console.log(alarm);
+        await this.alarmService.addAlarm(alarm);
         return 1;
-    }
-
-    @Get(':pot_id')
-    @ApiOperation({summary: '식물의 모든 알람 조회'})
-    async findAll(@Param() pot_id: number): Promise<AlarmDto[]>{
-        return await this.alarmService.findByPotId(pot_id);
     }
 
     @Post(':alarm_id')

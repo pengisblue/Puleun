@@ -3,6 +3,7 @@ import { User } from '../user/user.entity'; // 다른 엔터티에 따라 수정
 import { PotState } from '../pot-state/pot-state.entity';
 import { Type } from 'class-transformer';
 import { Calender } from 'src/calender/calender.entity';
+import { Alarm } from 'src/alarm/alarm.entity';
 
 @Entity()
 export class Pot {
@@ -41,11 +42,15 @@ export class Pot {
 
   @ManyToOne(() => User, (user) => user.Pots, {onUpdate: 'CASCADE', onDelete: 'CASCADE'})// 외래키 식별자로 사용될 컬럼명
   @JoinColumn({name: 'user_id'})
-  user_id: User;
+  user: User;
 
   // OneToMany에서는 참조하는 테이블의 PK가 아니라 FK를 지정해야한다
   @OneToMany(() => Calender, calender => calender.pot)
   calender: Calender[];
+
+  // OneToMany에서는 참조하는 테이블의 PK가 아니라 FK를 지정해야한다
+  @OneToMany(() => Alarm, alarm => alarm.pot)
+  alarm: Alarm[];
 
   @Column({ type: 'int', nullable: true})
   happy_cnt: number;

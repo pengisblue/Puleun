@@ -1,34 +1,24 @@
-import PotSimpleCard from "./PotSimpleCard";
-import PotAddSimpleCard from "./PotAddSimpleCard";
-import plus from "../../asset/plus_slate.svg";
-import cog from "../../asset/cog-8-tooth.svg";
-import { potSimpleList } from "../../test/potList";
-import { userList } from "../../test/userList";
+import PotSimpleCard from "../components/Pots/PotSimpleCard";
+import PotAddSimpleCard from "../components/Pots/PotAddSimpleCard";
+import plus from "../asset/plus_slate.svg";
+import cog from "../asset/cog-8-tooth.svg";
+import { potSimpleList } from "../test/potList";
+import { userList } from "../test/userList";
 import { useEffect, useState } from "react";
 
-// 필요한 데이터 = [
-//   {
-//     유저 리스트: [
-//       {
-//         유저 아이디,
-//         유저 이름
-//       },
-//     ]
-//   },
-//   {
-//     화분 리스트: [
-//       {
-//         화분 아이디,
-//         화분 이름,
-//         화분 사진,
-//         주인 아이디,
-//         주인 사진
-//       },
-//     ]
-//   }
-// ]
+// api1 = {
+//   화분 아이디,
+//   화분 이름,
+//   화분 사진,
+//   주인 아이디,
+//   주인 사진
+// },
+// api2 = {
+//   유저 아이디,
+//   유저 이름
+// }
 
-export default function PotList() {
+export default function PotListPage() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [filteredPots, setFilteredPots] = useState([]);
 
