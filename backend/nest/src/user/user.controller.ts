@@ -47,4 +47,10 @@ export class UserController {
     async delete(@Param('user_id') user_id:number): Promise<number>{
         return this.userService.delete(user_id)
     }
+
+    @Get('pot/:user_id')
+    @ApiOperation({ summary: '유저의 화분 모두 조회'})
+    async findPotWithUserId(@Param('user_id') user_id: number): Promise<User>{
+        return await this.userService.findPot(user_id);
+    }
 }
