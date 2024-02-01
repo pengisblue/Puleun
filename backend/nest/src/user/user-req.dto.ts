@@ -2,7 +2,6 @@ import { IsDate, IsNumber, IsOptional, IsString } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 import { Exclude, Type } from "class-transformer";
 
-@Exclude()
 export class CreateUserDto{
     @ApiProperty({example:'박지예'})
     @IsString()
@@ -13,8 +12,7 @@ export class CreateUserDto{
     @Type(() => Date)
     birth_DT: Date;
 
-    @ApiProperty({example:'1', description:'1 for male'})
-    @IsString()
+    @ApiProperty({example:'F', description:'M for male'})
     gender: string;
 
     @ApiProperty({example:0, description:'if user is parent'})
@@ -28,6 +26,7 @@ export class CreateUserDto{
 export class UpdateUserDto{
     @ApiProperty({example:'박지예'})
     @IsString()
+    @Type(()=>String)
     nickname: string;
 
     @ApiProperty({example:'1997-02-04'})
@@ -35,8 +34,9 @@ export class UpdateUserDto{
     @Type(() => Date)
     birth_DT: Date;
 
-    @ApiProperty({example:'1', description:'1 for male'})
+    @ApiProperty({example:'M', description:'F for female'})
     @IsString()
+    @Type(()=>String)
     gender: string;
 
     profile_img_url?: string="";
