@@ -7,8 +7,12 @@ import time
 import pygame
 import serial
 import sys
+import datetime
+
+# sys.path.append('../hot-word')
+sys.path.append('C:\\Users\\SSAFY\\Desktop\\S10P12E101\\embedded\\RaspberryPi\\hot-word')
+# print(sys.path)
 from stt import record_wav, speech_to_text
-sys.path.append('../hot-word')
 import porcu
 
 load_dotenv()
@@ -77,11 +81,10 @@ def tts(data): # 음성 파일 받기
 
 @sio.on('refresh')
 def refresh(): # 새로고침 신호
-    # state로 지금 측정한 데이터를 보내주면 됨
-    # 아두이노야 측정해줘
     # 측정값을 받아서 보낸다. > pot_state
     print("refreshing...")
-    pass
+    pot_state()
+
 
 
 @sio.on('')
@@ -124,25 +127,56 @@ def stt(): # 텍스트, 음성파일
 
 
 
-def pot_state(): # 아두이노 측정값 + 물줬을때
-    # 시리얼 통신 객체 생성
-    ser = serial.Serial('/dev/ttyUSB0', 9600)  # 아두이노와의 통신 속도에 맞게 설정
+def pot_state(): # 아두이노 측정값 + 물줬을때, 아두이노에서 측정값 받고 보내기
+    # 측정 시작 신호 전송
+    # ser.write(b"START\n")
+    print('start pot_state')
 
-    if ser.in_waiting > 0:
+    # 시간 두고 아두이노가 신호 처리 하도록
+    time.sleep(2) # 한번 측정할 정도의 시간임
+
+    while ser.in_waiting > 0:
         sensor_value = ser.readline().decode('utf-8').strip()
-        print(f'측정값: {sensor_value}')
+        is_temp = False
+        if (sensor_value[:1] == 'T'):
+            sensor_value = float(sensor_value[1:])
+            is_temp = True
+        elif (sensor_value[:1] == 'M'):
+            sensor_value = float(sensor_value[1:])
+        print(sensor_value)
 
         # Socket.IO로 데이터 전송
-        sio.emit('sensor_data', {'value': sensor_value})
-
-
+        sio.emit('pot_state', {'pot_id' : pot_id, 'data': sensor_value, 'isTemp_FG': is_temp})
 
 
 if __name__ == '__main__': # 메인 실행문
     server_url = os.getenv('SERVER_URL')
     sio.connect(server_url)
+
+    # 시리얼 열기
+    # 아두이노 포트 설정
+    arduino_port = 'COM6'
+    # arduino_port = '/dev/ttyUSB0' # 라즈베리
+    # 시리얼 통신 객체 생성
+    ser = serial.Serial(arduino_port, 9600)  # 아두이노와의 통신 속도에 맞게 설정
+
+    # -----------
     while True:
-        pass
+        # water 들어오면 emit하기
+        while ser.in_waiting > 0:
+            sensor_value = ser.readline().decode('utf-8').strip()
+            if (sensor_value == 'Water'):
+                print('sending water signal')
+                sio.emit('water', {'pot_id' : pot_id})
 
+        # 정각마다 pot_state 실행
+        now = datetime.datetime.now()
+        if now.minute == 0:
+            pot_state()
 
+    # -----
+        
+    # 시리얼 포트 닫기
+    ser.close()
+    print('serial close')
 
