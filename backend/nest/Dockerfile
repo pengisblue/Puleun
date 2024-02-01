@@ -42,11 +42,11 @@ RUN npm run build
 # Set NODE_ENV environment variable
 ENV NODE_ENV production
 
-ENV DB_HOST i10e101.p.ssafy.io
-ENV DB_PORT 3306
-ENV DB_USERNAME pjt1
-ENV DB_PASSWORD dlxldpdl101
-ENV DB_DATABASE test
+ARG DB_HOST=i10e101.p.ssafy.io
+ARG DB_PORT=3306
+ARG DB_USERNAME=pjt1
+ARG DB_PASSWORD=dlxldpdl101
+ARG DB_DATABASE=test
 
 # Running `npm ci` removes the existing node_modules directory and passing in --only=production ensures that only the production dependencies are installed. This ensures that the node_modules directory is as optimized as possible
 RUN npm ci --only=production && npm cache clean --force
