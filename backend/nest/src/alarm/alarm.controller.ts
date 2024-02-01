@@ -18,10 +18,17 @@ export class AlarmController {
         'alarm_date': '2024-01-30',
         'pot':2
     }})
-    async save(@Body() alarm:CreateAlarmDto): Promise<number>{
+    async save(@Query() @Body() alarm:CreateAlarmDto): Promise<number>{
         console.log(alarm);
         await this.alarmService.addAlarm(alarm);
         return 1;
+    }
+
+    @Get(':user_id')
+    @ApiOperation({summary: '유저의 모든 알람 조회'})
+    @ApiBody({type: Alarm})
+    async userAlarm(@Param('user_id') user_id: number): Promise<Alarm[]>{
+        return await this.alarmService.userAlarm(user_id);
     }
 
     @Post(':alarm_id')
@@ -46,6 +53,8 @@ export class AlarmController {
         await this.alarmService.deleteAlarm(alarm_id);
         return 1;
     }
+
+
 
 
 }

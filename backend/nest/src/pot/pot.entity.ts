@@ -40,7 +40,7 @@ export class Pot {
   @Column({ length: 200, nullable: false, default: 'noimage.png' })
   pot_img_url: string;
 
-  @ManyToOne(() => User, (user) => user.Pots, {onUpdate: 'CASCADE', onDelete: 'CASCADE'})// 외래키 식별자로 사용될 컬럼명
+  @ManyToOne(() => User, (user) => user.pots, {onUpdate: 'CASCADE', onDelete: 'CASCADE'})// 외래키 식별자로 사용될 컬럼명
   @JoinColumn({name: 'user_id'})
   user: User;
 

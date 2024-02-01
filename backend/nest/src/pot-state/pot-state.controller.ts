@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { PotStateService } from './pot-state.service';
 import { PotState } from './pot-state.entity';
@@ -15,7 +15,7 @@ export class PotStateController {
     }
 
     @Post()
-    async save(@Body() createPotStateDto:CreatePotStateDto): Promise<number>{
+    async save(@Query() @Body() createPotStateDto:CreatePotStateDto): Promise<number>{
         return this.potStateService.save(createPotStateDto)
     }
 }
