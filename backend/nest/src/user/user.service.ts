@@ -4,6 +4,8 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto, UpdateUserDto } from './user-req.dto';
 import { UserDetailDto, UserListDto } from './user-res.dto';
+import { plainToClass } from 'class-transformer';
+import { Pot } from 'src/pot/pot.entity';
 
 @Injectable()
 export class UserService {
@@ -14,7 +16,7 @@ export class UserService {
 
     async findByParent(user_id: number):Promise<UserListDto[]>{
         const child = await this.UserRepository.findBy({parent_id:user_id})
-        return child;
+        return plainToClass(UserListDto, child);
     }
 
     async find(user_id: number): Promise<UserDetailDto>{
@@ -37,9 +39,7 @@ export class UserService {
     }
 
     async update(user_id: number, data: UpdateUserDto): Promise<number>{
-        const user = await this.UserRepository.findOneBy({
-            user_id
-        })
+        const user = await this.UserRepository.findOneBy({user_id})
 
         if (!user) throw new HttpException('Bad_REQUEST', HttpStatus.NOT_FOUND)
         try{
@@ -57,5 +57,16 @@ export class UserService {
         }catch(e){
             throw new HttpException('Bad_REQUEST', HttpStatus.BAD_REQUEST)
         }
+    }
+
+    async findPot(user_id: number): Promise<User>{
+        const user: User = await this.UserRepository.createQueryBuilder('user')
+            .where('user.user_id= :user_id', {user_id})
+            .leftJoinAndSelect('user.pots', 'pot', 'pot.user_id=user.user_id')
+            .select([
+                'user', 'pot.pot_id', 'pot.pot_name', 'pot.pot_species'
+            ])
+            .getOne()
+        return user;
     }
 }

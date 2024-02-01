@@ -1,5 +1,4 @@
 import deviceImg from "../../asset/device.svg";
-import BaseDeviceCard from "../UI/DeviceBaseCard";
 
 export default function DeviceCard({ deviceName, serialNum }) {
   return (

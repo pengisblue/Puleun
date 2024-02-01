@@ -1,16 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { CreatePotStateDto } from 'src/pot-state/pot-state-insert.dto';
-import { PotState } from 'src/pot-state/pot-state.entity';
-import { Repository } from 'typeorm';
+
 import { SocketService } from "./socket.service";
 
 @WebSocketGateway(8080, {
-  cors: { origin: ["http://172.23.48.1:3000/","192.168.30.*"], },
-  namespace: 'socket'
+  cors: { origin: ["http://172.23.48.1:3000/","192.168.30.*"],},
 })
+
 @Injectable()
 export class SocketGateway {
   @WebSocketServer()
@@ -20,8 +18,9 @@ export class SocketGateway {
     private readonly socketService: SocketService,
   ){}
 
-  handleConnection(client: Socket){
+  handleConnection(@ConnectedSocket() client: Socket){
     console.log(client.id)
+    client.emit(`Hello ${client.id}`)
   }
 
   @SubscribeMessage('login')
@@ -36,13 +35,15 @@ export class SocketGateway {
   }
 
   @SubscribeMessage('stt')
-  saveSttFile( client: Socket, @MessageBody('file') file: File): void{
-    console.log(client)
-    console.log(file)
-    // txt 파일 저장
-    // redis insert
-    // 답변 생성 (gpt api)
-    // message -> tts >> wav
-    // client.emit(wav) 
+  async saveSttFile( @ConnectedSocket() client: Socket, @MessageBody('txt') txt: string, @MessageBody('file') base64Data: string): Promise<string>{
+    if (txt==null) txt=""
+    if (base64Data==null) base64Data=""
+    const returnData = await this.socketService.stt(txt, base64Data)
+    try{
+      client.emit('tts', {base64Data:returnData} );
+    } catch (error) {
+      console.error(`Error reading file: ${error}`);
+    }
+    return returnData
   }
 }
