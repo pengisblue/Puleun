@@ -1,4 +1,4 @@
-import DeviceChoice from "../Devices/DeviceChoice";
+import DeviceChoice from "../components/Devices/DeviceChoice";
 
 export default function CreatePot() {
   return (

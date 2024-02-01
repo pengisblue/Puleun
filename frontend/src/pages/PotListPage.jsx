@@ -5,6 +5,7 @@ import cog from "../asset/cog-8-tooth.svg";
 import { potSimpleList } from "../test/potList";
 import { userList } from "../test/userList";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // api1 = {
 //   화분 아이디,
@@ -21,6 +22,11 @@ import { useEffect, useState } from "react";
 export default function PotListPage() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [filteredPots, setFilteredPots] = useState([]);
+  const navigate = useNavigate();
+
+  const goCreatPot = function() {
+    navigate("/pot/create")
+  }
 
   useEffect(() => {
     if (selectedUser) {
@@ -42,7 +48,7 @@ export default function PotListPage() {
       <header className="m-2 flex items-center justify-between">
         <h1 className="text-title">화분 목록</h1>
         <div className="flex gap-2">
-          <img src={plus} alt="plus" className="w-7" />
+          <img src={plus} alt="plus" className="w-7" onClick={goCreatPot} />
           <img src={cog} alt="cog" className="w-7" />
         </div>
       </header>
