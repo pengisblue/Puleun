@@ -4,6 +4,8 @@ import { Server, Socket } from 'socket.io';
 import { CreatePotStateDto } from 'src/pot-state/pot-state-insert.dto';
 import { SocketService } from "./socket.service";
 import { PotStateService } from 'src/pot-state/pot-state.service';
+import { CalenderService } from 'src/calender/calender.service';
+import { CalenderCreateDto } from 'src/calender/calender-req.dto';
 
 @WebSocketGateway(8080, {
   cors: { origin: ["http://172.23.48.1:3000/","192.168.30.*"],},
@@ -17,6 +19,7 @@ export class SocketGateway {
   constructor(
     private readonly socketService: SocketService,
     private readonly potStateService: PotStateService,
+    private readonly calenderService: CalenderService,
   ){}
 
   handleConnection( client: Socket ){
@@ -32,7 +35,6 @@ export class SocketGateway {
 
   @SubscribeMessage('pot_state')
   async handleMessage( @MessageBody() inputDto: CreatePotStateDto): Promise<number>{
-    console.log(inputDto)
     await this.potStateService.save(inputDto);
     return 1;
   }
@@ -48,5 +50,14 @@ export class SocketGateway {
       console.error(`Error reading file: ${error}`);
     }
     return returnData
+  }
+
+  @SubscribeMessage('water')
+  async water( @MessageBody('pot_id') pot_id: number ): Promise<void>{
+    const dto = new CalenderCreateDto;
+    dto.pot_id = pot_id
+    dto.code = 'W'
+    this.calenderService.save(dto)
+    console.log('water')
   }
 }
