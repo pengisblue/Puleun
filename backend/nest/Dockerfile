@@ -56,6 +56,9 @@ FROM node:20.10.0-alpine As production
 # Copy the bundled code from the build stage to the production image
 COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node --from=build /usr/src/app/dist ./dist
+
+RUN ls
+
 COPY /.env ./
 
 # ENV DB_HOST i10e101.p.ssafy.io
