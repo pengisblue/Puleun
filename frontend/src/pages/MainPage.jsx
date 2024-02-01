@@ -7,9 +7,13 @@ import { useNavigate } from "react-router-dom";
 export default function MainPage() {
   const navigate = useNavigate();
 
-  const goPotList = function() {
-    navigate("/pot")
-  }
+  const goPotList = function () {
+    navigate("/pot");
+  };
+
+  const goCreatPot = function () {
+    navigate("/pot/create");
+  };
 
   return (
     <>
@@ -24,7 +28,9 @@ export default function MainPage() {
           {potDetailList.map((pot) => (
             <PotDetailCard key={pot.potId} {...pot} />
           ))}
-          <PotAddDetailCard />
+          <div onClick={goCreatPot} className="hover:cursor-pointer">
+            <PotAddDetailCard />
+          </div>
         </section>
 
         {/* 새로운 대화 */}

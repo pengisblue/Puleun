@@ -51,8 +51,13 @@ export default function PotListPage() {
       <header className="m-2 flex items-center justify-between">
         <h1 className="text-title">화분 목록</h1>
         <div className="flex gap-2">
-          <img src={plus} alt="plus" className="w-7" onClick={goCreatPot} />
-          <img src={cog} alt="cog" className="w-7" />
+          <img
+            src={plus}
+            alt="plus"
+            className="w-7 hover:cursor-pointer"
+            onClick={goCreatPot}
+          />
+          <img src={cog} alt="cog" className="w-7 hover:cursor-pointer" />
         </div>
       </header>
 
@@ -73,7 +78,9 @@ export default function PotListPage() {
         {filteredPots.map((pot) => (
           <PotSimpleCard key={pot.potId} {...pot} />
         ))}
-        <PotAddSimpleCard />
+        <div onClick={goCreatPot} className="hover:cursor-pointer">
+          <PotAddSimpleCard />
+        </div>
       </div>
     </div>
   );
