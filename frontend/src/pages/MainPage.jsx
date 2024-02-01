@@ -14,7 +14,8 @@ export default function MainPage() {
   return (
     <>
       <div>
-        <div>
+        {/* 화분 상태 요약 */}
+        <section>
           <div className="m-2 flex justify-between">
             <h1 className="text-2xl font-semibold">우리 화분</h1>
             <img src={chevron} alt="goPotList" onClick={goPotList} />
@@ -24,11 +25,12 @@ export default function MainPage() {
             <PotDetailCard key={pot.potId} {...pot} />
           ))}
           <PotAddDetailCard />
-        </div>
+        </section>
 
-        <div>
-          <h1>최근 대화</h1>
-        </div>
+        {/* 새로운 대화 */}
+        <section>
+          <h1>새로운 대화</h1>
+        </section>
       </div>
     </>
   );
