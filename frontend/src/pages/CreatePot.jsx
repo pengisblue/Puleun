@@ -24,7 +24,7 @@ export default function CreatePot() {
         {/* 주인 선택 */}
         <section>
           <label htmlFor="">주인 선택</label>
-          <Filter 
+          <Filter
             targetList={userList}
             filterKey="userId"
             filterValue="userId"
@@ -33,6 +33,7 @@ export default function CreatePot() {
             allTarget={false}
           />
         </section>
+        <span>{selectedUser}</span>
 
         {/* 애칭 입력 */}
         <section>
