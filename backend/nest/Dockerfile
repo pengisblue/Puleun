@@ -42,7 +42,7 @@ RUN npm run build
 # Set NODE_ENV environment variable
 ENV NODE_ENV production
 
-ENV DB_HOST i10e101.p.ssafy.io
+ENV DB_HOST i10e101.p.ssafy.io:3000
 ENV DB_PORT 3306
 ENV DB_USERNAME pjt1
 ENV DB_PASSWORD dlxldpdl101
