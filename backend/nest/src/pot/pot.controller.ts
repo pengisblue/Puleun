@@ -17,19 +17,19 @@ export class PotController {
     }
 
     @Post()
+    @ApiBody({type: CreatePotDto})
     @ApiOperation({ summary: '화분 등록'})
     @ApiOkResponse({ type:'1', description:'1 for SUCCESS' })
-    @ApiBody({type: CreatePotDto})
-    async save(@Query() @Body() pot: Pot): Promise<number>{
+    async save( @Body() pot: Pot): Promise<number>{
         this.potService.save(pot);
         return 1;
     }
 
     @Put(':pot_id')
+    @ApiBody( { type: UpdatePotDto } )
     @ApiOperation({ summary: '화분 수정'})
     @ApiOkResponse({ type:'1', description:'1 for SUCCESS' })
-    @ApiBody({type: UpdatePotDto})
-    async update(@Param('pot_id') user_id: number, @Query() @Body() pot: UpdatePotDto): Promise<number>{
+    async update( @Param('pot_id') user_id: number, @Body() pot: UpdatePotDto): Promise<number>{
         await this.potService.update(user_id, pot);
         return 1 
     }
@@ -42,18 +42,16 @@ export class PotController {
         return 1;
     }
 
-    @Post(':user_id')
+    @Get('user/:user_id')
     @ApiOperation({summary: '해당 유저의 모든 화분 조회'})
-    @ApiOkResponse({ type:Pot, description:'유저의 컬렉션 정보 조회' })
-    @ApiBody({type: CollectionDto})
+    @ApiOkResponse({ type: Pot, description:'유저의 컬렉션 정보 조회' })
     async findPotByUserId(@Param('user_id') user_id: number): Promise<Pot[]>{
         return await this.potService.findPotsByUserId(user_id);
     }
 
     @Get('collection/:user_id')
     @ApiOperation({summary: '해당 유저의 모든 컬렉션 조회'})
-    @ApiOkResponse({ type:Pot, description:'유저의 컬렉션 정보 조회' })
-    @ApiBody({type: CollectionDto})
+    @ApiOkResponse({ type: CollectionDto, description:'유저의 컬렉션 정보 조회' })
     async getCollection(@Param('user_id') user_id: number): Promise<CollectionDto[]>{
         return await this.potService.findCollection(user_id);
     }
@@ -61,6 +59,7 @@ export class PotController {
 
     @Put('collection/:pot_id')
     @ApiOperation({summary: '성장완료 되서 컬렉션으로 이동'})
+    @ApiOkResponse({ type:'1', description:'1 for SUCCESS' })
     async toCollection(@Param('pot_id') pot_id: number): Promise<number>{
         await this.potService.delete(pot_id);
         await this.potService.toCollection(pot_id);
