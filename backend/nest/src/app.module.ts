@@ -31,7 +31,7 @@ import { ConfigModule } from '@nestjs/config';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
       logging: true,
-      synchronize: false,
+      synchronize: true,
       // entities의 경로가 잘못되어 있어서 db가 연동이 되지 않았음
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       migrations: ['src/migrations/*.ts'],
