@@ -9,6 +9,7 @@ export class CreatePotStateDto {
     
     @ApiProperty()
     @IsNumber()
+    @Type(() => Number)
     data: number;
 
     @ApiProperty()

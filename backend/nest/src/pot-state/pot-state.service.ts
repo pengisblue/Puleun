@@ -17,7 +17,6 @@ export class PotStateService {
 
   /** 온도,습도 Insert */
   async save(inputDto: CreatePotStateDto): Promise<number>{
-    console.log(inputDto)
     this.potStateRepository.save(inputDto)
     return 1
   }

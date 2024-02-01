@@ -1,7 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import * as fs from 'fs';
-import { error } from 'console';
-import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
 import { DeviceService } from './../device/device.service';
 import { SocketLoginDto } from './socket.dto';
 import { DeviceCreateDto } from 'src/device/device-req.dto';

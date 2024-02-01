@@ -19,7 +19,7 @@ export class SocketGateway {
     private readonly potStateService: PotStateService,
   ){}
 
-  handleConnection(@ConnectedSocket() client: Socket){
+  handleConnection( client: Socket ){
     console.log(client.id)
     client.emit(`Hello ${client.id}`)
   }
@@ -30,8 +30,9 @@ export class SocketGateway {
     client.emit('login_result',result)
   }
 
-  @SubscribeMessage('pot-state')
+  @SubscribeMessage('pot_state')
   async handleMessage( @MessageBody() inputDto: CreatePotStateDto): Promise<number>{
+    console.log(inputDto)
     await this.potStateService.save(inputDto);
     return 1;
   }
