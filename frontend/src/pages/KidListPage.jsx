@@ -10,7 +10,7 @@ export default function KidListPage() {
     const getKids = async () => {
       try {
         const response = await axios.get(
-          "https://i10e101.p.ssafy.io/user/child/1",
+          "http://i10e101.p.ssafy.io/user/child/1",
         );
         console.log(response);
         setKidList(response.data);
