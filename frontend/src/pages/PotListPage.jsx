@@ -80,7 +80,7 @@ export default function PotListPage() {
         {filteredPots.map((pot) => (
           <PotSimpleCard key={pot.potId} {...pot} />
         ))}
-        <div onClick={goCreatPot} className="hover:cursor-pointer">
+        <div onClick={goCreatPot} className="cursor-pointer">
           <PotAddSimpleCard />
         </div>
       </div>

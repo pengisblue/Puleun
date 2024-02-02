@@ -31,10 +31,21 @@ export default function PotDetailCard({
     return hasCoda(name) ? "의" : "이의";
   }
 
+  const textSize = function (userName, potName) {
+    const totalLength = userName.length + selectPostposition(userName).length + potName.length
+    if (totalLength < 18) {
+      return "text-lg"
+    } else if (totalLength < 21) {
+      return "text-base"
+    } else {
+      return "text-sm"
+    }
+  }
+
   return (
-    <BaseDetailCard>
-      <div className="flex flex-col gap-1">
-        <h1 className="flex flex-wrap text-lg font-bold">
+    <BaseDetailCard size="w-80 h-48">
+      <div className="grid grid-cols-12 place-content-center gap-2">
+        <h1 className={`col-span-12 flex flex-wrap font-bold ${textSize(userName, potName)}`}>
           <span className="me-2">
             {userName}
             {selectPostposition(userName)}
@@ -42,37 +53,35 @@ export default function PotDetailCard({
           <span>{potName}</span>
         </h1>
 
-        <div className="flex h-full items-center gap-4 font-semibold">
-          <div className="basis-2/5 overflow-hidden rounded-xl">
-            <PotProfileImage imgUrl={potImgUrl} />
-          </div>
-
-          <ul className="text-sm">
-            <li>
-              품종: <span>{potSpecies}</span>
-            </li>
-            <li>
-              현재 온도: <span>{nowTemprature}℃</span>{" "}
-              <span>({tempratureStatus})</span>
-            </li>
-            <li>
-              현재 습도: <span>{nowMoisture}%</span>{" "}
-              <span>({moistureStatus})</span>
-            </li>
-            <li>
-              물 준 날: <span>{daysSinceWatering}</span>일 전
-            </li>
-            <li>
-              심은 날: <span>{plantDate}</span>
-            </li>
-            <li>
-              <span className="text-xl font-bold text-green-500">
-                {daysSincePlanting}
-              </span>
-              일째 함께하는 중
-            </li>
-          </ul>
+        <div className="col-span-5 place-self-center overflow-hidden rounded-xl">
+          <PotProfileImage imgUrl={potImgUrl} />
         </div>
+
+        <ul className="col-span-7 text-sm font-semibold">
+          <li>
+            품종: <span>{potSpecies}</span>
+          </li>
+          <li>
+            현재 온도: <span>{nowTemprature}℃</span>{" "}
+            <span>({tempratureStatus})</span>
+          </li>
+          <li>
+            현재 습도: <span>{nowMoisture}%</span>{" "}
+            <span>({moistureStatus})</span>
+          </li>
+          <li>
+            물 준 날: <span>{daysSinceWatering}</span>일 전
+          </li>
+          <li>
+            심은 날: <span>{plantDate}</span>
+          </li>
+          <li>
+            <span className="text-xl font-bold text-green-500">
+              {daysSincePlanting}
+            </span>
+            일째 함께하는 중
+          </li>
+        </ul>
       </div>
     </BaseDetailCard>
   );

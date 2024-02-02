@@ -14,7 +14,6 @@ const router = createBrowserRouter([
     element: <RootLayout />,
     children: [
       { path: "/", element: <MainPage /> },
-      { path: "/pots", element: <PotListPage /> },
       { path: "/kids", element: <KidListPage /> },
       { path: "/pot", element: <PotListPage /> },
       { path: "/pot/create", element: <PotCreatePage /> },
