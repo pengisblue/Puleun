@@ -15,7 +15,9 @@ export class UserLogin {
   @Column({ length: 30, nullable: false })
   user_password: string;
 
-  @OneToOne(() => User)
+  @OneToOne(() => User, {
+    onDelete: 'CASCADE', onUpdate: 'CASCADE'
+  })
   @JoinColumn({name: 'user_id'})
   user: User;
 
