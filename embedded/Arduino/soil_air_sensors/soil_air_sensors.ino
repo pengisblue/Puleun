@@ -8,7 +8,7 @@ DHT dht(DHTPIN, DHTTYPE);
 
 // 토양 수분 센서 설정
 const int MOISTURE_SENSOR_PIN = A5;
-const int MOISTURE_THRESHOLD = 100; // 급격한 변화를 감지할 임계값
+const int MOISTURE_THRESHOLD = 50; // 급격한 변화를 감지할 임계값
 int lastMoistureLevel = 0; // 마지막으로 측정된 수분 수준
 bool rapidChangeDetected = false; // 급변 감지 플래그
 
@@ -42,8 +42,6 @@ void readTempSensor() {
 // 토양 수분 센서 데이터 읽기 및 급변 감지
 void readMoistureSensor() {
   int moistureLevel = analogRead(MOISTURE_SENSOR_PIN);
-  Serial.print("M");
-  Serial.println(moistureLevel);
 
   if (abs(moistureLevel - lastMoistureLevel) > MOISTURE_THRESHOLD) {
     rapidChangeDetected = true;
@@ -53,6 +51,14 @@ void readMoistureSensor() {
   }
 
   lastMoistureLevel = moistureLevel;
+
+  // 값 변환
+  float moisturePercent = map(moistureLevel, 200, 1023, 100, 0);
+  moisturePercent = constrain(moisturePercent, 0, 100);
+
+  // 출력
+  Serial.print("M");
+  Serial.println(moisturePercent);
 }
 
 // 1초마다 센서 읽기
