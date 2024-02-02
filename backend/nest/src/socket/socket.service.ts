@@ -13,7 +13,6 @@ export class SocketService {
     private readonly deviceService: DeviceService,
     private readonly sentenceService: SentenceService,
     private readonly ttsService: TtsService,
-    private readonly redisClient = createClient(),
   ){}
 
   async login(serial_number: string): Promise<SocketLoginDto>{
@@ -34,6 +33,12 @@ export class SocketService {
       result.pot_id = device.pot_id
       result.is_owner = false
     }
+    
+    const redisClient = createClient()
+    redisClient.on('error', err => console.log('Redis Client Error', err));
+    await redisClient.connect()
+    await redisClient.set('key', 'value')
+    console.log(await redisClient.get('key'));
     return result;
   }
 
@@ -64,9 +69,10 @@ export class SocketService {
     // text, answerText 파일 저장 -> redis
     console.log(text)
 
-    this.redisClient.on('error', err => console.log('Redis Client Error', err));
-    await this.redisClient.connect()
-    await this.redisClient.set('key', 'value')
+    const redisClient = createClient()
+    redisClient.on('error', err => console.log('Redis Client Error', err));
+    await redisClient.connect()
+    await redisClient.set('key', 'value')
     return Buffer.from(content).toString('base64')
   }
 
