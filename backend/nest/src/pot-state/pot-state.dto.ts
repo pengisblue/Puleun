@@ -1,5 +1,11 @@
+import { Optional } from "@nestjs/common";
 import { Exclude, Expose, Type,  } from "class-transformer";
 import { IsNumber, IsString, IsDate } from 'class-validator';
+
+export class DateAndTempMoisDto{
+
+}
+
 
 @Exclude()
 export class StatusResultDto{
@@ -19,12 +25,13 @@ export class StatusResultDto{
     @Expose()
     @IsNumber()
     @Type(() => Number)
-    current_temp: number;
+    @Optional()
+    current_temp?: number = -1;
 
     @Expose()
     @IsNumber()
     @Type(() => Number)
-    current_mois: number;
+    current_mois ? : number = -1;
 
     @Expose()
     @IsDate()
