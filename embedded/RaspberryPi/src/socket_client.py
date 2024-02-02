@@ -158,7 +158,9 @@ def save_tts_file(data):
     # 재생이 완료될 때까지 대기
     sd.wait()
 
-    
+    send_stt_file()
+
+
     # pygame.mixer.init()
     # try:
     #     pygame.mixer.music.load(file_path)
@@ -215,9 +217,9 @@ if __name__ == '__main__':
     # 메인 루프
     while True:
         # keyword()
-        send_stt_file()
+        keyword()
 
-        time.sleep(10)
+        time.sleep(1)
     #     # water 들어오면 emit하기
     #     while ser.in_waiting > 0:
     #         sensor_value = ser.readline().decode('utf-8').strip()
