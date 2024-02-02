@@ -19,6 +19,15 @@ export default function Navigation() {
           >
             화분 목록
           </NavLink>
+          <NavLink
+            to="/kids"
+            className={({ isActive }) =>
+              `${isActive ? "underline" : ""}
+              mx-2`
+            }
+          >
+            아이 목록
+          </NavLink>
         </li>
       </ul>
     </nav>
