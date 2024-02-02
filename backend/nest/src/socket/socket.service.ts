@@ -5,6 +5,7 @@ import { SocketLoginDto } from './socket.dto';
 import { DeviceCreateDto } from 'src/device/device-req.dto';
 import { SentenceService } from 'src/sentence/sentence.service';
 import { TtsService } from 'src/tts/tts.service';
+import { createClient } from 'redis';
 
 @Injectable()
 export class SocketService {
@@ -12,6 +13,7 @@ export class SocketService {
     private readonly deviceService: DeviceService,
     private readonly sentenceService: SentenceService,
     private readonly ttsService: TtsService,
+    private readonly redisClient = createClient(),
   ){}
 
   async login(serial_number: string): Promise<SocketLoginDto>{
@@ -61,6 +63,10 @@ export class SocketService {
 
     // text, answerText 파일 저장 -> redis
     console.log(text)
+
+    this.redisClient.on('error', err => console.log('Redis Client Error', err));
+    await this.redisClient.connect()
+    await this.redisClient.set('key', 'value')
     return Buffer.from(content).toString('base64')
   }
 
