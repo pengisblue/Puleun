@@ -12,15 +12,20 @@ async function bootstrap() {
     exposedHeaders: ['Authorization','*'], // * 사용할 헤더 추가.
   });
   const config = new DocumentBuilder()
-    .setTitle('pliends')
-    .setDescription('ETA commonPJT pliends API description')
+    .setTitle('purin')
+    .setDescription('ETA commonPJT purin API description')
     .setVersion('1.0')
     .addTag('User') // Controller mapping
+    .addTag('Pot')
+    .addTag('Device')
+    .addTag('Calender')
+    .addTag('Alarm')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document)
   app.useGlobalPipes(new ValidationPipe());
   app.useWebSocketAdapter(new IoAdapter(app));
+  app.setGlobalPrefix('v1')
   await app.listen(3000);
 }
 bootstrap();
