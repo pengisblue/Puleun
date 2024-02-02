@@ -10,6 +10,8 @@ import pygame
 import serial
 import sys
 import datetime
+import sounddevice as sd
+import soundfile as sf
 from dotenv import load_dotenv
 from serial_number import get_serial_number
 from stt import record_wav, speech_to_text
@@ -21,7 +23,7 @@ sio = socketio.Client()
 pot_id = None # 식물 id
 is_owner = False # 주인 연결 여부
 is_connected = False # 백과 연결 여부
-talk_id = None # 대화 번호
+talk_id = 1 # 대화 번호
 # serial_number = get_serial_number() # 시리얼 번호
 serial_number = 'jkfjksdjs12331'
 transcript = None # stt 텍스트
@@ -61,6 +63,7 @@ def login_result(data):
 @sio.on('tts')
 def talk_tts(data):
     save_tts_file(data)
+    # 이 다음에 stt 실행
 
 
 # 알람이 왔을 때 tts 실행
@@ -104,6 +107,7 @@ def send_stt_file():
     wav_file_path = "recorded_audio.wav"
     record_wav(wav_file_path)
     transcript = speech_to_text(wav_file_path)
+
     
     # transcript의 값이 있을 경우 emit
     if transcript:
@@ -127,6 +131,7 @@ def send_stt_file():
 def keyword(): 
     hotword()
     sio.emit('hot_word') # 서버에게 hot_word 요청
+    print("키워드인식", talk_id)
     send_stt_file()   # 호출어 인식이 되면 stt 실행     
 
 
@@ -141,24 +146,33 @@ def save_tts_file(data):
         file.write(file_data)
 
     print("File received and saved.")
+    time.sleep(1)
 
     # 오디오 재생
-    pygame.mixer.init()
+   
     file_path = "received_file.wav"
 
-    try:
-        pygame.mixer.music.load(file_path)
-        pygame.mixer.music.play()
-        
-        # 파일 재생이 완료될 때까지 대기
-        while pygame.mixer.music.get_busy():
-            pygame.time.Clock().tick(10)
+    data, fs = sf.read(file_path)
+    # 음원 재생
+    sd.play(data, fs)
+    # 재생이 완료될 때까지 대기
+    sd.wait()
 
-    except pygame.error as e:
-        print("오류 발생:", e)
-    finally:
-        print("File play done")
-        pygame.mixer.quit()
+    
+    # pygame.mixer.init()
+    # try:
+    #     pygame.mixer.music.load(file_path)
+    #     pygame.mixer.music.play()
+        
+    #     # 파일 재생이 완료될 때까지 대기
+    #     while pygame.mixer.music.get_busy():
+    #         pygame.time.Clock().tick(10)
+
+    # except pygame.error as e:
+    #     print("오류 발생:", e)
+    # finally:
+    #     print("File play done")
+    #     pygame.mixer.quit()
 
 
 def pot_state(): # 아두이노 측정값 + 물줬을때, 아두이노에서 측정값 받고 보내기
@@ -193,29 +207,32 @@ if __name__ == '__main__':
     arduino_port = 'COM6'
     # arduino_port = '/dev/ttyUSB0' # 라즈베리
     # 시리얼 통신 객체 생성
-    ser = serial.Serial(arduino_port, 9600)  # 아두이노와의 통신 속도에 맞게 설정
+    # ser = serial.Serial(arduino_port, 9600)  # 아두이노와의 통신 속도에 맞게 설정
 
     # -----------
-    keyword() # 호출어 인식 테스트
-    # stt()  # STT 실행문 테스트
+    # keyword() # 호출어 인식 테스트
 
     # 메인 루프
     while True:
-        # water 들어오면 emit하기
-        while ser.in_waiting > 0:
-            sensor_value = ser.readline().decode('utf-8').strip()
-            if (sensor_value == 'Water'):
-                print('sending water signal')
-                sio.emit('water', {'pot_id' : pot_id})
+        # keyword()
+        send_stt_file()
 
-        # 정각마다 pot_state 실행
-        now = datetime.datetime.now()
-        if now.minute == 0:
-            pot_state()
+        time.sleep(10)
+    #     # water 들어오면 emit하기
+    #     while ser.in_waiting > 0:
+    #         sensor_value = ser.readline().decode('utf-8').strip()
+    #         if (sensor_value == 'Water'):
+    #             print('sending water signal')
+    #             sio.emit('water', {'pot_id' : pot_id})
+
+    #     # 정각마다 pot_state 실행
+    #     now = datetime.datetime.now()
+    #     if now.minute == 0:
+    #         pot_state()
 
     # -----
         
     # 시리얼 포트 닫기
-    ser.close()
-    print('serial close')
+    # ser.close()
+    # print('serial close')
 
