@@ -1,15 +1,21 @@
 import PotDetailCard from "../components/Pots/PotDetailCard";
 import PotAddDetailCard from "../components/Pots/PotAddDetailCard";
-import { potDetailList } from "../test/potList";
 import chevron from "../asset/chevron-right.svg";
 import { useNavigate } from "react-router-dom";
+
+// 하드코딩 테스트용 데이터
+import { potDetailList } from "../test/potList";
 
 export default function MainPage() {
   const navigate = useNavigate();
 
-  const goPotList = function() {
-    navigate("/pot")
-  }
+  const goPotList = function () {
+    navigate("/pot");
+  };
+
+  const goCreatPot = function () {
+    navigate("/pot/create");
+  };
 
   return (
     <>
@@ -24,7 +30,9 @@ export default function MainPage() {
           {potDetailList.map((pot) => (
             <PotDetailCard key={pot.potId} {...pot} />
           ))}
-          <PotAddDetailCard />
+          <div onClick={goCreatPot} className="hover:cursor-pointer">
+            <PotAddDetailCard />
+          </div>
         </section>
 
         {/* 새로운 대화 */}

@@ -1,26 +1,19 @@
 import DeviceCard from "./DeviceCard";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { deviceList } from "../../test/deviceList";
-import { useState } from "react";
-import { RadioGroup } from "@headlessui/react";
-import "swiper/css";
+import DeviceBaseCard from "../UI/DeviceBaseCard";
 import DeviceAddCard from "./DeviceAddCard";
 import radioOff from "../../asset/radio_off.svg";
 import radioOn from "../../asset/radio_on.svg";
-import DeviceBaseCard from "../UI/DeviceBaseCard";
+import { useState } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { RadioGroup } from "@headlessui/react";
+import "swiper/css";
 
-// api = {
-//   기기 아이디,
-//   기기 별명,
-//   시리얼번호
-// }
-
-export default function DeviceChoice() {
-  const [selected, setSelected] = useState(deviceList[0]);
+export default function DeviceChoice({ deviceList, onSelect, selectedDevice }) {
+  const [selected, setSelected] = useState(selectedDevice);
 
   const handleChange = function (value) {
-    console.log(value);
     setSelected(value);
+    onSelect(value);
   };
 
   return (

@@ -25,7 +25,7 @@ export class CalenderService {
 
     async getLastWaterDay(pot_id: number): Promise<Date>{
         const temp = await this.calenderRepository.find({
-            where: {pot_id: pot_id},
+            where: {pot_id: pot_id, code:'W'},
             order: {createdAt: 'DESC'},
             select: {createdAt: true},
             take: 1

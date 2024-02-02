@@ -44,9 +44,10 @@ export class PotService {
           // 두번째 파라미터는 해당 alias
         //   .leftJoinAndSelect('pot.user', 'user')
           .select([
-            'pot_id', 'pot.pot_name', 'pot.pot_name',
+            'pot.pot_id', 'pot.pot_name', 'pot.pot_name',
             'pot.pot_img_url', 'pot.min_temperature', 'pot.max_temperature',
-            'pot.min_moisture', 'pot.max_moisture', 'pot.createdAt', 'pot.pot_img_url'
+            'pot.min_moisture', 'pot.max_moisture', 'pot.createdAt', 'pot.pot_img_url',
+            'pot.temperature', 'pot.moisture'
           ])
           .getMany();
       }
