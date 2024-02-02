@@ -1,8 +1,7 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { CalenderService } from './calender.service';
 import { Calender } from './calender.entity';
-import { SelectCalenderDto } from './calender.dto';
-import { ApiBody, ApiOkResponse, ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('calender')
 @ApiTags('Calender')

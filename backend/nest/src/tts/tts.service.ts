@@ -1,12 +1,10 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable, Options, Post } from '@nestjs/common';
-import axios, { Axios, AxiosResponse } from 'axios';
+import { Injectable } from '@nestjs/common';
+import axios from 'axios';
 import * as fs from 'fs';
-import * as request from 'request';
 
 @Injectable()
 export class TtsService {
-    constructor(private readonly httpService: HttpService){}
     api_url: string = 'https://naveropenapi.apigw.ntruss.com/tts-premium/v1/tts';
 
     async tts(answer: string): Promise<any>{
@@ -25,22 +23,19 @@ export class TtsService {
             .then(response => {
                 return new Promise((resolve, reject) => {
                     
-                // response.data.pipe(writer);
-                // response.data
-                console.log(response);
+                response.data.pipe(writer);
                 let error = null;
-                    // writer.on('error', err => {
-                    //     error = err;
-                    //     writer.close();
-                    //     reject(err);
-                    // });
-                    // writer.on('close', () => {
-                    //     if (!error) {
-                    //         resolve(true);
-                    //     }
-                    // })
-            })
-        })
-
+                writer.on('error', err => {
+                    error = err;
+                    writer.close();
+                    reject(err);
+                });
+                writer.on('close', () => {
+                    if (!error) {
+                        resolve(true);
+                    }
+                });
+            });
+        });
     }
 }

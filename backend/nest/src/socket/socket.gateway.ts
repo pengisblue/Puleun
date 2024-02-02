@@ -2,8 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { CreatePotStateDto } from 'src/pot-state/pot-state-insert.dto';
-
 import { SocketService } from "./socket.service";
+import { PotStateService } from 'src/pot-state/pot-state.service';
+import { CalenderService } from 'src/calender/calender.service';
+import { CalenderCreateDto } from 'src/calender/calender-req.dto';
 
 @WebSocketGateway(8080, {
   cors: { origin: ["http://172.23.48.1:3000/","192.168.30.*"],},
@@ -16,34 +18,46 @@ export class SocketGateway {
 
   constructor(
     private readonly socketService: SocketService,
+    private readonly potStateService: PotStateService,
+    private readonly calenderService: CalenderService,
   ){}
 
-  handleConnection(@ConnectedSocket() client: Socket){
+  handleConnection( client: Socket ){
     console.log(client.id)
     client.emit(`Hello ${client.id}`)
   }
 
   @SubscribeMessage('login')
-  handleClientConnect(@ConnectedSocket() client: Socket, @MessageBody('message') message: JSON) {
-    client.emit('message',{ result: `${message} accepted`})
+  async handleClientConnect(@ConnectedSocket() client: Socket, @MessageBody('serial_number') serial_number: string){
+    const result = await this.socketService.login(serial_number)
+    client.emit('login_result',result)
   }
 
-  @SubscribeMessage('pot-state')
+  @SubscribeMessage('pot_state')
   async handleMessage( @MessageBody() inputDto: CreatePotStateDto): Promise<number>{
-    await this.socketService.saveState(inputDto);
+    await this.potStateService.save(inputDto);
     return 1;
   }
 
   @SubscribeMessage('stt')
-  async saveSttFile( @ConnectedSocket() client: Socket, @MessageBody('txt') txt: string, @MessageBody('file') base64Data: string): Promise<string>{
-    if (txt==null) txt=""
+  async saveSttFile( @ConnectedSocket() client: Socket, @MessageBody('text') text: string, @MessageBody('talk_id') talk_id: number, @MessageBody('file') base64Data: string): Promise<string>{
+    if (text==null) text=""
     if (base64Data==null) base64Data=""
-    const returnData = await this.socketService.stt(txt, base64Data)
+    const returnData = await this.socketService.stt(text, talk_id, base64Data)
     try{
       client.emit('tts', {base64Data:returnData} );
     } catch (error) {
       console.error(`Error reading file: ${error}`);
     }
     return returnData
+  }
+
+  @SubscribeMessage('water')
+  async water( @MessageBody('pot_id') pot_id: number ): Promise<void>{
+    const dto = new CalenderCreateDto;
+    dto.pot_id = pot_id
+    dto.code = 'W'
+    this.calenderService.save(dto)
+    console.log('water')
   }
 }

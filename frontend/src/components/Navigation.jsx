@@ -11,13 +11,22 @@ export default function Navigation() {
       <ul className="me-4">
         <li>
           <NavLink
-            to="/pots"
+            to="/pot"
             className={({ isActive }) =>
               `${isActive ? "underline" : ""}
               mx-2`
             }
           >
             화분 목록
+          </NavLink>
+          <NavLink
+            to="/kids"
+            className={({ isActive }) =>
+              `${isActive ? "underline" : ""}
+              mx-2`
+            }
+          >
+            아이 목록
           </NavLink>
         </li>
       </ul>

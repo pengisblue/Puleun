@@ -6,7 +6,7 @@ export class TtsController {
     constructor(private readonly ttsService: TtsService){}
 
     @Get(':voice')
-    async getClovaVoice(@Res() res: Response, @Param('voice') voice: string ){
+    async getClovaVoice(@Res() res: Response, @Param('voice') voice: string ): Promise<string>{
         await this.ttsService.tts(voice);
         return 'OK';
     }

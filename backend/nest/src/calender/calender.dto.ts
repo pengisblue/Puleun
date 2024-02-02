@@ -1,7 +1,4 @@
-import { Pot } from "src/pot/pot.entity";
-import { Calender } from "./calender.entity";
 import { Exclude, Expose } from "class-transformer";
-
 
 @Exclude()
 export class calenderPotDto{
