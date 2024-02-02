@@ -159,8 +159,7 @@ def save_tts_file(data):
     sd.wait()
 
     send_stt_file()
-
-
+    
     # pygame.mixer.init()
     # try:
     #     pygame.mixer.music.load(file_path)
