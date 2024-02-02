@@ -113,7 +113,7 @@ void loop() {
   Serial.println(distance);
   
   // 거리 가까우면 팔 흔들기
-  if (distance <= 100) {
+  if (2 < distance && distance <= 100) {
     // Serial.println("move");
     servo1.write(90);
     servo2.write(90);
