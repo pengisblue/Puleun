@@ -2,13 +2,13 @@
 
 ## components
 ### Devices
-- DeviceChoice.jsx
-    - import { deviceList } from "../../test/deviceList";
 
 ## pages
 - CreatePot.jsx
     - import { userList } from "../test/userList";
     - import { plantList } from "../test/plantList";
+    - import { deviceList } from "../../test/deviceList";
+    - import potImg from "../test/pot1.jpg";
 
 - MainPage.jsx
     - import { potDetailList } from "../test/potList";

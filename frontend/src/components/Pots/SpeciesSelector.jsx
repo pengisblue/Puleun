@@ -56,7 +56,7 @@ export default function SpeciesSelector({ plantList, onSelect, selectedPlant }) 
             {/* 사용자 직접입력 */}
             {query.length > 0 && !existsPlant && (
               <Combobox.Option
-                value={{ id: null, name: query }}
+                value={{ id: null, name: query, maxTemperature: "", minTemperature: "", maxMoisture: "", minMoisture: ""}}
                 className="relative cursor-default select-none px-4 py-2 text-gray-700"
               >
                 "{query}" 직접 입력

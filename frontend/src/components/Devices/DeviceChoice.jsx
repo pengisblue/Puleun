@@ -8,21 +8,12 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { RadioGroup } from "@headlessui/react";
 import "swiper/css";
 
-// 하드코딩 테스트용 데이터
-import { deviceList } from "../../test/deviceList";
-
-// api = {
-//   기기 아이디,
-//   기기 별명,
-//   시리얼번호
-// }
-
-export default function DeviceChoice() {
-  const [selected, setSelected] = useState(deviceList[0]);
+export default function DeviceChoice({ deviceList, onSelect, selectedDevice }) {
+  const [selected, setSelected] = useState(selectedDevice);
 
   const handleChange = function (value) {
-    console.log(value);
     setSelected(value);
+    onSelect(value);
   };
 
   return (
