@@ -7,7 +7,7 @@ import { IoAdapter } from '@nestjs/platform-socket.io';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: ["http://172.23.48.1/","192.168.30.*", '172.26.80.1'],
+    origin: ["http://172.23.48.1/","192.168.30.*", 'http://172.26.80.1:3000'],
     credentials: true,
     exposedHeaders: ['Authorization','*'], // * 사용할 헤더 추가.
   });
