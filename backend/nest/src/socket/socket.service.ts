@@ -4,12 +4,14 @@ import { DeviceService } from './../device/device.service';
 import { SocketLoginDto } from './socket.dto';
 import { DeviceCreateDto } from 'src/device/device-req.dto';
 import { SentenceService } from 'src/sentence/sentence.service';
+import { TtsService } from 'src/tts/tts.service';
 
 @Injectable()
 export class SocketService {
   constructor(
     private readonly deviceService: DeviceService,
-    private readonly sentenceService: SentenceService
+    private readonly sentenceService: SentenceService,
+    private readonly ttsService: TtsService,
   ){}
 
   async login(serial_number: string): Promise<SocketLoginDto>{
@@ -32,20 +34,21 @@ export class SocketService {
 
   /** stt 받아서 tts로 return */
   async stt(text: string, talk_id: number, base64Data: string): Promise<string>{
-    const filePath = "./upload/2024-02-01/" + "푸른이와의 대화.mp3"
+    console.log(text)
+    const saveFilePath = "./upload/2024-02-01/" + "푸른이와의 대화.mp3"
     const decodedBuffer = Buffer.from(base64Data, 'base64');
-    fs.writeFileSync(filePath, decodedBuffer);
+    fs.writeFileSync(saveFilePath, decodedBuffer);
 
-    // 답변 생성 (gpt api) -> sentence // 여기가 시간제일 많이
+    // gpt api
     const answerText = await this.sentenceService.answer(text)
     
+    const filePath = "./upload/2024-01-30/" + "ETA.wav"
     // message -> tts >> wav // 시간 안해봐서 모름
-    
+    await this.ttsService.tts(answerText, filePath)
 
     // client.emit(wav) 
-    const filePath2 = "./upload/2024-01-30/" + "ETA.mp3"
     const content = await new Promise<Buffer>((resolve, reject) => {
-      fs.readFile(filePath2, (err, data) => {
+      fs.readFile(filePath, (err, data) => {
         if (err) {
         reject(err)
         } else {
@@ -61,9 +64,4 @@ export class SocketService {
 
   /** 페이지 요청시 온습도 재측정 요청 */
   async refresh(){}
-
-  /** 물준날 체크 */
-  async water(): Promise<void>{
-
-  }
 }

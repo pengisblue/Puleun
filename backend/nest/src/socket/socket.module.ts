@@ -8,10 +8,11 @@ import { PotStateModule } from 'src/pot-state/pot-state.module';
 import { DeviceModule } from 'src/device/device.module';
 import { SentenceModule } from 'src/sentence/sentence.module';
 import { CalenderModule } from 'src/calender/calender.module';
+import { TtsModule } from 'src/tts/tts.module';
 
 @Module({
   imports: [ TypeOrmModule.forFeature([PotState]), PotStateModule, 
-  DeviceModule, SentenceModule, CalenderModule ],
+  DeviceModule, SentenceModule, CalenderModule, TtsModule ],
   controllers:[SocketController],
   providers:[SocketGateway, SocketService],})
 export class SocketModule {

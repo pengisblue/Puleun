@@ -24,7 +24,6 @@ export class SocketGateway {
 
   handleConnection( client: Socket ){
     console.log(client.id)
-    client.emit(`Hello ${client.id}`)
   }
 
   @SubscribeMessage('login')
@@ -41,6 +40,7 @@ export class SocketGateway {
 
   @SubscribeMessage('stt')
   async saveSttFile( @ConnectedSocket() client: Socket, @MessageBody('text') text: string, @MessageBody('talk_id') talk_id: number, @MessageBody('file') base64Data: string): Promise<string>{
+    console.log(text)
     if (text==null) text=""
     if (base64Data==null) base64Data=""
     const returnData = await this.socketService.stt(text, talk_id, base64Data)
@@ -59,5 +59,10 @@ export class SocketGateway {
     dto.code = 'W'
     this.calenderService.save(dto)
     console.log('water')
+  }
+
+  @SubscribeMessage('hot_word')
+  async hotWord( @ConnectedSocket() client: Socket ): Promise<void>{
+    client.emit('talk_id',{talk_id: 1})
   }
 }
