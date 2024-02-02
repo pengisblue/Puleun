@@ -15,7 +15,7 @@ export class TtsService {
         await axios({  
             method: 'POST',
             url: this.api_url,
-            data: "speaker=nara&volume=0&speed=0&pitch=0&format=mp3&text=" + answer,
+            data: "speaker=nhajun&volume=0&speed=0&pitch=0&format=mp3&text=" + answer,
             headers: {'X-NCP-APIGW-API-KEY-ID': process.env.CLOVA_CLIENT_ID, 
                     'X-NCP-APIGW-API-KEY': process.env.CLOVA_CLIENT_SECRET},
             responseType: 'stream',
