@@ -7,7 +7,7 @@ import { useState } from "react";
 import { userList } from "../test/userList";
 import { plantList } from "../test/plantList";
 
-export default function CreatePot() {
+export default function CreatePotPage() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [potName, setPotName] = useState(null);
   const [selectedPlant, setSelectedPlant] = useState(plantList[0]);   // 선택된 품종

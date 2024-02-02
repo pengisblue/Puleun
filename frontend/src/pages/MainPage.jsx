@@ -1,8 +1,10 @@
 import PotDetailCard from "../components/Pots/PotDetailCard";
 import PotAddDetailCard from "../components/Pots/PotAddDetailCard";
-import { potDetailList } from "../test/potList";
 import chevron from "../asset/chevron-right.svg";
 import { useNavigate } from "react-router-dom";
+
+// 하드코딩 테스트용 데이터
+import { potDetailList } from "../test/potList";
 
 export default function MainPage() {
   const navigate = useNavigate();

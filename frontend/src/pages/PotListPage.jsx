@@ -1,12 +1,14 @@
 import PotSimpleCard from "../components/Pots/PotSimpleCard";
 import PotAddSimpleCard from "../components/Pots/PotAddSimpleCard";
+import Filter from "../components/UI/Filter";
 import plus from "../asset/plus_slate.svg";
 import cog from "../asset/cog-8-tooth.svg";
-import { potSimpleList } from "../test/potList";
-import { userList } from "../test/userList";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Filter from "../components/UI/Filter";
+
+// 하드코딩 테스트용 데이터
+import { potSimpleList } from "../test/potList";
+import { userList } from "../test/userList";
 
 // api1 = {
 //   화분 아이디,
