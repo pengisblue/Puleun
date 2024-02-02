@@ -1,4 +1,3 @@
-import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import * as fs from 'fs';
@@ -7,9 +6,8 @@ import * as fs from 'fs';
 export class TtsService {
     api_url: string = 'https://naveropenapi.apigw.ntruss.com/tts-premium/v1/tts';
 
-    async tts(answer: string): Promise<any>{
-        const filePath = "./upload/2024-02-01/" + "푸른이와의 대화.mp3"
-
+    async tts(answer: string, filePath: string): Promise<any>{
+        
         const writer = fs.createWriteStream(filePath);
 
         await axios({  
@@ -37,5 +35,6 @@ export class TtsService {
                 });
             });
         });
+
     }
 }
