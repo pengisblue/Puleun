@@ -28,13 +28,15 @@ export class SocketService {
       return result
     }
     result.is_owner = true
-    if (device.pot_id != null) result.pot_id = device.pot_id
+    if (device.pot_id != null) {
+      result.pot_id = device.pot_id
+      result.is_owner = false
+    }
     return result;
   }
 
   /** stt 받아서 tts로 return */
   async stt(text: string, talk_id: number, base64Data: string): Promise<string>{
-    console.log(text)
     const saveFilePath = "./upload/2024-02-01/" + "푸른이와의 대화.mp3"
     const decodedBuffer = Buffer.from(base64Data, 'base64');
     fs.writeFileSync(saveFilePath, decodedBuffer);
