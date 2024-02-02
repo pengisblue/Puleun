@@ -15,6 +15,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { FileModule } from './file/file.module';
 import { SocketModule } from './socket/socket.module';
 import { ConfigModule } from '@nestjs/config';
+import { TtsModule } from './tts/tts.module';
+
 
 @Module({
   imports: [UserModule, PotModule, FileModule, SocketModule,
@@ -36,7 +38,7 @@ import { ConfigModule } from '@nestjs/config';
       migrations: ['src/migrations/*.ts'],
       subscribers: ['src/subscribers/*.ts'],
     }),
-    
+    TtsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

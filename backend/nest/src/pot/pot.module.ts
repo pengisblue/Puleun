@@ -8,6 +8,8 @@ import { UserModule } from 'src/user/user.module';
 @Module({
   imports: [TypeOrmModule.forFeature([Pot]), UserModule],
   controllers: [PotController],
-  providers: [PotService]
+  providers: [PotService],
+  exports:[PotService]
+
 })
 export class PotModule {}

@@ -24,13 +24,12 @@ export class SocketGateway {
 
   handleConnection( client: Socket ){
     console.log(client.id)
-    client.emit(`Hello ${client.id}`)
   }
 
   @SubscribeMessage('login')
   async handleClientConnect(@ConnectedSocket() client: Socket, @MessageBody('serial_number') serial_number: string){
     const result = await this.socketService.login(serial_number)
-    client.emit('login_result',result)
+    client.emit('login_result', result)
   }
 
   @SubscribeMessage('pot_state')
@@ -58,6 +57,10 @@ export class SocketGateway {
     dto.pot_id = pot_id
     dto.code = 'W'
     this.calenderService.save(dto)
-    console.log('water')
+  }
+
+  @SubscribeMessage('hot_word')
+  async hotWord( @ConnectedSocket() client: Socket ): Promise<void>{
+    client.emit('talk_id',{talk_id: 1})
   }
 }

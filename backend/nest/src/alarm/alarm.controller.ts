@@ -5,7 +5,7 @@ import { ApiBody, ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger';
 import { AlarmDto, CreateAlarmDto } from './alarm.dto';
 
 @Controller('alarm')
-@ApiTags('alarm')
+@ApiTags('Alarm')
 export class AlarmController {
     constructor(private readonly alarmService:AlarmService){}
 

@@ -3,6 +3,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { PotStateService } from './pot-state.service';
 import { PotState } from './pot-state.entity';
 import { CreatePotStateDto } from './pot-state-insert.dto';
+import { StatusResultDto } from './pot-state.dto';
 
 @Controller('pot-state')
 @ApiTags('pot-state')
@@ -15,7 +16,13 @@ export class PotStateController {
     }
 
     @Post()
-    async save(@Query() @Body() createPotStateDto:CreatePotStateDto): Promise<number>{
+    async save(@Body() createPotStateDto:CreatePotStateDto): Promise<number>{
         return this.potStateService.save(createPotStateDto)
+    }
+
+    @Get(':parent_id')
+    async checkStatus(@Param('parent_id') parent_id: number): Promise<PotState[]>{
+        const result = await this.potStateService.checkStatus(parent_id);
+        return result;
     }
 }
