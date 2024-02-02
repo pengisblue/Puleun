@@ -4,8 +4,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto, UpdateUserDto } from './user-req.dto';
 import { UserDetailDto, UserListDto } from './user-res.dto';
-import { plainToClass } from 'class-transformer';
-import { Pot } from 'src/pot/pot.entity';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class UserService {
@@ -16,7 +15,8 @@ export class UserService {
 
     async findByParent(user_id: number):Promise<UserListDto[]>{
         const child = await this.UserRepository.findBy({parent_id:user_id})
-        return plainToClass(UserListDto, child);
+        child.push( await this.UserRepository.findOneBy({user_id}) )
+        return plainToInstance(UserListDto, child);
     }
 
     async find(user_id: number): Promise<UserDetailDto>{
