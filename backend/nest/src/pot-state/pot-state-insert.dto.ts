@@ -5,6 +5,7 @@ import { IsNumber } from 'class-validator';
 export class CreatePotStateDto {
     @ApiProperty()
     @IsNumber()
+    @Type(() => Number)
     pot_id: number;
     
     @ApiProperty()

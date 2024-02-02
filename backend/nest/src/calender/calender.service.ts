@@ -22,6 +22,16 @@ export class CalenderService {
         await this.calenderRepository.save(calenderCreateDto)
         return 1;
     }
+
+    async getLastWaterDay(pot_id: number): Promise<Date>{
+        const temp = await this.calenderRepository.find({
+            where: {pot_id: pot_id},
+            order: {createdAt: 'DESC'},
+            select: {createdAt: true},
+            take: 1
+        })
+        return temp[0]?.createdAt;
+    }
     // async findAll(pot_id: number): Promise<Calender[]>{
     //     const entity = await this.calenderRepository.createQueryBuilder('calender')
     //         .where('calender.pot_id= :pot_id', {pot_id})

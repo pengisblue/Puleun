@@ -39,11 +39,14 @@ export class PotService {
     async findPotsByUserId(user_id: number): Promise<Pot[]> {
         return this.potRepository.createQueryBuilder('pot')
           .where('pot.user_id = :user_id', { user_id })
+          .andWhere('pot.collection_FG= :FG ', {FG: 0})
           // 첫번째 파라미터는 repository의 엔티티의 연관관계가 잡힌 필드의 이름
           // 두번째 파라미터는 해당 alias
-          .leftJoinAndSelect('pot.user', 'user')
+        //   .leftJoinAndSelect('pot.user', 'user')
           .select([
-            'pot', 'user.user_id', 'user.nickname'
+            'pot_id', 'pot.pot_name', 'pot.pot_name',
+            'pot.pot_img_url', 'pot.min_temperature', 'pot.max_temperature',
+            'pot.min_moisture', 'pot.max_moisture', 'pot.createdAt', 'pot.pot_img_url'
           ])
           .getMany();
       }
@@ -69,4 +72,6 @@ export class PotService {
     async toCollection(pot_id: number){
         await this.potRepository.update(pot_id, {collection_FG: true});
     }
+
+    
 }
