@@ -157,7 +157,7 @@ def save_tts_file(data):
     sd.play(data, fs)
     # 재생이 완료될 때까지 대기
     sd.wait()
-
+    # stt를 넣는다.
     
     # pygame.mixer.init()
     # try:
