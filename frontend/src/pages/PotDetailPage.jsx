@@ -22,7 +22,7 @@ export default function PotDetailPage() {
   return (
     <div>
       <h1>{pot.userName}, {pot.potName}</h1>
-      <PotDetailCard {...pot}/>
+      <PotDetailCard {...pot} size="w-80 h-44" display="hidden"/>
     </div>
   );
 }

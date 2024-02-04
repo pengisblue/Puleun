@@ -15,7 +15,7 @@ export default function PotSwiper({ potList }) {
     <Swiper slidesPerView={"auto"} loop={false}>
       {potList.map((pot) => (
         <SwiperSlide key={pot.potId} className="w-auto-important me-2">
-          <PotDetailCard {...pot}/>
+          <PotDetailCard {...pot} size="w-80 h-48"/>
         </SwiperSlide>
       ))}
       <SwiperSlide className="w-auto-important me-4">

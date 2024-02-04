@@ -2,6 +2,7 @@ import BaseDetailCard from "../UI/BaseDetailCard";
 import PotProfileImage from "./PotProfileImage";
 
 export default function PotDetailCard({
+  // 화분 정보
   potId,
   userName,
   potName,
@@ -14,6 +15,9 @@ export default function PotDetailCard({
   daysSinceWatering,
   plantDate,
   daysSincePlanting,
+  // css 정보
+  size,
+  display,
 }) {
   // 이름이 받침으로 끝나는지 확인
   function hasCoda(name) {
@@ -43,9 +47,9 @@ export default function PotDetailCard({
   }
 
   return (
-    <BaseDetailCard size="w-80 h-48">
-      <div className="grid grid-cols-12 place-content-center gap-2">
-        <h1 className={`col-span-12 flex flex-wrap font-bold ${textSize(userName, potName)}`}>
+    <BaseDetailCard size={size}>
+      <div className="grid grid-cols-12 place-content-center gap-1">
+        <h1 className={`col-span-12 flex flex-wrap font-bold ${textSize(userName, potName)} ${display}`}>
           <span className="me-2">
             {userName}
             {selectPostposition(userName)}
@@ -57,7 +61,7 @@ export default function PotDetailCard({
           <PotProfileImage imgUrl={potImgUrl} />
         </div>
 
-        <ul className="col-span-7 text-sm font-semibold">
+        <ul className="col-span-6 col-start-7 text-sm font-semibold">
           <li>
             품종: <span>{potSpecies}</span>
           </li>
