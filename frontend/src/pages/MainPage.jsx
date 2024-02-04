@@ -1,9 +1,9 @@
+import PotSwiper from "../components/Pots/PotSwiper";
 import chevron from "../asset/chevron-right.svg";
 import { useNavigate } from "react-router-dom";
 
 // 하드코딩 테스트용 데이터
 import { potDetailList } from "../test/potList";
-import PotSwiper from "../components/Pots/PotSwiper";
 
 // 화분 상태정보 = {
 //   화분 아이디,
