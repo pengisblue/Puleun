@@ -1,9 +1,11 @@
+import PotDetailCard from "../components/Pots/PotDetailCard";
+import Calander from "react-calendar";
+import 'react-calendar/dist/Calendar.css';
 import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 // 하드코딩용
 import { potDetailList } from "../test/potList";
-import PotDetailCard from "../components/Pots/PotDetailCard";
 
 export default function PotDetailPage() {
   const { potId } = useParams();
@@ -17,12 +19,17 @@ export default function PotDetailPage() {
   }, [potId, navigate]);
 
   // 하드코딩용
-  const pot = potDetailList[potId-1];
+  const pot = potDetailList[potId - 1];
 
   return (
     <div>
-      <h1>{pot.userName}, {pot.potName}</h1>
-      <PotDetailCard {...pot} size="w-80 h-44" display="hidden"/>
+      <h1>
+        {pot.userName}, {pot.potName}
+      </h1>
+      <PotDetailCard {...pot} size="w-80 h-44" display="hidden" />
+      <section>
+        <Calander className="rounded-lg"/>
+      </section>
     </div>
   );
 }
