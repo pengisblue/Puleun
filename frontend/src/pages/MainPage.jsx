@@ -5,6 +5,20 @@ import { useNavigate } from "react-router-dom";
 import { potDetailList } from "../test/potList";
 import PotSwiper from "../components/Pots/PotSwiper";
 
+// 화분 상태정보 = {
+//   화분 아이디,
+//   화분 이름,
+//   주인 이름,
+//   화분 이미지,
+//   품종,
+//   현재 온도,
+//   현재 습도,
+//   온도 상태,
+//   습도 상태,
+//   물 준 날,
+//   심은 날
+// }
+
 export default function MainPage() {
   const navigate = useNavigate();
 
