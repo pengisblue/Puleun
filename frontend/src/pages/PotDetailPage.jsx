@@ -17,7 +17,7 @@ export default function PotDetailPage() {
   }, [potId, navigate]);
 
   // 하드코딩용
-  const pot = potDetailList[potId];
+  const pot = potDetailList[potId-1];
 
   return (
     <div>
