@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import KidCard from "../components/Kids/KidCard";
-import PotAddDetailCard from "../components/Pots/PotAddDetailCard";
+import AddDetailCard from "../components/UI/AddDetailCard";
 
 export default function KidListPage() {
   const [kidList, setKidList] = useState([]);
@@ -32,7 +32,7 @@ export default function KidListPage() {
           {kidList.map((kid) => (
             <KidCard key={kid.userId} nickname={kid.nickname}></KidCard>
           ))}
-          <PotAddDetailCard></PotAddDetailCard>
+          <AddDetailCard text="아이 추가하기" size="w-72"/>
         </div>
       </div>
     </>
