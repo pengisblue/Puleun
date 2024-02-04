@@ -5,6 +5,7 @@ import { SocketLoginDto } from './socket.dto';
 import { DeviceCreateDto } from 'src/device/device-req.dto';
 import { SentenceService } from 'src/sentence/sentence.service';
 import { TtsService } from 'src/tts/tts.service';
+import { createClient } from 'redis';
 
 @Injectable()
 export class SocketService {
@@ -32,6 +33,12 @@ export class SocketService {
       result.pot_id = device.pot_id
       result.is_owner = false
     }
+    
+    const redisClient = createClient()
+    redisClient.on('error', err => console.log('Redis Client Error', err));
+    await redisClient.connect()
+    await redisClient.set('key', 'value')
+    console.log(await redisClient.get('key'));
     return result;
   }
 
@@ -61,6 +68,11 @@ export class SocketService {
 
     // text, answerText 파일 저장 -> redis
     console.log(text)
+
+    const redisClient = createClient()
+    redisClient.on('error', err => console.log('Redis Client Error', err));
+    await redisClient.connect()
+    await redisClient.set('key', 'value')
     return Buffer.from(content).toString('base64')
   }
 
