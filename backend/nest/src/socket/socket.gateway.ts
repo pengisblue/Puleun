@@ -28,7 +28,7 @@ export class SocketGateway {
 
   @SubscribeMessage('login')
   async handleClientConnect(@ConnectedSocket() client: Socket, @MessageBody('serial_number') serial_number: string){
-    const result = await this.socketService.login(serial_number)
+    const result = await this.socketService.login(client.id, serial_number)
     client.emit('login_result', result)
   }
 
@@ -39,7 +39,10 @@ export class SocketGateway {
   }
 
   @SubscribeMessage('stt')
-  async saveSttFile( @ConnectedSocket() client: Socket, @MessageBody('text') text: string, @MessageBody('talk_id') talk_id: number, @MessageBody('file') base64Data: string): Promise<string>{
+  async saveSttFile( @ConnectedSocket() client: Socket, 
+        @MessageBody('text') text: string, 
+        @MessageBody('talk_id') talk_id: string, 
+        @MessageBody('file') base64Data: string): Promise<string>{
     if (text==null) text=""
     if (base64Data==null) base64Data=""
     const returnData = await this.socketService.stt(text, talk_id, base64Data)
@@ -62,5 +65,9 @@ export class SocketGateway {
   @SubscribeMessage('hot_word')
   async hotWord( @ConnectedSocket() client: Socket ): Promise<void>{
     client.emit('talk_id',{talk_id: 1})
+  }
+
+  async refresh( clientId: string): Promise<void>{
+    this.server.to(clientId).emit('refresh')
   }
 }
