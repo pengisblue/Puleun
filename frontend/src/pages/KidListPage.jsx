@@ -8,6 +8,10 @@ export default function KidListPage() {
   const [kidList, setKidList] = useState([]);
   const navigate = useNavigate();
 
+  const goDetailKid = (userId) => {
+    return () => navigate(`/kid/${userId}`);
+  };
+
   const goCreateKid = () => {
     navigate("/kid/create");
   };
@@ -42,7 +46,9 @@ export default function KidListPage() {
       </header>
       <div className="my-6 grid w-full grid-cols-3 place-items-center gap-3 md:grid-cols-3 lg:grid-cols-3">
         {kidList.map((kid) => (
-          <KidCard key={kid.userId} nickname={kid.nickname}></KidCard>
+          <div onClick={goDetailKid(kid.userId)} className="cursor-pointer">
+            <KidCard key={kid.userId} nickname={kid.nickname}></KidCard>
+          </div>
         ))}
       </div>
     </div>

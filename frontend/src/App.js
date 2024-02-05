@@ -9,6 +9,7 @@ import PotDetailPage from "./pages/PotDetailPage";
 
 // import Example from "./test/Example";
 import KidCreatePage from "./pages/KidCreatePage";
+import KidDetailPage from "./pages/KidDetailPage";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,7 @@ const router = createBrowserRouter([
       { path: "/pot/create", element: <PotCreatePage /> },
       { path: "/kid/create", element: <KidCreatePage /> },
       { path: "/pot/:potId", element: <PotDetailPage /> },
+      { path: "/kid/:userId", element: <KidDetailPage></KidDetailPage> },
     ],
   },
   // 테스트용
