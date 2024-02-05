@@ -30,7 +30,7 @@ export default function PotCalander({ wateringDayList, talkDayList }) {
   };
 
   return (
-    <div className="rounded-xl border overflow-hidden max-w-[30rem]">
+    <>
       <Calander
         calendarType="US"
         locale="ko"
@@ -40,6 +40,6 @@ export default function PotCalander({ wateringDayList, talkDayList }) {
         formatDay={(locale, date) => dayjs(date).format("D")}
         tileContent={ContentInfo}
       />
-    </div>
+    </>
   );
 }
