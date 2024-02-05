@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query } from
 import { UserService } from './user.service';
 import { User } from './user.entity';
 import { CreateUserDto, UpdateUserDto } from './user-req.dto';
-import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ApiExtraModels } from "@nestjs/swagger";
 import { UserDetailDto, UserListDto } from './user-res.dto';
 
@@ -27,18 +27,21 @@ export class UserController {
     }
 
     @Post()
+    @ApiBody( { type: CreateUserDto } )
     @ApiOperation({ summary: '유저 등록 & 아이 등록'})
     @ApiOkResponse({ type:'1', description:'1 for SUCCESS' })
     @ApiNotFoundResponse({ description:'wrong data request' })
-    async save(@Query() @Body() child:CreateUserDto): Promise<number>{
-        return this.userService.save(child)
+    async save(@Body() user:CreateUserDto): Promise<number>{
+        console.log(user)
+        return this.userService.save(user)
     }
 
     @Put(':user_id')
+    @ApiBody( { type: UpdateUserDto } )
     @ApiOperation({ summary: '유저 & 아이 정보 수정'})
     @ApiOkResponse({ type:'1', description:'1 for SUCCESS'})
-    async update(@Query() @Param('user_id') user_id:number, @Query() @Body() child:UpdateUserDto): Promise<number>{
-        return this.userService.update(user_id, child)
+    async update(@Param('user_id') user_id:number, @Body('user') user:UpdateUserDto): Promise<number>{
+        return this.userService.update(user_id, user)
     }
     
     @Delete(':user_id')
@@ -46,5 +49,11 @@ export class UserController {
     @ApiOkResponse({ type:'1', description:'1 for SUCCESS'})
     async delete(@Param('user_id') user_id:number): Promise<number>{
         return this.userService.delete(user_id)
+    }
+
+    @Get('pot/:user_id')
+    @ApiOperation({ summary: '유저의 화분 모두 조회'})
+    async findPotWithUserId(@Param('user_id') user_id: number): Promise<User>{
+        return await this.userService.findPot(user_id);
     }
 }

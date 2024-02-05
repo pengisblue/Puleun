@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn, CreateDateColumn, DeleteDateColumn, UpdateDateColumn } from 'typeorm';
 import { User } from '../user/user.entity'; // 다른 엔터티에 따라 수정해야 합니다.
-import { PotState } from '../pot-state/pot-state.entity';
-import { Type } from 'class-transformer';
+import { Calender } from 'src/calender/calender.entity';
+import { Alarm } from 'src/alarm/alarm.entity';
 
 @Entity()
 export class Pot {
@@ -38,13 +38,27 @@ export class Pot {
   @Column({ length: 200, nullable: false, default: 'noimage.png' })
   pot_img_url: string;
 
-  @ManyToOne(() => User)
-  @JoinColumn({name: 'user_id'}) // 외래키 식별자로 사용될 컬럼명
-  user_id: number;
+  @ManyToOne(() => User, (user) => user.pots, {onUpdate: 'CASCADE', onDelete: 'CASCADE'})// 외래키 식별자로 사용될 컬럼명
+  @JoinColumn({name: 'user_id'})
+  user: User;
+
+  // OneToMany에서는 참조하는 테이블의 PK가 아니라 FK를 지정해야한다
+  @OneToMany(() => Calender, calender => calender.pot)
+  calender: Calender[];
+
+  // OneToMany에서는 참조하는 테이블의 PK가 아니라 FK를 지정해야한다
+  @OneToMany(() => Alarm, alarm => alarm.pot)
+  alarm: Alarm[];
 
   @Column({ type: 'int', nullable: true})
   happy_cnt: number;
 
   @Column({ type: 'tinyint', nullable: false, default: 0})
   collection_FG: boolean;
+
+  @Column({type: 'int', nullable: true, default: 0, name: 'temperature'})
+  temperature: number;
+
+  @Column({type: 'int', nullable: true, default: 0, name: 'moisture'})
+  moisture: number;
 }

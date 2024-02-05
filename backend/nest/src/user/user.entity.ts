@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, JoinColumn, OneToOne } from 'typeorm';
 import { Pot } from '../pot/pot.entity';
+import { UserLogin } from 'src/user-login/user-login.entity';
 
 @Entity()
 export class User {
@@ -26,9 +27,11 @@ export class User {
   @Column({ nullable: true })
   parent_id: number
 
-  @OneToMany(() => Pot, (pot) => pot.user_id)
-  @JoinColumn()
-  Pots: Pot[];
+  @OneToMany(() => Pot, (pot) => pot.user)
+  pots: Pot[];
+
+  @OneToOne(() => UserLogin, (userLogin) => userLogin.user, {cascade: true})
+  userLogin: UserLogin;
 
   // Other columns and relationships can be added as needed.
 }

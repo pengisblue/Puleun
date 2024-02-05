@@ -1,26 +1,37 @@
-import logo from "./logo.svg";
-import "./App.css";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
+import MainPage from "./pages/MainPage";
+import PotListPage from "./pages/PotListPage";
+import RootLayout from "./pages/Root";
+import KidListPage from "./pages/KidListPage";
+import PotCreatePage from "./pages/PotCreatePage";
+import PotDetailPage from "./pages/PotDetailPage";
+
+// import Example from "./test/Example";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <RootLayout />,
+    children: [
+      { path: "/", element: <MainPage /> },
+      { path: "/kids", element: <KidListPage /> },
+      { path: "/pot", element: <PotListPage /> },
+      { path: "/pot/create", element: <PotCreatePage /> },
+      { path: "/pot/:potId", element: <PotDetailPage /> },
+    ],
+  },
+  // 테스트용
+  {
+    // path: "/test",
+    // element: <Example />,
+  },
+]);
 
 function App() {
   return (
-    <div className="App">
-      <h1 className="text-3xl font-bold text-violet-600 underline">
-        Hello world!
-      </h1>
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="min-h-screen bg-amber-overlay">
+      <RouterProvider router={router} />
     </div>
   );
 }
