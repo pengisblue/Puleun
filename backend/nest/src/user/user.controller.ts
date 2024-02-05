@@ -4,7 +4,7 @@ import { User } from './user.entity';
 import { CreateUserDto, UpdateUserDto } from './user-req.dto';
 import { ApiBody, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ApiExtraModels } from "@nestjs/swagger";
-import { UserDetailDto, UserListDto } from './user-res.dto';
+import { SpeciesWithUser, UserDetailDto, UserListDto } from './user-res.dto';
 
 @Controller('user')
 @ApiTags('User')
@@ -56,4 +56,11 @@ export class UserController {
     async findPotWithUserId(@Param('user_id') user_id: number): Promise<User>{
         return await this.userService.findPot(user_id);
     }
+
+    @Get('create/:user_id')
+    @ApiOperation({summary: 'User와 자동완성 목록'})
+    async userAndSpecies(@Param('user_id') user_id: number): Promise<User>{
+        return await this.userService.simpleUser(user_id);
+    }   
+
 }

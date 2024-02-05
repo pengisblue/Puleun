@@ -1,21 +1,21 @@
-import { Body, Controller, Delete, Get, Param, Put } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Put } from '@nestjs/common';
 import { DeviceService } from './device.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { DeviceCreateDto, SelectDeviceDto } from './device-req.dto';
-import { Device } from './device.entity';
+import { SelectDeviceDto } from './device-req.dto';
+
 
 @Controller('device')
 @ApiTags('device')
 export class DeviceController {
     constructor(private readonly deviceService: DeviceService){}
 
-    @Get('unMapping:user_id')
+    @Get('unMapping/:user_id')
     @ApiOperation({summary: '비어있는 디바이스 출력'})
     async emptyDevice(@Param('user_id') user_id: number): Promise<SelectDeviceDto[]>{
         return await this.deviceService.emptyDevice(user_id);
     }
 
-    @Get('Mapping:user_id')
+    @Get('Mapping/:user_id')
     @ApiOperation({summary: '비어있지 않은 디바이스 출력'})
     async unEmptyDevice(@Param('user_id') user_id: number): Promise<SelectDeviceDto[]>{
         return await this.deviceService.unEmptyDevice(user_id);
