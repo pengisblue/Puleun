@@ -42,7 +42,7 @@ export class PotService {
           .andWhere('pot.collection_FG= :FG ', {FG: 0})
           // 첫번째 파라미터는 repository의 엔티티의 연관관계가 잡힌 필드의 이름
           // 두번째 파라미터는 해당 alias
-        //   .leftJoinAndSelect('pot.user', 'user')
+            //   .leftJoinAndSelect('pot.user', 'user')
           .select([
             'pot.pot_id', 'pot.pot_name', 'pot.pot_name',
             'pot.pot_img_url', 'pot.min_temperature', 'pot.max_temperature',
