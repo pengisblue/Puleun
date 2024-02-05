@@ -73,3 +73,7 @@ export class CompareDataDto{
     @IsNumber()
     yesterday_mois: number;
 }
+
+export class PotStateDto{
+    
+}

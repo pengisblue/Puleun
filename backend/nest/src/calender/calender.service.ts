@@ -23,10 +23,19 @@ export class CalenderService {
         return 1;
     }
 
-
     async getLastWaterDay(pot_id: number): Promise<Date>{
         const temp = await this.calenderRepository.find({
             where: {pot_id: pot_id, code:'W'},
+            order: {createdAt: 'DESC'},
+            select: {createdAt: true},
+            take: 1
+        })
+        return temp[0]?.createdAt;
+    }
+
+    async getLastTalkDay(pot_id: number): Promise<Date>{
+        const temp = await this.calenderRepository.find({
+            where: {pot_id: pot_id, code:'T'},
             order: {createdAt: 'DESC'},
             select: {createdAt: true},
             take: 1

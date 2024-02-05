@@ -6,7 +6,6 @@ import { IoAdapter } from '@nestjs/platform-socket.io';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  console.log(process.env)
   app.enableCors({
     origin: ["http://localhost:3000", "http://172.23.48.1/","192.168.30.*", 'http://172.26.80.1:3000'],
     credentials: true,
