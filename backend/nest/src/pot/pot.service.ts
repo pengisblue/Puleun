@@ -75,4 +75,10 @@ export class PotService {
     }
 
     
+    async calenderWithCurrentMoisAndTemp(pot_id: number): Promise<Pot>{
+        return await this.potRepository.findOne({
+            where: {pot_id},
+            select: {temperature: true, moisture: true}
+        })
+    }
 }

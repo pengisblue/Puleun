@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import * as fs from 'fs';
 import { DeviceService } from './../device/device.service';
 import { SocketLoginDto } from './socket.dto';
@@ -6,6 +6,7 @@ import { DeviceCreateDto } from 'src/device/device-req.dto';
 import { SentenceService } from 'src/sentence/sentence.service';
 import { TtsService } from 'src/tts/tts.service';
 import { createClient } from 'redis';
+import { RedisService } from 'src/redis/redis.service';
 
 @Injectable()
 export class SocketService {
@@ -13,9 +14,13 @@ export class SocketService {
     private readonly deviceService: DeviceService,
     private readonly sentenceService: SentenceService,
     private readonly ttsService: TtsService,
+    private readonly redisService: RedisService,
   ){}
 
   async login(serial_number: string): Promise<SocketLoginDto>{
+    console.log(await this.redisService.get('serial_number'))
+    await this.redisService.set('serial_number', '123456')
+    console.log(await this.redisService.get('serial_number'))
     const device = await this.deviceService.findBySerialNumber(serial_number)
     const result = new SocketLoginDto
     result.serial_number = serial_number
@@ -34,11 +39,6 @@ export class SocketService {
       result.is_owner = false
     }
     
-    const redisClient = createClient()
-    redisClient.on('error', err => console.log('Redis Client Error', err));
-    await redisClient.connect()
-    await redisClient.set('key', 'value')
-    console.log(await redisClient.get('key'));
     return result;
   }
 

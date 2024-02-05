@@ -69,4 +69,13 @@ export class UserService {
             .getOne()
         return user;
     }
+
+
+    async findByUserIdInTalk(user_id: number): Promise<User>{
+        return await this.UserRepository.findOne({
+            relations: {talk: true},
+            where: {user_id: user_id}
+        })
+    }
+
 }

@@ -9,10 +9,11 @@ import { DeviceModule } from 'src/device/device.module';
 import { SentenceModule } from 'src/sentence/sentence.module';
 import { CalenderModule } from 'src/calender/calender.module';
 import { TtsModule } from 'src/tts/tts.module';
+import { RedisModule } from 'src/redis/redis.module';
 
 @Module({
   imports: [ TypeOrmModule.forFeature([PotState]), PotStateModule, 
-  DeviceModule, SentenceModule, CalenderModule, TtsModule ],
+  DeviceModule, SentenceModule, CalenderModule, TtsModule, RedisModule],
   controllers:[SocketController],
   providers:[SocketGateway, SocketService],})
 export class SocketModule {
