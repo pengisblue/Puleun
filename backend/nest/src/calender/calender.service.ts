@@ -1,10 +1,8 @@
-import { Inject, Injectable, forwardRef } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Calender } from './calender.entity';
 import { Repository } from 'typeorm';
 import { CalenderCreateDto } from './calender-req.dto';
-import { PotService } from 'src/pot/pot.service';
-import { PotStateService } from 'src/pot-state/pot-state.service';
 
 @Injectable()
 export class CalenderService {
