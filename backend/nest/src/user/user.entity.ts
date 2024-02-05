@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
 import { Pot } from '../pot/pot.entity';
+import { Talk } from 'src/talk/talk.entity';
 
 @Entity()
 export class User {
@@ -29,5 +30,6 @@ export class User {
   @OneToMany(() => Pot, (pot) => pot.user)
   pots: Pot[];
 
-  // Other columns and relationships can be added as needed.
+  @OneToMany(() => Talk, talk => talk.talk_id)
+  talk: Talk[];
 }
