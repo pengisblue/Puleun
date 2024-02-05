@@ -7,6 +7,10 @@ import "swiper/css";
 export default function PotSwiper({ potList }) {
   const navigate = useNavigate();
 
+  const goPotDetail = function (potId) {
+    return () => navigate(`/pot/${potId}`);
+  };
+
   const goCreatPot = function () {
     navigate("/pot/create");
   };
@@ -14,13 +18,15 @@ export default function PotSwiper({ potList }) {
   return (
     <Swiper slidesPerView={"auto"} loop={false}>
       {potList.map((pot) => (
-        <SwiperSlide key={pot.potId} className="w-auto-important me-2">
-          <PotDetailCard {...pot}/>
+        <SwiperSlide key={pot.potId} className="me-2 w-auto-important">
+          <div onClick={goPotDetail(pot.potId)} className="cursor-pointer">
+            <PotDetailCard {...pot} size="w-80 h-48" />
+          </div>
         </SwiperSlide>
       ))}
-      <SwiperSlide className="w-auto-important me-4">
+      <SwiperSlide className="me-4 w-auto-important">
         <div onClick={goCreatPot} className="cursor-pointer">
-          <AddDetailCard text="화분 추가하기"  size="w-80 h-48"/>
+          <AddDetailCard text="화분 추가하기" size="w-80 h-48" />
         </div>
       </SwiperSlide>
     </Swiper>

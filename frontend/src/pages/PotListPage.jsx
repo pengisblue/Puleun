@@ -27,6 +27,12 @@ export default function PotListPage() {
   const [filteredPots, setFilteredPots] = useState([]);
   const navigate = useNavigate();
 
+  // 화분 상세정보로 이동
+  const goPotDetail = function (potId) {
+    return () => navigate(`/pot/${potId}`);
+  };
+
+  // 화분 추가하기로 이동
   const goCreatPot = function () {
     navigate("/pot/create");
   };
@@ -78,7 +84,9 @@ export default function PotListPage() {
       {/* 화분 카드 */}
       <div className="my-6 grid w-full grid-cols-2 place-items-center md:grid-cols-3 lg:grid-cols-4">
         {filteredPots.map((pot) => (
-          <PotSimpleCard key={pot.potId} {...pot} />
+          <div key={pot.potId} onClick={goPotDetail(pot.potId)} className="cursor-pointer">
+            <PotSimpleCard {...pot} />
+          </div>
         ))}
         <div onClick={goCreatPot} className="cursor-pointer">
           <PotAddSimpleCard />

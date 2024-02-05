@@ -12,6 +12,26 @@ import { plantList } from "../test/plantList";
 import { deviceList } from "../test/deviceList";
 import potImg from "../test/pot1.jpg";
 
+// 기본 화분 이미지
+
+// 화분 없는 등록된 기기 = {
+//   기기 아이디,
+//   기기 시리얼넘버,
+//   기기 별명
+// }
+// 유저 목록 = {
+//   유저 아이디,
+//   유저 이름
+// }
+// 품종 정보 = {
+//   품종 아이디,
+//   품종 이름,
+//   최고 온도,
+//   최저 온도,
+//   최고 습도,
+//   최저 습도
+// }
+
 export default function PotCreatePage() {
   // 기기
   const [selectedDevice, setSelectedDevice] = useState(deviceList[0]);
