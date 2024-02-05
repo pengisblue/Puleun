@@ -1,7 +1,7 @@
 import BaseSimpleCard from "../UI/BaseSimpleCard";
 import plus from "../../asset/plus_circle_emerald.svg";
 
-export default function PotAddSimple() {
+export default function PotAddSimpleCard() {
   return (
     <BaseSimpleCard>
       <div className="flex h-full flex-col items-center justify-center">

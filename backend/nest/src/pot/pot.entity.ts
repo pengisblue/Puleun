@@ -1,7 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn, CreateDateColumn, DeleteDateColumn, UpdateDateColumn } from 'typeorm';
 import { User } from '../user/user.entity'; // 다른 엔터티에 따라 수정해야 합니다.
-import { PotState } from '../pot-state/pot-state.entity';
-import { Type } from 'class-transformer';
 import { Calender } from 'src/calender/calender.entity';
 import { Alarm } from 'src/alarm/alarm.entity';
 
@@ -57,4 +55,10 @@ export class Pot {
 
   @Column({ type: 'tinyint', nullable: false, default: 0})
   collection_FG: boolean;
+
+  @Column({type: 'int', nullable: true, default: 0, name: 'temperature'})
+  temperature: number;
+
+  @Column({type: 'int', nullable: true, default: 0, name: 'moisture'})
+  moisture: number;
 }

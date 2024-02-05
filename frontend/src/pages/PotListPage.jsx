@@ -1,12 +1,14 @@
 import PotSimpleCard from "../components/Pots/PotSimpleCard";
 import PotAddSimpleCard from "../components/Pots/PotAddSimpleCard";
+import Filter from "../components/UI/Filter";
 import plus from "../asset/plus_slate.svg";
 import cog from "../asset/cog-8-tooth.svg";
-import { potSimpleList } from "../test/potList";
-import { userList } from "../test/userList";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Filter from "../components/UI/Filter";
+
+// 하드코딩 테스트용 데이터
+import { potSimpleList } from "../test/potList";
+import { userList } from "../test/userList";
 
 // api1 = {
 //   화분 아이디,
@@ -51,8 +53,13 @@ export default function PotListPage() {
       <header className="m-2 flex items-center justify-between">
         <h1 className="text-title">화분 목록</h1>
         <div className="flex gap-2">
-          <img src={plus} alt="plus" className="w-7" onClick={goCreatPot} />
-          <img src={cog} alt="cog" className="w-7" />
+          <img
+            src={plus}
+            alt="plus"
+            className="w-7 hover:cursor-pointer"
+            onClick={goCreatPot}
+          />
+          <img src={cog} alt="cog" className="w-7 hover:cursor-pointer" />
         </div>
       </header>
 
@@ -73,7 +80,9 @@ export default function PotListPage() {
         {filteredPots.map((pot) => (
           <PotSimpleCard key={pot.potId} {...pot} />
         ))}
-        <PotAddSimpleCard />
+        <div onClick={goCreatPot} className="cursor-pointer">
+          <PotAddSimpleCard />
+        </div>
       </div>
     </div>
   );
