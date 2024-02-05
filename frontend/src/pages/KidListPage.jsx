@@ -1,17 +1,14 @@
 import axios from "axios";
-import plus from "../asset/plus_slate.svg";
-import cog from "../asset/cog-8-tooth.svg";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import plus from "../asset/plus_slate.svg";
 import KidCard from "../components/Kids/KidCard";
-import PotAddDetailCard from "../components/Pots/PotAddDetailCard";
+import { useNavigate } from "react-router-dom";
 
 export default function KidListPage() {
   const [kidList, setKidList] = useState([]);
-
   const navigate = useNavigate();
 
-  const goCreateKid = function () {
+  const goCreateKid = () => {
     navigate("/kid/create");
   };
 
@@ -31,20 +28,22 @@ export default function KidListPage() {
   }, []);
 
   return (
-    <div>
+    <div className="">
       <header className="m-2 flex items-center justify-between">
         <h1 className="text-title">아이 목록</h1>
         <div className="flex gap-2">
-          <img src={plus} alt="plus" className="w-7" onClick={goCreateKid} />
-          <img src={cog} alt="cog" className="w-7" />
+          <img
+            src={plus}
+            alt="plus"
+            className="w-7 hover:cursor-pointer"
+            onClick={goCreateKid}
+          />
         </div>
       </header>
-
-      <div className="my-6 grid w-full grid-cols-2 place-items-center md:grid-cols-3 lg:grid-cols-4">
+      <div className="my-6 grid w-full grid-cols-3 place-items-center gap-3 md:grid-cols-3 lg:grid-cols-3">
         {kidList.map((kid) => (
           <KidCard key={kid.userId} nickname={kid.nickname}></KidCard>
         ))}
-        <PotAddDetailCard></PotAddDetailCard>
       </div>
     </div>
   );

@@ -16,12 +16,14 @@ export default function DeviceChoice({ deviceList, onSelect, selectedDevice }) {
     onSelect(value);
   };
 
+  const goCreatDevice = function () {};
+
   return (
     <RadioGroup value={selected} onChange={handleChange}>
-      <Swiper spaceBetween={0} slidesPerView={1.7}>
+      <Swiper slidesPerView={"auto"}>
         {/* 기기 목록 */}
         {deviceList.map((device) => (
-          <SwiperSlide key={device.deviceId}>
+          <SwiperSlide key={device.diviceId} className="me-2 w-auto-important">
             <RadioGroup.Option value={device} className="outline-none">
               {({ active, checked }) => (
                 <DeviceBaseCard>
@@ -40,8 +42,10 @@ export default function DeviceChoice({ deviceList, onSelect, selectedDevice }) {
         ))}
 
         {/* 기기 추가 */}
-        <SwiperSlide key="deviceAdd">
-          <DeviceAddCard />
+        <SwiperSlide key="deviceAdd" className="me-2 w-auto-important">
+          <div onClick={goCreatDevice} className="cursor-pointer">
+            <DeviceAddCard />
+          </div>
         </SwiperSlide>
       </Swiper>
     </RadioGroup>
