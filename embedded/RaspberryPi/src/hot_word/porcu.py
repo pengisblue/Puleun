@@ -90,8 +90,17 @@ def hotword():
     # args.model_path='porcupine_params_ko.pv'
 
     # 절대 경로 노출 X
+    # window
     keyword_path1 = os.path.join(current_dir, '베리야_ko_windows_v3_0_0.ppn')
     keyword_path2 = os.path.join(current_dir, '푸른아_ko_windows_v3_0_0.ppn')
+    
+
+    # raspberry pi
+    # keyword_path1 = os.path.join(current_dir, '방울아_ko_raspberry-pi_v3_0_0.ppn')
+    # keyword_path2 = os.path.join(current_dir, '푸른아_ko_raspberry-pi_v3_0_0.ppn')
+    # keyword_path3 = os.path.join(current_dir, '푸르나_ko_raspberry-pi_v3_0_0.ppn')
+
+
 
     args.keyword_paths=[keyword_path1, keyword_path2]
     args.model_path = os.path.join(current_dir, 'porcupine_params_ko.pv')
