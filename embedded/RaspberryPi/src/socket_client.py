@@ -23,6 +23,7 @@ sio = socketio.Client()
 pot_id = None # 식물 id
 is_owner = False # 주인 연결 여부
 is_connected = False # 백과 연결 여부
+is_water = False
 talk_id = 1 # 대화 번호
 # serial_number = get_serial_number() # 시리얼 번호
 serial_number = 'jkfjksdjs12331'
@@ -220,16 +221,19 @@ if __name__ == '__main__':
 
         time.sleep(1)
     #     # water 들어오면 emit하기
-    #     while ser.in_waiting > 0:
-    #         sensor_value = ser.readline().decode('utf-8').strip()
-    #         if (sensor_value == 'Water'):
-    #             print('sending water signal')
-    #             sio.emit('water', {'pot_id' : pot_id})
+        while ser.in_waiting > 0:
+            sensor_value = ser.readline().decode('utf-8').strip()
+            if (sensor_value == 'Water' and is_water == False):
+                print('sending water signal')
+                is_water = True
+                sio.emit('water', {'pot_id' : pot_id})
 
-    #     # 정각마다 pot_state 실행
-    #     now = datetime.datetime.now()
-    #     if now.minute == 0:
-    #         pot_state()
+        # 정각마다 pot_state 실행
+        now = datetime.datetime.now()
+        if now.minute == 0:
+            pot_state()
+            if now.hour == 0:
+                is_water = False
 
     # -----
         
