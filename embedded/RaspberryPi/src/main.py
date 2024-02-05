@@ -6,7 +6,6 @@ import os
 import requests
 import base64
 import time
-import pygame
 import serial
 import sys
 import datetime
@@ -23,13 +22,18 @@ sio = socketio.Client()
 pot_id = None # 식물 id
 is_owner = False # 주인 연결 여부
 is_connected = False # 백과 연결 여부
-is_water = False
+is_water = False # 백에 물 준 날 전송 여부 / day
+status_flag = False # 백에 화분 상태 전송 여부 / hour
 talk_id = 1 # 대화 번호
 # serial_number = get_serial_number() # 시리얼 번호
 serial_number = 'jkfjksdjs12331'
 transcript = None # stt 텍스트
 encoded_wav = None # stt 음성파일
 
+# 아두이노 포트 설정
+# arduino_port = 'COM6'
+arduino_port_1 = '/dev/ttyACM0' # LCD
+arduino_port_2 = '/dev/ttyUSB0' # nano
 
 # ------------------------------------- 소켓 이벤트 핸들러 -------------------------------------
 
@@ -179,14 +183,14 @@ def save_tts_file(data):
 
 def pot_state(): # 아두이노 측정값 + 물줬을때, 아두이노에서 측정값 받고 보내기
     # 측정 시작 신호 전송
-    # ser.write(b"START\n")
+    # ser2.write(b"START\n")
     print('start pot_state')
 
     # 시간 두고 아두이노가 신호 처리 하도록
     time.sleep(2) # 한번 측정할 정도의 시간임
 
-    while ser.in_waiting > 0:
-        sensor_value = ser.readline().decode('utf-8').strip()
+    while ser2.in_waiting > 0:
+        sensor_value = ser2.readline().decode('utf-8').strip()
         is_temp = False
         if (sensor_value[:1] == 'T'):
             sensor_value = float(sensor_value[1:])
@@ -196,20 +200,17 @@ def pot_state(): # 아두이노 측정값 + 물줬을때, 아두이노에서 측
         print(sensor_value)
 
         # Socket.IO로 데이터 전송
-        sio.emit('pot_state', {'pot_id' : pot_id, 'data': sensor_value, 'isTemp_FG': is_temp})
+        # sio.emit('pot_state', {'pot_id' : pot_id, 'data': sensor_value, 'isTemp_FG': is_temp})
 
 
 # 메인 실행문
 if __name__ == '__main__': 
     server_url = os.getenv('SERVER_URL')
-    sio.connect(server_url)
+    # sio.connect(server_url)
 
     # 시리얼 열기
-    # 아두이노 포트 설정
-    arduino_port = 'COM6'
-    # arduino_port = '/dev/ttyUSB0' # 라즈베리
     # 시리얼 통신 객체 생성
-    # ser = serial.Serial(arduino_port, 9600)  # 아두이노와의 통신 속도에 맞게 설정
+    ser2 = serial.Serial(arduino_port_2, 9600)  # 아두이노와의 통신 속도에 맞게 설정
 
     # -----------
     # keyword() # 호출어 인식 테스트
@@ -217,21 +218,22 @@ if __name__ == '__main__':
     # 메인 루프
     while True:
         # keyword()
-        keyword()
 
-        time.sleep(1)
+        # time.sleep(1)
     #     # water 들어오면 emit하기
-        while ser.in_waiting > 0:
-            sensor_value = ser.readline().decode('utf-8').strip()
+        while ser2.in_waiting > 0:
+            sensor_value = ser2.readline().decode('utf-8').strip()
             if (sensor_value == 'Water' and is_water == False):
                 print('sending water signal')
                 is_water = True
-                sio.emit('water', {'pot_id' : pot_id})
+                # sio.emit('water', {'pot_id' : pot_id})
 
         # 정각마다 pot_state 실행
         now = datetime.datetime.now()
         if now.minute == 0:
-            pot_state()
+            if status_flag == False:
+                pot_state()
+                status_flag = True
             if now.hour == 0:
                 is_water = False
 

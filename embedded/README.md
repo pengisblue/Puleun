@@ -19,7 +19,7 @@
 1. 가상환경 실행
 
 ```bash
-source myenv/bin/activate
+source venv/bin/activate
 ```
 
 2. python 실행
@@ -72,6 +72,7 @@ main.py 실행하면 얘도 실행되게
 ---------
 
 ### 호출어 (Hot-word)
+#### efficientword
 ```bash
 # demo 실행해보기
 # efficientword-net 파이썬 라이브러리 설치
@@ -85,6 +86,9 @@ pipwin install pyaudio
 
 # 실행
 python -m eff_word_net.engine
+```
+#### picoporcupine
+```
 ```
 
 ### 블루투스
