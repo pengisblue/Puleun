@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PotStateService } from './pot-state.service';
 import { PotState } from './pot-state.entity';
 import { CreatePotStateDto } from './pot-state-insert.dto';
-import { StatusResultDto } from './pot-state.dto';
+import { CompareDataDto, StatusResultDto } from './pot-state.dto';
 
 @Controller('pot-state')
 @ApiTags('pot-state')
@@ -25,5 +25,12 @@ export class PotStateController {
     async checkStatus(@Param('parent_id') parent_id: number): Promise<StatusResultDto[]>{
         const result = await this.potStateService.checkStatus(parent_id);
         return result;
+    }
+
+    
+    @Get('/detail/:pot_id')
+    @ApiOperation({summary: '화분의 전날 온습도와 현재 온습도'})
+    async getDetail(@Param('pot_id') pot_id: number): Promise<CompareDataDto>{
+        return await this.potStateService.getCompareData(pot_id);
     }
 }
