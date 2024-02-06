@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Pot } from './pot.entity';
 import { IsNull, Not, Repository } from 'typeorm';
 import { CollectionDto, CreatePotDto, SelectPotDto, UpdatePotDto } from './pot.dto';
-import { plainToClass } from 'class-transformer';
+import { plainToClass, plainToInstance } from 'class-transformer';
 import { User } from 'src/user/user.entity';
 
 @Injectable()
@@ -12,6 +12,13 @@ export class PotService {
         @InjectRepository(Pot)
         private readonly potRepository: Repository<Pot>,
     ){}
+
+
+    async findAllPot(): Promise<SelectPotDto[]>{
+        const result = await this.potRepository.find();
+        return plainToInstance(SelectPotDto, result);
+    }
+        
 
     async potDetail(pot_id: number): Promise<Pot>{
         const dto = await this.potRepository.createQueryBuilder('pot')
@@ -23,8 +30,8 @@ export class PotService {
         return dto;
     }
 
-    async save(potDto: Pot) {
-        await this.potRepository.save(potDto);
+    async save(createPotDto: CreatePotDto) {
+        await this.potRepository.save(createPotDto);
     }
 
     async update(pot_id: number, data: UpdatePotDto){

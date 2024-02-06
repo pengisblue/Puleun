@@ -1,13 +1,20 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { PotService } from './pot.service';
 import { Pot } from './pot.entity';
-import { CollectionDto, CreatePotDto, UpdatePotDto } from './pot.dto';
+import { CollectionDto, CreatePotDto, SelectPotDto, UpdatePotDto } from './pot.dto';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('pot')
 @ApiTags('Pot')
 export class PotController {
     constructor(private readonly potService:PotService){}
+
+    @Get()
+    @ApiOperation({summary: '모든 화분(식물) 상세 조회'})
+    @ApiOkResponse({type: SelectPotDto})
+    async findAllPot(): Promise<SelectPotDto[]>{
+        return await this.potService.findAllPot();
+    }
 
     @Get(':pot_id')
     @ApiOperation({ summary: "화분(식물) 상세 조회"})
@@ -20,8 +27,8 @@ export class PotController {
     @ApiBody({type: CreatePotDto})
     @ApiOperation({ summary: '화분 등록'})
     @ApiOkResponse({ type:'1', description:'1 for SUCCESS' })
-    async save( @Body() pot: Pot): Promise<number>{
-        this.potService.save(pot);
+    async save( @Body() createPotDto: CreatePotDto): Promise<number>{
+        this.potService.save(createPotDto);
         return 1;
     }
 
