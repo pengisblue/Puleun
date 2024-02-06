@@ -6,6 +6,7 @@ import { DeviceCreateDto } from 'src/device/device-req.dto';
 import { SentenceService } from 'src/sentence/sentence.service';
 import { TtsService } from 'src/tts/tts.service';
 import { RedisService } from 'src/redis/redis.service';
+import { FileService } from './../file/file.service';
 
 @Injectable()
 export class SocketService {
@@ -14,6 +15,7 @@ export class SocketService {
     private readonly sentenceService: SentenceService,
     private readonly ttsService: TtsService,
     private readonly redisService: RedisService,
+    private readonly fileService: FileService,
   ){}
 
   // device 정보 + socket id 저장
@@ -45,22 +47,24 @@ export class SocketService {
     return result;
   }
 
-  /** stt-> tts : stt 받아서 tts로 응답 */
+  /** stt-> tts : stt 받아서 tts로 return */
   async stt(text: string, talk_id: string, base64Data: string): Promise<string>{
-    const saveFilePath = "./upload/2024-02-01/" + "푸른이와의 대화.mp3"
+    let sentenceId = this.redisService.incr(`${talk_id}:sentenceId`)
+    const filePath ="./upload/talk/" + this.fileService.getToday()
+    const saveFilePath =  filePath + talk_id + ".mp3"
     const decodedBuffer = Buffer.from(base64Data, 'base64');
     fs.writeFileSync(saveFilePath, decodedBuffer);
 
     // gpt api
     const answerText = await this.sentenceService.answer(text)
     
-    const filePath = "./upload/2024-01-30/" + "ETA.wav"
+    const uploadFilePath = filePath + (talk_id+1) + ".wav"
     // message -> tts
-    await this.ttsService.tts(answerText, filePath)
+    await this.ttsService.tts(answerText, uploadFilePath)
 
     // client.emit
     const content = await new Promise<Buffer>((resolve, reject) => {
-      fs.readFile(filePath, (err, data) => {
+      fs.readFile(uploadFilePath, (err, data) => {
         if (err) {
         reject(err)
         } else {
@@ -72,14 +76,14 @@ export class SocketService {
     // text, answerText 파일 저장 -> redis
     console.log(text)
 
-    let sentenceId = this.redisService.incr(`${talk_id}:sentenceId`)
+    // !! nest module 'cacheManager' doesn't have array
     // '{talkId}:{sentenceId}':key, text:value
     await this.redisService.set(`${talk_id}:${sentenceId}`, text)
-    await this.redisService.set(`${talk_id}:${sentenceId}:url`, saveFilePath)
+    await this.redisService.set(`${talk_id}:${sentenceId}:path`, saveFilePath)
     // sentenceId ++
     sentenceId = this.redisService.incr(`${talk_id}:sentenceId`)
     await this.redisService.set(`${talk_id}:${sentenceId}`, answerText)
-    await this.redisService.set(`${talk_id}:${sentenceId}:url`, filePath)
+    await this.redisService.set(`${talk_id}:${sentenceId}:path`, filePath)
     // if sentenceId//2 == 0 => child 
     // else AI
     return Buffer.from(content).toString('base64')
