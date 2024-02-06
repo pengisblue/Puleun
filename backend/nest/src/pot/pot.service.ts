@@ -24,8 +24,7 @@ export class PotService {
     }
 
     async save(potDto: Pot) {
-        const testPot = this.potRepository.create(potDto)
-        await this.potRepository.save(testPot);
+        await this.potRepository.save(potDto);
     }
 
     async update(pot_id: number, data: UpdatePotDto){
