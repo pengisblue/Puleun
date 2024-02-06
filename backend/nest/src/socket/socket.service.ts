@@ -49,8 +49,9 @@ export class SocketService {
 
   /** stt-> tts : stt 받아서 tts로 return */
   async stt(text: string, talk_id: string, base64Data: string): Promise<string>{
-    let sentenceId = this.redisService.incr(`${talk_id}:sentenceId`)
-    const filePath ="./upload/talk/" + this.fileService.getToday()
+    const today = this.fileService.getToday()
+    const filePath ="./upload/talk/" + today + "/"
+    if (!fs.existsSync(filePath)) fs.mkdirSync(filePath)
     const saveFilePath =  filePath + talk_id + ".mp3"
     const decodedBuffer = Buffer.from(base64Data, 'base64');
     fs.writeFileSync(saveFilePath, decodedBuffer);
@@ -76,6 +77,12 @@ export class SocketService {
     // text, answerText 파일 저장 -> redis
     console.log(text)
 
+    const talkArray = (await this.redisService.get(`${talk_id}:array`)).split(',').map((x)=>JSON.parse(x))
+    talkArray.push({content:text, sentence_DTN:today, talker_FG:true, talk_id, audio:saveFilePath})
+    talkArray.push({content:answerText, sentence_DTN:today, talker_FG:true, talk_id, audio:uploadFilePath})
+    await this.redisService.set(`${talk_id}:array`, talkArray.toString())
+
+    /**
     // !! nest module 'cacheManager' doesn't have array
     // '{talkId}:{sentenceId}':key, text:value
     await this.redisService.set(`${talk_id}:${sentenceId}`, text)
@@ -86,6 +93,7 @@ export class SocketService {
     await this.redisService.set(`${talk_id}:${sentenceId}:path`, filePath)
     // if sentenceId//2 == 0 => child 
     // else AI
+    */
     return Buffer.from(content).toString('base64')
   }
 }
