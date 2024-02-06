@@ -169,8 +169,6 @@ export class SelectPotDto{
     // user_id ? : number = 0;    
 }
 
-
-
 export class CollectionDto{
     @IsString()
     @Length(1,10)
@@ -202,3 +200,52 @@ export class CollectionDto{
     @ApiProperty()
     happy_cnt ? : number;
 }
+
+
+export class PotWithStatusDto{
+    @IsNumber()
+    pot_id: number;
+
+    @IsString()
+    pot_name: string;
+
+    @IsString()
+    pot_img_url: string;
+
+    @IsString()
+    pot_species: string;
+
+    @IsNumber()
+    user_id: number;
+
+    @IsString()
+    profile_img_url: string;
+
+    @IsString()
+    nickname: string;
+
+    @IsNumber()
+    temperature: number;
+
+    @IsNumber()
+    moisture: number;
+
+    @IsString()
+    tempState: string;
+
+    @IsString()
+    moisState: string;
+
+    @IsDate()
+    last_water: Date;
+
+    @IsDate()
+    planting_day: Date;
+
+    @IsNumber()
+    together_day: number;
+
+    @IsDate()
+    last_talk: Date;
+}
+

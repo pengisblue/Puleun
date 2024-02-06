@@ -7,7 +7,7 @@ import { PotModule } from 'src/pot/pot.module';
 import { CalenderModule } from 'src/calender/calender.module';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([PotState]), PotModule, forwardRef(() =>CalenderModule)],
+  imports:[TypeOrmModule.forFeature([PotState]), forwardRef(() => PotModule), forwardRef(() =>CalenderModule)],
   controllers: [PotStateController],
   providers: [PotStateService],
   exports: [PotStateService]
