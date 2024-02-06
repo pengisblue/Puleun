@@ -6,6 +6,7 @@ import { CreateUserDto, UpdateUserDto } from './user-req.dto';
 import { SpeciesWithUser, UserDetailDto, UserListDto } from './user-res.dto';
 import { plainToInstance } from 'class-transformer';
 import { Pot } from 'src/pot/pot.entity';
+import { AllUserDto } from 'src/user-login/user-login.dto';
 
 @Injectable()
 export class UserService {
@@ -83,5 +84,12 @@ export class UserService {
             where: {user_id: user_id},
             select: {user_id: true, nickname: true}
         })
+    }
+
+    async findUserWithInfo(): Promise<AllUserDto[]>{
+        const result = await this.UserRepository.find({
+            relations: {userLogin: true}
+        });
+        return result;
     }
 }
