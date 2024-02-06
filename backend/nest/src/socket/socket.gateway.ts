@@ -7,7 +7,7 @@ import { PotStateService } from 'src/pot-state/pot-state.service';
 import { CalenderService } from 'src/calender/calender.service';
 import { CalenderCreateDto } from 'src/calender/calender-req.dto';
 
-@WebSocketGateway(8080, {
+@WebSocketGateway(7080, {
   cors: { origin: "*",},
   headers: { Authorization: 'base64 auth' }
 })
