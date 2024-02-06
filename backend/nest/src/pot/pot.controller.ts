@@ -16,6 +16,11 @@ export class PotController {
         return await this.potService.findAllPot();
     }
 
+    @Get('main/:parent_id')
+    async parentUserByStatus(@Param('parent_id') parent_id: number){
+        return await this.potService.potWithStatus(parent_id);
+    }
+
     @Get(':pot_id')
     @ApiOperation({ summary: "화분(식물) 상세 조회"})
     @ApiOkResponse({ type:Pot, description:'선택한 화분(컬렉션에 있는 화분 포함)의 모든 정보 조회' })

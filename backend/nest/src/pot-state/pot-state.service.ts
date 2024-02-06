@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { PotState } from './pot-state.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, Repository } from 'typeorm';
@@ -12,6 +12,7 @@ export class PotStateService {
   constructor(
     @InjectRepository(PotState)
     private readonly potStateRepository: Repository<PotState>,
+    @Inject(forwardRef(() => PotService))
     private readonly potService: PotService,
     private readonly calenderService: CalenderService
     ){}
