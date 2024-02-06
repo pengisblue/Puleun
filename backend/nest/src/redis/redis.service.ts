@@ -5,7 +5,9 @@ import { Cache } from 'cache-manager';
 @Injectable()
 export class RedisService {
     
-    constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
+    constructor(
+        @Inject(CACHE_MANAGER) private cacheManager: Cache,
+        ) {}
 
     async get(key: string): Promise<string>{
         return await this.cacheManager.get(key)
@@ -13,5 +15,14 @@ export class RedisService {
 
     async set(key: string, value: string): Promise<void>{
         await this.cacheManager.set(key, value)
+    }
+
+    async makeIncrKey(key: string): Promise<void>{
+        await this.cacheManager.set(key, 0)
+    }
+    async incr(key: string): Promise<number>{
+        const res = parseInt(await this.cacheManager.get(key)) + 1
+        await this.cacheManager.set(key, res)
+        return res
     }
 }

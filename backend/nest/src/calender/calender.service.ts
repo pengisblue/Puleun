@@ -1,10 +1,8 @@
-import { Inject, Injectable, forwardRef } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Calender } from './calender.entity';
 import { Repository } from 'typeorm';
 import { CalenderCreateDto } from './calender-req.dto';
-import { PotService } from 'src/pot/pot.service';
-import { PotStateService } from 'src/pot-state/pot-state.service';
 
 @Injectable()
 export class CalenderService {
@@ -25,10 +23,19 @@ export class CalenderService {
         return 1;
     }
 
-
     async getLastWaterDay(pot_id: number): Promise<Date>{
         const temp = await this.calenderRepository.find({
             where: {pot_id: pot_id, code:'W'},
+            order: {createdAt: 'DESC'},
+            select: {createdAt: true},
+            take: 1
+        })
+        return temp[0]?.createdAt;
+    }
+
+    async getLastTalkDay(pot_id: number): Promise<Date>{
+        const temp = await this.calenderRepository.find({
+            where: {pot_id: pot_id, code:'T'},
             order: {createdAt: 'DESC'},
             select: {createdAt: true},
             take: 1
