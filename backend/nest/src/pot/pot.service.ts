@@ -77,13 +77,12 @@ export class PotService {
     }
 
     async potDetail(pot_id: number): Promise<Pot>{
-        const dto = await this.potRepository.createQueryBuilder('pot')
+        return await this.potRepository.createQueryBuilder('pot')
             .where({pot_id: pot_id, collection_FG: false})
             // pot.user AS user라는 뜻
             .leftJoinAndSelect('pot.user', 'user', 'user.user_id = pot.user_id')
-            .select(['pot', 'user.user_id', 'user.nickname'])
+            .select(['pot.pot_id', 'pot.pot_name', 'pot.pot_species', 'user.user_id', 'user.nickname'])
             .getOne();
-        return dto;
     }
 
     async save(createPotDto: CreatePotDto) {
