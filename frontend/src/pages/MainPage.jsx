@@ -46,9 +46,9 @@ export default function MainPage() {
         </section>
 
         {/* 새로운 대화 */}
-        <section>
+        {/* <section>
           <h1>새로운 대화</h1>
-        </section>
+        </section> */}
       </div>
     </>
   );

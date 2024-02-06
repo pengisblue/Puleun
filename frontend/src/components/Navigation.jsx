@@ -1,5 +1,6 @@
-import { Fragment } from "react";
-import { Disclosure, Menu, Transition } from "@headlessui/react";
+import { Fragment, useState } from "react";
+import { useNavigate } from "react-router";
+import { Disclosure, Menu, Switch, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import navImg from "../test/pot2-removebg-preview.png";
 import kidImg from "../test/kid3.png";
@@ -15,6 +16,14 @@ function classNames(...classes) {
 }
 
 export default function Navigation() {
+  const [enabled, setEnabled] = useState(false);
+  const navigate = useNavigate();
+
+  const switchKidsMode = () => {
+    setEnabled(true);
+    navigate("/kid/select");
+  };
+
   return (
     <Disclosure as="nav" className="bg-green-200">
       {({ open }) => (
@@ -92,6 +101,28 @@ export default function Navigation() {
                     leaveTo="transform opacity-0 scale-95"
                   >
                     <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <Menu.Item>
+                        <Switch.Group>
+                          <div className="flex items-center">
+                            <Switch.Label className="block px-4 py-2 text-sm text-gray-700">
+                              키즈 모드
+                            </Switch.Label>
+                            <Switch
+                              checked={enabled}
+                              onChange={switchKidsMode}
+                              className={`${
+                                enabled ? "bg-green-600" : "bg-gray-200"
+                              } relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2`}
+                            >
+                              <span
+                                className={`${
+                                  enabled ? "translate-x-6" : "translate-x-1"
+                                } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
+                              />
+                            </Switch>
+                          </div>
+                        </Switch.Group>
+                      </Menu.Item>
                       <Menu.Item>
                         {({ active }) => (
                           <a
