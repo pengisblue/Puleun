@@ -1,5 +1,5 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsDate, IsInt, IsOptional, IsString, Length } from "class-validator";
+import { ApiOperation, ApiProperty } from "@nestjs/swagger";
+import { IsDate, IsInt, IsOptional, IsString, Length, IsNumber } from "class-validator";
 import { Exclude, Expose, Type } from "class-transformer";
 
 
@@ -47,8 +47,19 @@ export class CreatePotDto {
 
     @IsString()
     @Length(1, 200)
+    @IsOptional()
     @ApiProperty({example: 'noimage.jpg'})
     pot_img_url: string;
+
+    @IsNumber()
+    @IsOptional()
+    @ApiProperty({example: 10.5, description: '현재 화분의 온도'})
+    temperature: number;
+
+    @IsOptional()
+    @IsNumber()
+    @ApiProperty({example: 10.5, description: '현재 화분의 습도'})
+    moisuture: number;
 }
 
 export class UpdatePotDto{
@@ -91,6 +102,10 @@ export class UpdatePotDto{
 
 @Exclude()
 export class SelectPotDto{
+    @IsNumber()
+    @Expose()
+    pot_id: number;
+
     @IsString()
     @ApiProperty()
     @Length(1, 10)
@@ -152,10 +167,6 @@ export class SelectPotDto{
     // @IsOptional()
     // @ApiProperty()
     // user_id ? : number = 0;    
-
-    @Type(() => PotUserDto)
-    @Expose()
-    user: PotUserDto;
 }
 
 

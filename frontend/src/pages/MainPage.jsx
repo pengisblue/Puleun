@@ -15,7 +15,7 @@ import { potDetailList } from "../test/potList";
 //   현재 습도,
 //   온도 상태,
 //   습도 상태,
-//   물 준 날,
+//   물 준 날(가장 최근),
 //   심은 날
 // }
 

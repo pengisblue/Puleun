@@ -21,11 +21,12 @@ async function bootstrap() {
     .addTag('Calender')
     .addTag('Alarm')
     .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document)
+  
   app.useGlobalPipes(new ValidationPipe());
   app.useWebSocketAdapter(new IoAdapter(app));
   app.setGlobalPrefix('v1')
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document)
   await app.listen(3000);
 }
 bootstrap();

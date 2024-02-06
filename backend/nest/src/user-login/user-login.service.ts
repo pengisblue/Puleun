@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserLogin } from './user-login.entity';
 import { Repository } from 'typeorm';
-import { LoginDto, UserLoginDto } from './user-login.dto';
+import { AllUserDto, LoginDto, UserLoginDto } from './user-login.dto';
 import { plainToClass, plainToInstance } from 'class-transformer';
 
 @Injectable()
@@ -19,12 +19,12 @@ export class UserLoginService {
         return 1;
     }
 
-    async login(loginDto: LoginDto): Promise<UserLoginDto>{
+    async login(loginDto: LoginDto): Promise<boolean>{
         const dto = await this.userLoginRepository.findOne({
             where: {user_email: loginDto.user_email, user_password: loginDto.user_password},       
         })
-        console.log(plainToClass(UserLoginDto, dto));
-        return plainToInstance(UserLoginDto, dto);
+        if(dto == null) return false;
+        return true;
     }
 
     async myInfo(user_id: number): Promise<UserLoginDto>{
