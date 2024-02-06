@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PotStateService } from './pot-state.service';
 import { PotState } from './pot-state.entity';
 import { CreatePotStateDto } from './pot-state-insert.dto';
@@ -22,8 +22,17 @@ export class PotStateController {
 
     @Get(':parent_id')
     @ApiOperation({summary: '부모가 가진 화분과 상태 표현'})
+    @ApiOkResponse({type:StatusResultDto})
     async checkStatus(@Param('parent_id') parent_id: number): Promise<StatusResultDto[]>{
         const result = await this.potStateService.checkStatus(parent_id);
         return result;
     }
+
+    
+    @Post(':pot_id')
+    @ApiOperation({summary: '화분의 전날 온습도 리스트'})
+    async getDetail(@Param('pot_id') pot_id: number): Promise<any>{
+        return await this.potStateService.yesterdayMoisAndTemp(pot_id);
+    }
+    
 }

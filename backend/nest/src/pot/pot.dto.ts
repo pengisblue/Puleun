@@ -4,7 +4,6 @@ import { Exclude, Expose, Type } from "class-transformer";
 
 
 export class PotUserDto{
-
     @IsInt()
     @ApiProperty({example: 3})
     user_id: number;
