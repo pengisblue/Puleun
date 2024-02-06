@@ -6,6 +6,7 @@ import RootLayout from "./pages/Root";
 import KidListPage from "./pages/KidListPage";
 import PotCreatePage from "./pages/PotCreatePage";
 import PotDetailPage from "./pages/PotDetailPage";
+import LoginPage from "./pages/LoginPage";
 
 // import Example from "./test/Example";
 import KidCreatePage from "./pages/KidCreatePage";
@@ -25,6 +26,7 @@ const router = createBrowserRouter([
       { path: "/pot/:potId", element: <PotDetailPage /> },
       { path: "/kid/:userId", element: <KidDetailPage></KidDetailPage> },
       { path: "/kid/select", element: <KidSelectPage></KidSelectPage> },
+      { path: "/login", element: <LoginPage></LoginPage> },
     ],
   },
   // 테스트용
