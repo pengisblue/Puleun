@@ -233,8 +233,10 @@ export default function PotCreatePage() {
           />
         </section>
       </div>
+
+      {/* 등록 버튼 */}
       <div className="grid place-content-center">
-        <Button isDisabled={false}>등록하기</Button>
+        <Button className="bg-amber-300 hover:bg-amber-400 text-white" isDisabled={false}>등록하기</Button>
       </div>
 
       {/* 임시 확인용 */}

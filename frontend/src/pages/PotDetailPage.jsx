@@ -1,6 +1,7 @@
 import PotDetailCard from "../components/Pots/PotDetailCard";
 import PotCalander from "../components/Pots/PotCalander";
 import PotChart from "../components/Pots/PotChart";
+import Button from "../components/UI/Button";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
@@ -111,6 +112,11 @@ export default function PotDetailPage() {
           </div>
         </div>
       </section>
+
+      {/* 성장완료 버튼 */}
+      <div>
+        <Button className="bg-amber-300 hover:bg-amber-400 text-white">성장완료</Button>
+      </div>
 
       {/* 테스트 */}
       <div>

@@ -1,11 +1,11 @@
-export default function Button(props) {
+export default function Button({ className, isDisabled, children }) {
   return (
     <button
-      className="rounded-2xl bg-amber-300 px-6 py-3 font-semibold text-slate-800 hover:bg-amber-400
-       disabled:bg-slate-200 disabled:text-slate-500"
-      disabled={props.isDisabled}
+      className={`rounded-[0.9rem] px-4 py-2 font-semibold ${className}
+       disabled:bg-slate-200 disabled:text-slate-500`}
+      disabled={isDisabled}
     >
-      {props.children}
+      {children}
     </button>
   );
 }
