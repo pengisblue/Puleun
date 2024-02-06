@@ -8,7 +8,8 @@ import { CalenderService } from 'src/calender/calender.service';
 import { CalenderCreateDto } from 'src/calender/calender-req.dto';
 
 @WebSocketGateway(8080, {
-  cors: { origin: ["http://172.23.48.1:3000/","192.168.30.*"],},
+  cors: { origin: "*",},
+  headers: { Authorization: 'base64 auth' }
 })
 
 @Injectable()
