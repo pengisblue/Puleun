@@ -19,12 +19,14 @@ export default function KidCreatePage() {
       };
       reader.readAsDataURL(file);
     }
+    console.log(inputImg);
   };
 
   // 애칭
   const [nickname, setNickname] = useState(null);
   const handleNickname = (event) => {
     setNickname(event.target.value);
+    console.log(nickname);
   };
 
   // 생년월일
@@ -38,6 +40,7 @@ export default function KidCreatePage() {
   const [gender, setGender] = useState(null);
   const handleGender = (event) => {
     setGender(event.target.value);
+    console.log(gender);
   };
 
   return (
