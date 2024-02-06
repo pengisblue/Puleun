@@ -6,11 +6,15 @@ import { TalkDto } from './talk.dto';
 import { plainToInstance } from 'class-transformer';
 import { User } from 'src/user/user.entity';
 import { UserService } from 'src/user/user.service';
+import { RedisService } from 'src/redis/redis.service';
 
 @Injectable()
 export class TalkService {
-    constructor(@InjectRepository(Talk) private readonly talkRepository: Repository<Talk>,
-                private readonly userService: UserService
+    constructor(
+        @InjectRepository(Talk) 
+        private readonly talkRepository: Repository<Talk>,
+        private readonly userService: UserService,
+        private readonly redisService: RedisService
     ){}
 
     async talkSave(talkDto: TalkDto){
@@ -38,4 +42,8 @@ export class TalkService {
         return await this.userService.findByUserIdInTalk(user_id);
     }
 
+    /** get talk_id */
+    async talkStart(): Promise<number>{
+        return this.redisService.getTalkId()
+    }
 }

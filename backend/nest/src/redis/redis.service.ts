@@ -25,4 +25,8 @@ export class RedisService {
         await this.cacheManager.set(key, res)
         return res
     }
+
+    async getTalkId(): Promise<number>{
+        return await this.incr("talk_id")
+    }
 }
