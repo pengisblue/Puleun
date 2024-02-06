@@ -3,8 +3,10 @@ import PotAddSimpleCard from "../components/Pots/PotAddSimpleCard";
 import Filter from "../components/UI/Filter";
 import plus from "../asset/plus_slate.svg";
 import cog from "../asset/cog-8-tooth.svg";
+import axios from "axios"
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../config/config";
 
 // 하드코딩 테스트용 데이터
 import { potSimpleList } from "../test/potList";
@@ -23,6 +25,8 @@ import { userList } from "../test/userList";
 // }
 
 export default function PotListPage() {
+  const [potList, setPotList] = useState([]);
+  const [userList, setUserList] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [filteredPots, setFilteredPots] = useState([]);
   const navigate = useNavigate();
@@ -36,6 +40,10 @@ export default function PotListPage() {
   const goCreatPot = function () {
     navigate("/pot/create");
   };
+
+  useEffect(() => {
+    axios.get(`${API_URL}/pot/user/1`);
+  });
 
   // 주인 필터링 확인
   useEffect(() => {
@@ -84,7 +92,11 @@ export default function PotListPage() {
       {/* 화분 카드 */}
       <div className="my-6 grid w-full grid-cols-2 place-items-center md:grid-cols-3 lg:grid-cols-4">
         {filteredPots.map((pot) => (
-          <div key={pot.potId} onClick={goPotDetail(pot.potId)} className="cursor-pointer">
+          <div
+            key={pot.potId}
+            onClick={goPotDetail(pot.potId)}
+            className="cursor-pointer"
+          >
             <PotSimpleCard {...pot} />
           </div>
         ))}
