@@ -2,18 +2,21 @@ import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
 import { UserLoginService } from './user-login.service';
 import { ApiOkResponse, ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger';
 import { UserLogin } from './user-login.entity';
-import { LoginDto, UserLoginDto } from './user-login.dto';
+import { AllUserDto, LoginDto, UserLoginDto } from './user-login.dto';
+import { UserService } from 'src/user/user.service';
 
 @Controller('user-login')
 @ApiTags('user-login')
 export class UserLoginController {
-    constructor(private readonly userLoginService: UserLoginService){}
+    constructor(private readonly userLoginService: UserLoginService,
+                private readonly userService: UserService){}
 
     @Post('/save')
     @ApiOperation({summary:'유저 저장'})
-    @ApiProperty({type: UserLogin})
+    @ApiProperty({type: UserLoginDto})
     async userSave(@Body() userLogin: UserLogin){
-        return await this.userLoginService.save(userLogin);
+        await this.userLoginService.save(userLogin);
+        return 1;
     }
 
     @Put(':user_id')
@@ -26,13 +29,20 @@ export class UserLoginController {
     @Post()
     @ApiOperation({summary: '로그인'})
     @ApiProperty({type: LoginDto})
-    async login(@Body() loginDto: LoginDto): Promise<UserLoginDto>{
-        return await this.userLoginService.login(loginDto);
+    async login(@Body() loginDto: LoginDto): Promise<number>{
+        if(await this.userLoginService.login(loginDto)) return 1;
+        else return 0;
     }
 
     @Get(':user_id')
     @ApiOperation({summary: '자기 정보 조회'})
     async myInfo(@Param('user_id') user_id: number): Promise<UserLoginDto>{
         return await this.userLoginService.myInfo(user_id);
+    }
+
+    @Get()
+    @ApiOperation({summary: '모든 유저 정보 조회'})
+    async allUserInfo(): Promise<AllUserDto[]>{
+        return await this.userService.findUserWithInfo();
     }
 }
