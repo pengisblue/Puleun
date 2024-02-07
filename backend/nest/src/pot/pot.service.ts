@@ -3,10 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Pot } from './pot.entity';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { CollectionDto, CreatePotDto, PotWithStatusDto, SelectPotDto, UpdatePotDto } from './pot.dto';
-import { Calender } from 'src/calender/calender.entity';
 import { PotStateService } from 'src/pot-state/pot-state.service';
 import { CalenderService } from 'src/calender/calender.service';
-import { stdout } from 'process';
 
 @Injectable()
 export class PotService {
@@ -39,6 +37,7 @@ export class PotService {
                 .andWhere('pot.user_id= :parent_id', {parent_id})
                 .andWhere('pot.collection_FG= :flag', {flag: false})
                 .andWhere('user.user_id= :parent_id', {parent_id})
+                .orWhere('user.parent_id= :parent_id', {parent_id})
                 .select(['pot.pot_id', 'pot.pot_name', 'pot.pot_species','pot.createdAt', 
                          'user.parent_id', 'pot.temperature','pot.min_temperature', 'pot.max_temperature',
                          'pot.min_moisture', 'pot.max_moisture',

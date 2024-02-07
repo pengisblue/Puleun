@@ -75,7 +75,6 @@ export class PotController {
     @ApiOperation({summary: '성장완료 되서 컬렉션으로 이동'})
     @ApiOkResponse({ type:'1', description:'1 for SUCCESS' })
     async toCollection(@Param('pot_id') pot_id: number): Promise<number>{
-        await this.potService.delete(pot_id);
         await this.potService.toCollection(pot_id);
         return 1;
     }
