@@ -10,6 +10,7 @@ import KidCreatePage from "./pages/KidCreatePage";
 import KidDetailPage from "./pages/KidDetailPage";
 import KidSelectPage from "./pages/KidSelectPage";
 import TalkListPage from "./pages/TalkListPage";
+import TalkDetailPage from "./pages/TalkDetailPage";
 
 // import Example from "./test/Example";
 
@@ -26,6 +27,7 @@ const router = createBrowserRouter([
       { path: "/kid/create", element: <KidCreatePage /> },
       { path: "/pot/:potId", element: <PotDetailPage /> },
       { path: "/kid/:userId", element: <KidDetailPage></KidDetailPage> },
+      { path: "/talk/:talkId", element: <TalkDetailPage /> },
       { path: "/kid/select", element: <KidSelectPage></KidSelectPage> },
     ],
   },

@@ -3,9 +3,11 @@ import PotProfileImage from "../Pots/PotProfileImage";
 import Star from "../UI/star";
 import wateringCan from "../../asset/watering_can.svg";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 
 export default function TalkTitleCard({
+  talkID,
   created_DT,
   talkTitle,
   userImg,
@@ -13,6 +15,8 @@ export default function TalkTitleCard({
   isRead,
   isFavorite,
 }) {
+  const navigate = useNavigate();
+
   const [starState, setStarState] = useState(isFavorite);
   const handleStar = () => {
     const newStarState = !starState;
@@ -24,6 +28,13 @@ export default function TalkTitleCard({
     if (!isReadState) {
       setIsReadState(true);
     }
+  };
+
+  const goTalkDetail = function (talkID) {
+    return () => {
+      handleRead();
+      navigate(`/talk/${talkID}`);
+    };
   };
 
   const createdAt = dayjs(created_DT).format("YY/MM/DD");
@@ -44,7 +55,7 @@ export default function TalkTitleCard({
 
       {/* 대화 내용 */}
       <div
-        onClick={handleRead}
+        onClick={goTalkDetail(talkID)}
         className={`h-full w-full cursor-pointer p-3 ps-4 ${isReadState ? "bg-amber-50" : "bg-amber-200"}`}
       >
         <div className="flex justify-between">
