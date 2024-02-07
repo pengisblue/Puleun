@@ -31,7 +31,7 @@ transcript = None # stt 텍스트
 encoded_wav = None # stt 음성파일
 
 # 아두이노 포트 설정
-arduino_port = 'COM6'
+# arduino_port = 'COM6'
 arduino_port_1 = '/dev/ttyACM0' # LCD
 arduino_port_2 = '/dev/ttyUSB0' # nano
 
@@ -74,7 +74,7 @@ def talk_tts(data):
 # 알람이 왔을 때 tts 실행
 @sio.on('alarm')
 def alarm_tts(data):
-    save_tts_file(data)  
+    wav_play(data)  
 
 
 # 주인 변했을때 == 주인이 생겼을때/없어졌을때
@@ -104,7 +104,57 @@ def refresh(): # 새로고침 신호
 def emotion(data):
     pass
 
+
+
+@sio.on('situation')
+# data = {
+#     'situation_id':int, # 상황번호
+#     'effect': wav_file, # 효과음
+#     'name_voice': wav_file, # ~야 음성파일
+#     'basic_voice':wav_file, # 기본멘트 음성파일(랜덤으로 보내주세요), 알람일땐 null
+# }    
+def situation(data):
+    basic_voice = data['basic_voice']
+    situation_id = data['situation_id']
+    name_voice = data['name_voice']
+    effect = data['effect']
+
+    wav_play()
+    wav_play(name_voice)
+    if situation_id == 5: # 알람일때
+        alarm_tts()
+        # 팔 신호보내기
+    else: # 나머지
+        # 음원받아서 재생 - tts
+        wav_play()
+        # lcd
+        
+
+
 # -------------------------------------------- 함수 ------------------------------------------------
+
+# wav 파일 재생
+def wav_play(data):
+    # .wav 디코딩해서 재생하기
+    base64_data = data['base64Data']
+    file_data = base64.b64decode(base64_data) # base64 디코딩
+
+    # 파일로 저장 (ex: received_file.wav)
+    with open('received_file.wav', 'wb') as file:
+        file.write(file_data)
+
+    print("File received and saved.")
+    time.sleep(1)
+
+    # 오디오 재생
+    file_path = "received_file.wav"
+
+    data, fs = sf.read(file_path)
+    # 음원 재생
+    sd.play(data, fs)
+    # 재생이 완료될 때까지 대기
+    sd.wait()
+
 
 # stt 텍스트, 음성파일 전송
 def send_stt_file(): 
@@ -140,29 +190,9 @@ def keyword():
     send_stt_file()   # 호출어 인식이 되면 stt 실행     
 
 
-# 음성 파일 저장 + 출력 함수
 def save_tts_file(data): 
-    # .wav 디코딩해서 재생하기
-    base64_data = data['base64Data']
-    file_data = base64.b64decode(base64_data) # base64 디코딩
-
-    # 파일로 저장 (ex: received_file.wav)
-    with open('received_file.wav', 'wb') as file:
-        file.write(file_data)
-
-    print("File received and saved.")
-    time.sleep(1)
-
-    # 오디오 재생
-   
-    file_path = "received_file.wav"
-
-    data, fs = sf.read(file_path)
-    # 음원 재생
-    sd.play(data, fs)
-    # 재생이 완료될 때까지 대기
-    sd.wait()
-
+    # 음성 파일 저장 + 출력
+    wav_play(data)
     send_stt_file()
     
     # pygame.mixer.init()
@@ -181,14 +211,13 @@ def save_tts_file(data):
     #     pygame.mixer.quit()
 
 
-# 아두이노 측정값 + 물줬을때, 아두이노에서 측정값 받고 보내기
-def pot_state(): 
+def pot_state(): # 아두이노 측정값 + 물줬을때, 아두이노에서 측정값 받고 보내기
     # 측정 시작 신호 전송
     # ser2.write(b"START\n")
     print('start pot_state')
 
     # 시간 두고 아두이노가 신호 처리 하도록
-    time.sleep(0.5) # 한번 측정할 정도의 시간임
+    time.sleep(2) # 한번 측정할 정도의 시간임
 
     while ser2.in_waiting > 0:
         sensor_value = ser2.readline().decode('utf-8').strip()
@@ -203,19 +232,6 @@ def pot_state():
         # Socket.IO로 데이터 전송
         # sio.emit('pot_state', {'pot_id' : pot_id, 'data': sensor_value, 'isTemp_FG': is_temp})
 
-# 아두이노로 메시지 보내기
-def send_sig_to_arduino(msg):
-    msg = msg + '\n'
-    msg = bytes(msg, 'utf-8')
-    ser2.write(msg)
-
-    # 테스트용으로 완료신호 받는 함수
-    # time.sleep(1)
-
-    # while ser2.in_waiting > 0:
-    #     answer = ser2.readline().decode('utf-8').strip()
-    #     print(answer)
-
 
 
 # 메인 실행문
@@ -225,34 +241,33 @@ if __name__ == '__main__':
 
     # 시리얼 열기
     # 시리얼 통신 객체 생성
-    # ser2 = serial.Serial(arduino_port_2, 9600)  # 아두이노와의 통신 속도에 맞게 설정
-    ser2 = serial.Serial(arduino_port, 9600)  # 아두이노와의 통신 속도에 맞게 설정
-    time.sleep(2)
+    ser2 = serial.Serial(arduino_port_2, 9600)  # 아두이노와의 통신 속도에 맞게 설정
+
     # -----------
     # keyword() # 호출어 인식 테스트
 
     # 메인 루프
-    # while True:
+    while True:
         # keyword()
 
         # time.sleep(1)
-        # water 들어오면 emit하기
-        # while ser2.in_waiting > 0:
-        #     sensor_value = ser2.readline().decode('utf-8').strip()
-        #     if (sensor_value == 'Water' and is_water == False):
-        #         print('sending water signal')
-        #         is_water = True
-        #         # sio.emit('water', {'pot_id' : pot_id})
+    #     # water 들어오면 emit하기
+        while ser2.in_waiting > 0:
+            sensor_value = ser2.readline().decode('utf-8').strip()
+            if (sensor_value == 'Water' and is_water == False):
+                print('sending water signal')
+                is_water = True
+                # sio.emit('water', {'pot_id' : pot_id})
 
-        # # 정각마다 pot_state 실행
-        # now = datetime.datetime.now()
-        # if now.minute == 0:
-        #     if status_flag == False:
-        #         pot_state()
-        #         status_flag = True
-        #     if now.hour == 0:
-        #         is_water = False
-        
+        # 정각마다 pot_state 실행
+        now = datetime.datetime.now()
+        if now.minute == 0:
+            if status_flag == False:
+                pot_state()
+                status_flag = True
+            if now.hour == 0:
+                is_water = False
+
     # -----
         
     # 시리얼 포트 닫기
