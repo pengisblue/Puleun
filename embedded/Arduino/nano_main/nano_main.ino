@@ -73,6 +73,38 @@ void readMoistureSensor() {
   Serial.println(moisturePercent);
 }
 
+
+// 양쪽 팔 동시에 흔들기
+void arm_both() {
+  servo1.write(90);
+  servo2.write(90);
+  delay(1000);
+  servo1.write(0);
+  servo2.write(0);
+  delay(1000);
+}
+
+
+// 양쪽 팔 번갈아 흔들기
+void arm_switch() {
+  servo1.write(90);
+  servo2.write(0);
+  delay(1000);
+  servo1.write(0);
+  servo2.write(90);
+  delay(1000);
+}
+
+
+// 한쪽 팔 흔들기
+void arm_single(Servo servo) {
+  servo.write(90);
+  delay(1000);
+  servo.write(0);
+  delay(1000);
+}
+
+
 // 1초마다 센서 읽기
 Task taskReadHumidity(1000, TASK_FOREVER, &readTempSensor);
 Task taskReadMoisture(1000, TASK_FOREVER, &readMoistureSensor); 
@@ -93,6 +125,8 @@ void setup() {
   // 서보 모터 설정
   servo1.attach(servoPin1);
   servo2.attach(servoPin2);
+  servo1.write(0);
+  servo2.write(0);
 
   // 초음파 센서 설정
   pinMode(trigPin, OUTPUT);
@@ -112,17 +146,12 @@ void loop() {
   Serial.print("Distance: ");
   Serial.println(distance);
   
-  // 거리 가까우면 팔 흔들기
-  if (2 < distance && distance <= 100) {
-    // Serial.println("move");
-    servo1.write(90);
-    servo2.write(90);
-    delay(1000);
-    servo1.write(0);
-    servo2.write(0);
-    delay(1000);
+  // 거리 가까우면 오른팔 흔들기
+  if ( distance == 100) {
+    arm_single(servo1);
   }
 
+  // 오른쪽- 1m, 왼쪽- 말 시작할때, 양쪽같이- 호출어, 양쪽 번갈아-알람
 
   delay(1000);
 }
