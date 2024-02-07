@@ -3,7 +3,7 @@ import { User } from './user.entity';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto, UpdateUserDto } from './user-req.dto';
-import { UserDetailDto, UserListDto } from './user-res.dto';
+import { SimpleUserListDto, UserDetailDto, UserListDto } from './user-res.dto';
 import { plainToInstance } from 'class-transformer';
 import { AllUserDto } from 'src/user-login/user-login.dto';
 import { Pot } from 'src/pot/pot.entity';
@@ -112,5 +112,35 @@ export class UserService {
         return await this.userRepository.find({
             relations: {pots: true}
         })
+    }
+
+    async simpleUserList(user_id: number): Promise<SimpleUserListDto[]>{
+        const dtos = new Array<SimpleUserListDto>();
+        const dto = await this.userRepository.createQueryBuilder('user')
+        .select(['user.user_id', 'user.nickname', 'user.profile_img_url',
+                 'pot.pot_id', 'pot.pot_name', 'pot.pot_img_url', 'user.parent_id'])
+        .leftJoin('user.pots', 'pot', 'user.user_id = pot.user_id')
+        .where('user.user_id= :user_id', {user_id})
+        .orWhere('user.parent_id= :user_id', {user_id})
+        .getMany();
+
+        for(let i = 0; i < dto.length; i++){
+            const tempDto = new SimpleUserListDto();
+            const element = dto[i];
+
+            element.pots.forEach(pot => {
+                tempDto.pot_id = pot.pot_id;
+                tempDto.pot_img_url = pot.pot_img_url;
+                tempDto.pot_name = pot.pot_name;
+            });
+
+            tempDto.user_id = element.user_id;
+            tempDto.nickname = element.nickname;
+            tempDto.profile_img_url = element.profile_img_url;
+            tempDto.parent_id = element.parent_id;
+            dtos.push(tempDto);
+        }
+
+        return dtos;
     }
 }
