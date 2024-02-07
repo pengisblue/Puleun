@@ -2,6 +2,7 @@ import { Fragment, useState } from "react";
 import { useNavigate } from "react-router";
 import { Disclosure, Menu, Switch, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import Session from "react-session-api";
 import navImg from "../test/pot2-removebg-preview.png";
 import kidImg from "../test/kid3.png";
 
@@ -20,8 +21,16 @@ export default function Navigation() {
   const navigate = useNavigate();
 
   const switchKidsMode = () => {
-    setEnabled(true);
-    navigate("/kid/select");
+    const ch = Session.get("kidsmode");
+
+    if (!!ch) {
+      setEnabled(false);
+      Session.remove("kidsmode");
+    } else {
+      setEnabled(true);
+      Session.set("kidsmode", true);
+      navigate("/kids/select");
+    }
   };
 
   return (
