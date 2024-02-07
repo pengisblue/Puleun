@@ -17,7 +17,6 @@ export default function TalkTitleCard({
   const handleStar = () => {
     const newStarState = !starState;
     setStarState(newStarState);
-    isFavorite = newStarState;
   };
 
   const [isReadState, setIsReadState] = useState(isRead);
@@ -31,10 +30,10 @@ export default function TalkTitleCard({
 
   return (
     <div
-      onClick={handleRead}
       className="m-4 flex h-24 w-80 items-center overflow-hidden rounded-lg shadow-lg 
         ring ring-amber-200 ring-offset-1 ring-offset-amber-300"
     >
+      {/* 즐겨찾기 표시 */}
       <div className="flex h-full items-center bg-orange-100">
         <Star
           onClick={handleStar}
@@ -42,8 +41,11 @@ export default function TalkTitleCard({
           className="mx-1.5 w-12 cursor-pointer "
         />
       </div>
+
+      {/* 대화 내용 */}
       <div
-        className={`h-full w-full p-3 ps-4 ${isReadState ? "bg-amber-50" : "bg-amber-200"}`}
+        onClick={handleRead}
+        className={`h-full w-full cursor-pointer p-3 ps-4 ${isReadState ? "bg-amber-50" : "bg-amber-200"}`}
       >
         <div className="flex justify-between">
           <div className="flex items-center gap-1">
