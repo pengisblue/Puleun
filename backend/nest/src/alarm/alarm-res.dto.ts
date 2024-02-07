@@ -1,4 +1,5 @@
 import { Expose, Type } from "class-transformer";
+import { time } from "console";
 
 // export class TinyPotDto{
 //     pot_id: number;
@@ -30,7 +31,8 @@ export class AlarmDto {
     @Expose()
     active_FG: boolean;
     @Expose()
-    alarm_date: Date;
+    @Type(() => time)
+    alarm_date: string;
     @Expose()
     routine: string;
     

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { AlarmService } from './alarm.service';
 import { Alarm } from './alarm.entity';
 import { ApiBody, ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger';
@@ -30,7 +30,6 @@ export class AlarmController {
     @ApiOperation({summary: '유저의 모든 알람 조회'})
     @ApiBody({type: Alarm})
     async userAlarm(@Param('user_id') user_id: number){
-        // return await this.alarmService.userAlarm(user_id);
         return await this.userService.allAlarmOfUser(user_id);
     }
 
@@ -56,8 +55,4 @@ export class AlarmController {
         await this.alarmService.deleteAlarm(alarm_id);
         return 1;
     }
-
-
-
-
 }
