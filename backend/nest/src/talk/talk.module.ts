@@ -3,11 +3,11 @@ import { TalkController } from './talk.controller';
 import { TalkService } from './talk.service';
 import { UserModule } from 'src/user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from 'src/user/user.entity';
 import { Talk } from './talk.entity';
+import { RedisModule } from 'src/redis/redis.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Talk]), UserModule],
+  imports: [TypeOrmModule.forFeature([Talk]), UserModule, RedisModule],
   controllers: [TalkController],
   providers: [TalkService]
 })

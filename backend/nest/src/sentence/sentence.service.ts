@@ -4,10 +4,16 @@ import OpenAI from "openai";
 import { Sentence } from './sentence.entity';
 import { Repository } from 'typeorm';
 import { SentenceDto } from './sentence.dto';
+import { RedisService } from 'src/redis/redis.service';
 
 @Injectable()
 export class SentenceService {
-    constructor(@InjectRepository(Sentence) private readonly sentenceRepository: Repository<Sentence>){}
+    constructor(
+        @InjectRepository(Sentence) 
+        private readonly sentenceRepository: Repository<Sentence>,
+
+        private readonly redisService:RedisService
+    ){}
 
     openai: any = new OpenAI({
         organization: 'org-XvLEOTgNTjznmJI9U3UnwBOk',
@@ -36,8 +42,7 @@ export class SentenceService {
     }
 
     async sentenceFindAll(talk_id: number): Promise<SentenceDto[]>{
-        return await this.sentenceRepository.find({
-            where: {talk_id}
-        })
+        const res: SentenceDto[] = (await this.redisService.get(talk_id.toString())).split(",").map((x)=>JSON.parse(x))
+        return res
     }
 }
