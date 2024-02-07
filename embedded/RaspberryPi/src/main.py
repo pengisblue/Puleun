@@ -29,7 +29,7 @@ talk_id = 1 # 대화 번호
 serial_number = 'jkfjksdjs12331'
 transcript = None # stt 텍스트
 encoded_wav = None # stt 음성파일
-
+name_voice = None # 이름 음성 파일
 # 아두이노 포트 설정
 arduino_port = 'COM6'
 arduino_port_1 = '/dev/ttyACM0' # LCD
@@ -71,19 +71,24 @@ def talk_tts(data):
     # 이 다음에 stt 실행
 
 
-# 알람이 왔을 때 tts 실행 > situation에 합칠예정
-# @sio.on('alarm')
-# def alarm_tts(data):
-#     wav_play(data)
-#     # 팔 움직이기
-#     send_sig_to_arduino(ser2, "alarm")
-
-
 # 주인 변했을때 == 주인이 생겼을때/없어졌을때
-# data==True일 때 효과음 + 이름 파일 받아서 저장
+# data==True일 때 이름 파일 받아서 저장
 @sio.on('owner_change')
 def owner_change(data): 
-    is_owner = data
+    global is_owner, name_voice
+    # 받는 데이터 형식
+    # data={
+    #     'is_owner': bool,
+    #     'name_voice': wavfile,
+    # }
+
+    is_owner = data['is_owner']
+    base64_data = data['name_voice']
+    # 이름 음성 파일 저장
+    file_data = base64.b64decode(base64_data)
+    with open('name_voice.wav', 'wb') as file:
+        file.write(file_data)
+
     print("owner status changed")
 
 
@@ -105,18 +110,18 @@ def refresh(): # 새로고침 신호
 
 # 상태 별 액션
 @sio.on('situation')
-# data = {
-#     'situation_id':int, # 상황번호
-#     'effect': wav_file, # 효과음
-#     'name_voice': wav_file, # ~야 음성파일
-#     'basic_voice':wav_file, # 기본멘트 음성파일(랜덤으로 보내주세요), 알람일땐 null
-# }    
 def situation(data):
+    # data = {
+    #     'situation_id':int, # 상황번호
+    #     'basic_voice':wav_file, # 기본멘트 음성파일(랜덤으로 보내주세요), 알람일땐 tts 파일
+    # } 
     situation_id = data['situation_id']
-    # effect = data['effect'] # 얘네 두개는 owner_change에서 받아올듯?
-    # name_voice = data['name_voice']
     basic_voice = data['basic_voice']
 
+    # 이거 두개는 라즈베리파이에서 저장해두고 쓰기
+    # effect = "effect.wav"
+    # name_voice = "name_voice.wav"
+    
     start_sound()
     if situation_id == 5: # 알람일때
         wav_play(basic_voice)
@@ -129,6 +134,22 @@ def situation(data):
         send_sig_to_arduino(ser1, situation_id)
 
 # -------------------------------------------- 함수 ------------------------------------------------
+
+# 음성 재생
+def play_sound(file_path):
+    data, fs = sf.read(file_path)  # 파일 읽기
+    sd.play(data, fs)  # 소리 재생
+    sd.wait()  # 재생이 끝날 때까지 대기
+
+
+# 효과음 + 이름 재생
+def start_sound():
+    effect_file_path = "effect_sound.wav"
+    name_voice_file_path = "name_voice.wav"
+
+    play_sound(effect_file_path)  # 효과음 재생
+    play_sound(name_voice_file_path)  # 이름 음성 파일 재생
+
 
 # wav 파일 재생
 def wav_play(data):
@@ -243,9 +264,6 @@ def send_sig_to_arduino(ser, msg):
     #     answer = ser2.readline().decode('utf-8').strip()
     #     print(answer)
 
-# 효과음 + 이름 재생
-def start_sound():
-    pass
 
 # 메인 실행문
 if __name__ == '__main__': 
