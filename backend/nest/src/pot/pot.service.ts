@@ -3,10 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Pot } from './pot.entity';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { CollectionDto, CreatePotDto, PotWithStatusDto, SelectPotDto, UpdatePotDto } from './pot.dto';
-import { Calender } from 'src/calender/calender.entity';
 import { PotStateService } from 'src/pot-state/pot-state.service';
 import { CalenderService } from 'src/calender/calender.service';
-import { stdout } from 'process';
 
 @Injectable()
 export class PotService {
@@ -28,25 +26,26 @@ export class PotService {
     async potWithStatus(parent_id: number): Promise<PotWithStatusDto[]>{
         const now = new Date();
         const pot = await this.potRepository.createQueryBuilder('pot')
-                .leftJoinAndSelect('pot.user', 'user', 'user.user_id = pot.user_id')
-                .leftJoinAndSelect('pot.calender', 'calender','calender.pot_id = pot.pot_id')
-                .where('(calender.pot_id, calender.code, calender.createdAt) IN (' +
-                    'SELECT pot_id, code, MAX(createdAt) ' +
-                    'FROM calender ' +
-                    'WHERE code IN ("W", "T") ' +
-                    'GROUP BY pot_id, code)' 
-                )
-                .andWhere('pot.user_id= :parent_id', {parent_id})
-                .andWhere('pot.collection_FG= :flag', {flag: false})
-                .andWhere('user.user_id= :parent_id', {parent_id})
-                .select(['pot.pot_id', 'pot.pot_name', 'pot.pot_species','pot.createdAt', 
-                         'user.parent_id', 'pot.temperature','pot.min_temperature', 'pot.max_temperature',
-                         'pot.min_moisture', 'pot.max_moisture',
-                         'pot.moisture', 'pot_img_url', 'user.user_id', 'user.nickname',
-                         'user.profile_img_url', 'calender.code', 'calender.createdAt'])                         
-                .getMany();
+            .leftJoinAndSelect('pot.user', 'user', 'user.user_id = pot.user_id')
+            .leftJoinAndSelect('pot.calender', 'calender','calender.pot_id = pot.pot_id')
+            .where('((user.user_id= :parent_id OR user.parent_id = :parent_id) AND (calender.pot_id IS NULL)) OR' + 
+            '(calender.pot_id, calender.code, calender.createdAt) IN ' +
+                '(SELECT pot_id, code, MAX(createdAt) ' +
+                'FROM calender ' +
+                'GROUP BY pot_id, code)', {parent_id} 
+            )
+            .andWhere('pot.user_id= :parent_id', {parent_id})
+            .andWhere('pot.collection_FG= :flag', {flag: false})
+            .andWhere('user.user_id= :parent_id', {parent_id})
+            .orWhere('user.parent_id= :parent_id', {parent_id})
+            .select(['pot.pot_id', 'pot.pot_name', 'pot.pot_species','pot.createdAt', 
+                        'user.parent_id', 'pot.temperature','pot.min_temperature', 'pot.max_temperature',
+                        'pot.min_moisture', 'pot.max_moisture',
+                        'pot.moisture', 'pot_img_url', 'user.user_id', 'user.nickname',
+                        'user.profile_img_url', 'calender.code', 'calender.createdAt'])                         
+            .getMany();
     
-
+        pot.forEach(pot => console.log(pot));
 
         const statusDtos = new Array<PotWithStatusDto>();
         for(let i = 0; i < pot.length; i++){

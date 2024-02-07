@@ -85,7 +85,6 @@ export class UserService {
 
     // 화분이 없는 유저 목록
     async unMappingUser(user_id: number): Promise<UserListDto[]>{
-
         const result = await this.userRepository
             .createQueryBuilder('user')
             .where((qb: SelectQueryBuilder<User>) => {
