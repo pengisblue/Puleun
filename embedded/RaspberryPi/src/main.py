@@ -31,7 +31,7 @@ transcript = None # stt 텍스트
 encoded_wav = None # stt 음성파일
 
 # 아두이노 포트 설정
-# arduino_port = 'COM6'
+arduino_port = 'COM6'
 arduino_port_1 = '/dev/ttyACM0' # LCD
 arduino_port_2 = '/dev/ttyUSB0' # nano
 
@@ -104,8 +104,6 @@ def refresh(): # 새로고침 신호
 def emotion(data):
     pass
 
-
-
 @sio.on('situation')
 # data = {
 #     'situation_id':int, # 상황번호
@@ -128,8 +126,6 @@ def situation(data):
         # 음원받아서 재생 - tts
         wav_play()
         # lcd
-        
-
 
 # -------------------------------------------- 함수 ------------------------------------------------
 
@@ -190,8 +186,8 @@ def keyword():
     send_stt_file()   # 호출어 인식이 되면 stt 실행     
 
 
+# 음성 파일 저장 + 출력 함수
 def save_tts_file(data): 
-    # 음성 파일 저장 + 출력
     wav_play(data)
     send_stt_file()
     
@@ -211,13 +207,14 @@ def save_tts_file(data):
     #     pygame.mixer.quit()
 
 
-def pot_state(): # 아두이노 측정값 + 물줬을때, 아두이노에서 측정값 받고 보내기
+# 아두이노 측정값 + 물줬을때, 아두이노에서 측정값 받고 보내기
+def pot_state(): 
     # 측정 시작 신호 전송
     # ser2.write(b"START\n")
     print('start pot_state')
 
     # 시간 두고 아두이노가 신호 처리 하도록
-    time.sleep(2) # 한번 측정할 정도의 시간임
+    time.sleep(0.5) # 한번 측정할 정도의 시간임
 
     while ser2.in_waiting > 0:
         sensor_value = ser2.readline().decode('utf-8').strip()
@@ -232,6 +229,19 @@ def pot_state(): # 아두이노 측정값 + 물줬을때, 아두이노에서 측
         # Socket.IO로 데이터 전송
         # sio.emit('pot_state', {'pot_id' : pot_id, 'data': sensor_value, 'isTemp_FG': is_temp})
 
+# 아두이노로 메시지 보내기
+def send_sig_to_arduino(msg):
+    msg = msg + '\n'
+    msg = bytes(msg, 'utf-8')
+    ser2.write(msg)
+
+    # 테스트용으로 완료신호 받는 함수
+    # time.sleep(1)
+
+    # while ser2.in_waiting > 0:
+    #     answer = ser2.readline().decode('utf-8').strip()
+    #     print(answer)
+
 
 
 # 메인 실행문
@@ -241,33 +251,34 @@ if __name__ == '__main__':
 
     # 시리얼 열기
     # 시리얼 통신 객체 생성
-    ser2 = serial.Serial(arduino_port_2, 9600)  # 아두이노와의 통신 속도에 맞게 설정
-
+    # ser2 = serial.Serial(arduino_port_2, 9600)  # 아두이노와의 통신 속도에 맞게 설정
+    ser2 = serial.Serial(arduino_port, 9600)  # 아두이노와의 통신 속도에 맞게 설정
+    time.sleep(2)
     # -----------
     # keyword() # 호출어 인식 테스트
 
     # 메인 루프
-    while True:
+    # while True:
         # keyword()
 
         # time.sleep(1)
-    #     # water 들어오면 emit하기
-        while ser2.in_waiting > 0:
-            sensor_value = ser2.readline().decode('utf-8').strip()
-            if (sensor_value == 'Water' and is_water == False):
-                print('sending water signal')
-                is_water = True
-                # sio.emit('water', {'pot_id' : pot_id})
+        # water 들어오면 emit하기
+        # while ser2.in_waiting > 0:
+        #     sensor_value = ser2.readline().decode('utf-8').strip()
+        #     if (sensor_value == 'Water' and is_water == False):
+        #         print('sending water signal')
+        #         is_water = True
+        #         # sio.emit('water', {'pot_id' : pot_id})
 
-        # 정각마다 pot_state 실행
-        now = datetime.datetime.now()
-        if now.minute == 0:
-            if status_flag == False:
-                pot_state()
-                status_flag = True
-            if now.hour == 0:
-                is_water = False
-
+        # # 정각마다 pot_state 실행
+        # now = datetime.datetime.now()
+        # if now.minute == 0:
+        #     if status_flag == False:
+        #         pot_state()
+        #         status_flag = True
+        #     if now.hour == 0:
+        #         is_water = False
+        
     # -----
         
     # 시리얼 포트 닫기
