@@ -10,10 +10,6 @@ export default function KidListPage() {
   const [kidList, setKidList] = useState([]);
   const navigate = useNavigate();
 
-  const goDetailKid = (userId) => {
-    return () => navigate(`/kid/${userId}`);
-  };
-
   const goCreateKid = () => {
     navigate("/kid/create");
   };
