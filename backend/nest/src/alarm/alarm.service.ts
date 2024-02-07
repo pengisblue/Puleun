@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { AlarmDto, CreateAlarmDto } from './alarm.dto';
 import { Pot } from 'src/pot/pot.entity';
 import { plainToClass } from 'class-transformer';
+import { UserWithAlarmDto } from './alarm-res.dto';
 
 @Injectable()
 export class AlarmService {

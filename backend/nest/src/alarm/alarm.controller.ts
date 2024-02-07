@@ -3,11 +3,13 @@ import { AlarmService } from './alarm.service';
 import { Alarm } from './alarm.entity';
 import { ApiBody, ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger';
 import { AlarmDto, CreateAlarmDto } from './alarm.dto';
+import { UserService } from 'src/user/user.service';
 
 @Controller('alarm')
 @ApiTags('Alarm')
 export class AlarmController {
-    constructor(private readonly alarmService:AlarmService){}
+    constructor(private readonly alarmService:AlarmService,
+                private readonly userService: UserService){}
 
     @Post()
     @ApiOperation({ summary: "알람 저장"})
@@ -18,7 +20,7 @@ export class AlarmController {
         'alarm_date': '2024-01-30',
         'pot':2
     }})
-    async save(@Query() @Body() alarm:CreateAlarmDto): Promise<number>{
+    async save(@Body() alarm:CreateAlarmDto): Promise<number>{
         console.log(alarm);
         await this.alarmService.addAlarm(alarm);
         return 1;
@@ -27,8 +29,9 @@ export class AlarmController {
     @Get(':user_id')
     @ApiOperation({summary: '유저의 모든 알람 조회'})
     @ApiBody({type: Alarm})
-    async userAlarm(@Param('user_id') user_id: number): Promise<Alarm[]>{
-        return await this.alarmService.userAlarm(user_id);
+    async userAlarm(@Param('user_id') user_id: number){
+        // return await this.alarmService.userAlarm(user_id);
+        return await this.userService.allAlarmOfUser(user_id);
     }
 
     @Post(':alarm_id')

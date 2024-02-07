@@ -7,6 +7,7 @@ import { SimpleUserListDto, UserDetailDto, UserListDto } from './user-res.dto';
 import { plainToInstance } from 'class-transformer';
 import { AllUserDto } from 'src/user-login/user-login.dto';
 import { Pot } from 'src/pot/pot.entity';
+import { UserWithAlarmDto } from 'src/alarm/alarm-res.dto';
 
 @Injectable()
 export class UserService {
@@ -96,6 +97,7 @@ export class UserService {
                 .getQuery();
                 return `user.user_id NOT IN ${subQuery}`;
             })
+            .andWhere('user.user_id= :user_id', {user_id})
             .select(['user.user_id', 'user.nickname'])
             .getMany();
         return result;
@@ -117,12 +119,12 @@ export class UserService {
     async simpleUserList(user_id: number): Promise<SimpleUserListDto[]>{
         const dtos = new Array<SimpleUserListDto>();
         const dto = await this.userRepository.createQueryBuilder('user')
-        .select(['user.user_id', 'user.nickname', 'user.profile_img_url',
-                 'pot.pot_id', 'pot.pot_name', 'pot.pot_img_url', 'user.parent_id'])
-        .leftJoin('user.pots', 'pot', 'user.user_id = pot.user_id')
-        .where('user.user_id= :user_id', {user_id})
-        .orWhere('user.parent_id= :user_id', {user_id})
-        .getMany();
+            .select(['user.user_id', 'user.nickname', 'user.profile_img_url',
+                    'pot.pot_id', 'pot.pot_name', 'pot.pot_img_url', 'user.parent_id'])
+            .leftJoin('user.pots', 'pot', 'user.user_id = pot.user_id')
+            .where('user.user_id= :user_id', {user_id})
+            .orWhere('user.parent_id= :user_id', {user_id})
+            .getMany();
 
         for(let i = 0; i < dto.length; i++){
             const tempDto = new SimpleUserListDto();
@@ -140,6 +142,45 @@ export class UserService {
             tempDto.parent_id = element.parent_id;
             dtos.push(tempDto);
         }
+        return dtos;
+    }
+
+
+    // user의 모든 알람을 표시
+    // alarm controller에서 사용중
+    async allAlarmOfUser(user_id: number): Promise<UserWithAlarmDto[]>{
+        const dtos = new Array<UserWithAlarmDto>();
+        const result = await this.userRepository.createQueryBuilder('user')
+            .where('user.user_id= :user_id', {user_id})
+            .orWhere('user.parent_id= :user_id', {user_id})
+            .leftJoin('user.pots', 'pot', 'user.user_id=pot.user_id')
+            .leftJoinAndSelect('pot.alarm', 'alarm', 'pot.pot_id=alarm.pot_id')
+            .select(['user', 'pot', 'alarm'])
+            .getMany();
+
+        // result.forEach(arr => {
+        //     const dto = new UserWithAlarmDto();
+        //     dto.user_id = arr.user_id;
+        //     dto.nickname = arr.nickname;            
+        //     arr.pots.forEach(pot =>{
+        //         dto.pot_id = pot.pot_id;
+        //         dto.pot_name = pot.pot_name;
+        //         pot.alarm.forEach(alarm => {
+        //             dto.alarm_id = alarm.alarm_id
+        //             dto.alarm_name = alarm.alarm_name
+        //             dto.alarm_content = alarm.alarm_content
+        //             dto.active_FG = alarm.active_FG
+        //             dto.alarm_date = alarm.alarm_date
+        //             dto.routine = alarm.routine
+        //         })
+        //     });
+        //     dtos.push(dto);
+        // })
+
+        result.forEach(arr => {
+            const userDto = plainToInstance(UserWithAlarmDto, arr, {excludeExtraneousValues: true});
+            dtos.push(userDto);
+        })
 
         return dtos;
     }
