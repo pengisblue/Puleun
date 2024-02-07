@@ -6,10 +6,8 @@ import * as fs from 'fs';
 export class TtsService {
     api_url: string = 'https://naveropenapi.apigw.ntruss.com/tts-premium/v1/tts';
 
-    async tts(answer: string, filePath: string): Promise<any>{
-
-        if(!fs.existsSync(filePath)) fs.mkdirSync(filePath);
-        
+    /**  */
+    async tts(answer: string, filePath: string): Promise<any>{        
         const writer = fs.createWriteStream(filePath);
 
         await axios({  
