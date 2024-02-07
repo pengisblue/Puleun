@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Between, Repository } from 'typeorm';
 import { CreatePotStateDto } from './pot-state-insert.dto';
 import { PotService } from 'src/pot/pot.service';
-import { CompareDataDto, StatusResultDto } from './pot-state.dto';
+import { StatusResultDto } from './pot-state.dto';
 import { CalenderService } from 'src/calender/calender.service';
 
 @Injectable()
@@ -40,7 +40,7 @@ export class PotStateService {
     
       for (let index = 0; index < potList.length; index++) {
         const element = potList[index];
-        const lastWaterDay = await this.calenderService.getLastWaterDay(element.pot_id);
+        const lastWaterDay = await this.calenderService.getLastDay(element.pot_id, "W");
         const together_day = this.theDayWeWereTogether(element.createdAt);
         const moisState = this.moisState(element.min_moisture, element.max_moisture, element.moisture);
         const tempState = this.tempState(element.min_temperature, element.max_temperature, element.temperature);
@@ -112,9 +112,9 @@ export class PotStateService {
 
   // 온도에 따른 상태 표시
   tempState(min: number, max: number, current: number): string{
-    if(current < min) return '부족';
+    if(current < min) return '낮음';
     else if (min <= current && max >= current) '적정';
-    return '초과';
+    return '높음';
   }
 
   // 습도에 따른 상태 표시

@@ -1,5 +1,4 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
-import { User } from '../user/user.entity';
 import { Pot } from '../pot/pot.entity';
 import { Sentence } from '../sentence/sentence.entity';
 
@@ -10,15 +9,16 @@ export class Talk {
 
   @Column({ length: 30, nullable: false })
   talk_title: string;
-
   
   @Column({ type: 'datetime', nullable: false })
   talk_DT: Date;
 
-  @ManyToOne(() => Pot)
+  @Column({ type: 'tinyint', nullable: false })
+  read_FG: boolean
+
+  @ManyToOne(() => Pot, (pot) => pot.talk )
   @JoinColumn({name: 'pot_id'})
-  pot_id: Pot;
-  // Other columns and relationships can be added as needed.
+  pot: Pot;
   
   @OneToMany(() => Sentence, sentence => sentence.sentence_id)
   sentence: Sentence[];
