@@ -10,6 +10,7 @@ import KidCreatePage from "./pages/KidCreatePage";
 import KidDetailPage from "./pages/KidDetailPage";
 import KidSelectPage from "./pages/KidSelectPage";
 import TalkListPage from "./pages/TalkListPage";
+import LandingPage from "./pages/LandingPage";
 
 // import Example from "./test/Example";
 
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
       { path: "/kid/:userId", element: <KidDetailPage></KidDetailPage> },
       { path: "/kid/select", element: <KidSelectPage></KidSelectPage> },
     ],
+  },
+  {
+    path: "/hello",
+    element: <LandingPage />,
   },
   // 테스트용
   // {
