@@ -38,15 +38,15 @@ export class FileController {
       // 파일을 저장하거나 다른 작업을 수행할 수 있습니다.
     }
 
-    @Get(':fileName')
-    @Header('Content-Type', 'audio/wav')
-    @ApiOperation({summary: '파일을 클라이언트로 받기'})
-    @ApiBody({ type: 'wav' })
-    @ApiOkResponse({type: 'wav', description:'테스트로 ETA가 전송되어야 함'})
-    // post를 보낼때 key를 file로 해서 보내야 됨
-    async getFile(@Param('fileName') fileName: string): Promise<StreamableFile>{
-        const path = await this.fileService.resolveFileName();
-        const file = createReadStream(join(process.cwd(), path + '/ETA.mp3'));
-        return new StreamableFile(file);
-    }
+    // @Get(':fileName')
+    // @Header('Content-Type', 'audio/wav')
+    // @ApiOperation({summary: '파일을 클라이언트로 받기'})
+    // @ApiBody({ type: 'wav' })
+    // @ApiOkResponse({type: 'wav', description:'테스트로 ETA가 전송되어야 함'})
+    // // post를 보낼때 key를 file로 해서 보내야 됨
+    // async getFile(@Param('fileName') fileName: string): Promise<StreamableFile>{
+    //     const path = await this.fileService.resolveFileName();
+    //     const file = createReadStream(join(process.cwd(), path + '/ETA.mp3'));
+    //     return new StreamableFile(file);
+    // }
 }
