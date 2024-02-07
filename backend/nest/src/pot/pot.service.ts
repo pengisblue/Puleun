@@ -19,11 +19,14 @@ export class PotService {
     ){}
 
     async findAllPot(): Promise<SelectPotDto[]>{
-        const result = await this.potRepository.find();
+        const result = await this.potRepository.find({
+            relations: {user: true}
+        });
         return result;
     }
         
     async potWithStatus(parent_id: number): Promise<PotWithStatusDto[]>{
+        const now = new Date();
         const pot = await this.potRepository.createQueryBuilder('pot')
                 .leftJoinAndSelect('pot.user', 'user', 'user.user_id = pot.user_id')
                 .leftJoinAndSelect('pot.calender', 'calender','calender.pot_id = pot.pot_id')
@@ -42,7 +45,7 @@ export class PotService {
                          'pot.moisture', 'pot_img_url', 'user.user_id', 'user.nickname',
                          'user.profile_img_url', 'calender.code', 'calender.createdAt'])                         
                 .getMany();
-
+    
 
 
         const statusDtos = new Array<PotWithStatusDto>();
@@ -50,11 +53,17 @@ export class PotService {
             const statusDto = new PotWithStatusDto();
             const element = pot[i];
 
-            const lastWaterDay = await this.calenderService.getLastWaterDay(element.pot_id);
+            let lastWaterDay = 0;
+            let lastTalkDay = 0;
+
+            element.calender.forEach(arr => {
+                if(arr.code == 'W') lastWaterDay = Math.floor((now.getTime() - arr.createdAt.getTime())/(1000 * 24 * 24 * 60));
+                else lastTalkDay = Math.floor((now.getTime() - arr.createdAt.getTime())/(1000 * 24 * 24 * 60));
+            })
+
             const together_day = await this.potStateService.theDayWeWereTogether(element.createdAt);
             const moisState = await this.potStateService.moisState(element.min_moisture, element.max_moisture, element.moisture);
             const tempState = await this.potStateService.tempState(element.min_temperature, element.max_temperature, element.temperature);
-            const lastTalkDay = await this.calenderService.getLastTalkDay(element.pot_id);
 
             statusDto.pot_id = element.pot_id;
             statusDto.pot_name = element.pot_name;
@@ -65,12 +74,13 @@ export class PotService {
             statusDto.user_id = element.user.user_id;
             statusDto.profile_img_url = element.user.profile_img_url;
             statusDto.nickname = element.user.nickname;
-            statusDto.tempState = tempState;
-            statusDto.moisState = moisState
+            statusDto.temp_state = tempState;
+            statusDto.mois_state = moisState
             statusDto.last_water = lastWaterDay;
             statusDto.planting_day = element.createdAt;
             statusDto.together_day = together_day;
             statusDto.last_talk = lastTalkDay;
+            statusDto.parent_id = element.user.parent_id;
             statusDtos.push(statusDto);
         }
         return statusDtos;

@@ -16,12 +16,13 @@ export class PotController {
         return await this.potService.findAllPot();
     }
 
-    @Get('main/:parent_id')
+    @Get(':parent_id')
+    @ApiOperation({summary: '유저가 가진 모든 화분과 화분의 상태 표시'})
     async parentUserByStatus(@Param('parent_id') parent_id: number){
         return await this.potService.potWithStatus(parent_id);
     }
 
-    @Get(':pot_id')
+    @Get('/detail/:pot_id')
     @ApiOperation({ summary: "화분(식물) 상세 조회"})
     @ApiOkResponse({ type:Pot, description:'선택한 화분(컬렉션에 있는 화분 포함)의 모든 정보 조회' })
     async potDetail(@Param('pot_id') pot_id: number): Promise<Pot>{
@@ -54,12 +55,13 @@ export class PotController {
         return 1;
     }
 
-    @Get('user/:user_id')
-    @ApiOperation({summary: '해당 유저의 모든 화분 조회'})
-    @ApiOkResponse({ type: Pot, description:'유저의 컬렉션 정보 조회' })
-    async findPotByUserId(@Param('user_id') user_id: number): Promise<Pot[]>{
-        return await this.potService.findPotsByUserId(user_id);
-    }
+    // parentUserByStatus이 메소드로 대체
+    // @Get('user/:user_id')
+    // @ApiOperation({summary: '해당 유저의 모든 화분 조회'})
+    // @ApiOkResponse({ type: Pot, description:'유저의 컬렉션 정보 조회' })
+    // async findPotByUserId(@Param('user_id') user_id: number): Promise<Pot[]>{
+    //     return await this.potService.findPotsByUserId(user_id);
+    // }
 
     @Get('collection/:user_id')
     @ApiOperation({summary: '해당 유저의 모든 컬렉션 조회'})
