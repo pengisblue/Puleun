@@ -37,12 +37,14 @@ export default function MainPage() {
       <div className="flex flex-col gap-8">
         {/* 화분 상태 요약 */}
         <section>
-          <div
-            onClick={goPotList}
-            className="mb-3 flex cursor-pointer items-center justify-between"
-          >
+          <div className="mb-3 flex cursor-pointer items-center justify-between">
             <h1 className="text-title">우리 화분</h1>
-            <img src={chevron} alt="goPotList" className="w-8 cursor-pointer" />
+            <img
+              onClick={goPotList}
+              src={chevron}
+              alt="goPotList"
+              className="w-8 cursor-pointer"
+            />
           </div>
           <div className="flex items-center">
             <PotSwiper potList={potDetailList} />
@@ -51,12 +53,10 @@ export default function MainPage() {
 
         {/* 새로운 대화 */}
         <section>
-          <div
-            onClick={goTalkList}
-            className="mb-3 flex cursor-pointer items-center justify-between"
-          >
+          <div className="mb-3 flex cursor-pointer items-center justify-between">
             <h1 className="text-title">새로운 대화</h1>
             <img
+              onClick={goTalkList}
               src={chevron}
               alt="goTalkList"
               className="w-8 cursor-pointer"

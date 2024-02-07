@@ -9,7 +9,7 @@ import kidImg from "../test/kid3.png";
 const navigation = [
   { name: "화분 관리", href: "/pot", current: false },
   { name: "아이 관리", href: "/kids", current: false },
-  { name: "대화 관리", href: "#", current: false },
+  { name: "대화 관리", href: "/talk", current: false },
 ];
 
 function classNames(...classes) {
