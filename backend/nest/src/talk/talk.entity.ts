@@ -13,6 +13,9 @@ export class Talk {
   @Column({ type: 'datetime', nullable: false })
   talk_DT: Date;
 
+  @Column({ type: 'tinyint', nullable: false })
+  read_FG: boolean
+
   @ManyToOne(() => Pot, (pot) => pot.talk )
   @JoinColumn({name: 'pot_id'})
   pot: Pot;
