@@ -23,6 +23,10 @@ export class CalenderService {
         return 1;
     }
 
+    async findAllCalender(): Promise<Calender[]>{
+        return await this.calenderRepository.find();
+    }
+
     async getLastWaterDay(pot_id: number): Promise<Date>{
         const temp = await this.calenderRepository.find({
             where: {pot_id: pot_id, code:'W'},
