@@ -25,8 +25,8 @@ const router = createBrowserRouter([
       { path: "/pot/create", element: <PotCreatePage /> },
       { path: "/kid/create", element: <KidCreatePage /> },
       { path: "/pot/:potId", element: <PotDetailPage /> },
-      { path: "/kid/:userId", element: <KidDetailPage></KidDetailPage> },
-      { path: "/kid/select", element: <KidSelectPage></KidSelectPage> },
+      { path: "/kid/:user_id", element: <KidDetailPage></KidDetailPage> },
+      { path: "/kids/select", element: <KidSelectPage></KidSelectPage> },
     ],
   },
   // 테스트용

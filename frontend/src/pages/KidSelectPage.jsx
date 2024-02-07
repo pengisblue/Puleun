@@ -1,8 +1,16 @@
-import { useEffect, useState } from "react";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import BaseSimpleCard from "../components/UI/BaseSimpleCard";
+import kidImg from "../test/kid1.png";
 
 export default function KidSelectPage() {
   const [kidList, setKidList] = useState([]);
+  const navigate = useNavigate();
+
+  const goKidsMode = (id) => {
+    return () => navigate(`/kidsmode/${id}`);
+  };
 
   useEffect(() => {
     const getKids = async () => {
@@ -10,7 +18,6 @@ export default function KidSelectPage() {
         const response = await axios.get(
           "https://i10e101.p.ssafy.io/v1/user/child/1",
         );
-        console.log(response);
         setKidList(response.data);
       } catch (e) {
         console.log(e);
@@ -20,27 +27,35 @@ export default function KidSelectPage() {
   }, []);
 
   return (
-    <div className="bg-white">
-      <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
-        <h2 className="sr-only">Products</h2>
+    <div className="">
+      <div className="my-6 grid w-full grid-cols-2 place-items-center md:grid-cols-3 lg:grid-cols-4">
+        {kidList.map((kid) => (
+          <div
+            key={kid.user_id}
+            onClick={goKidsMode(kid.user_id)}
+            className="cursor-pointer"
+          >
+            <BaseSimpleCard>
+              <div className="flex h-full flex-col justify-evenly">
+                {/* 화분 사진 */}
+                <div className="mx-auto w-full overflow-hidden rounded-lg">
+                  <div className="flex aspect-square items-center overflow-hidden">
+                    <img
+                      src={kidImg}
+                      alt="potImg"
+                      className="min-h-full min-w-full object-cover"
+                    />
+                  </div>
+                </div>
 
-        <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-          {kidList.map((kid) => (
-            <a key={kid.id} href="#!" className="group">
-              <div className="aspect-h-1 aspect-w-1 xl:aspect-h-8 xl:aspect-w-7 w-full overflow-hidden rounded-lg bg-gray-200">
-                <img
-                  src={kid.profileImgUrl}
-                  alt=""
-                  className="h-full w-full object-cover object-center group-hover:opacity-75"
-                />
+                {/* 아이 사진 & 화분 이름 */}
+                <div className="flex items-center gap-2">
+                  <div className="text- basis-3/4">{kid.nickname}</div>
+                </div>
               </div>
-              <h3 className="mt-4 text-sm text-gray-700">{kid.nickname}</h3>
-              {/* <p className="mt-1 text-lg font-medium text-gray-900">
-                {product.price}
-              </p> */}
-            </a>
-          ))}
-        </div>
+            </BaseSimpleCard>
+          </div>
+        ))}
       </div>
     </div>
   );

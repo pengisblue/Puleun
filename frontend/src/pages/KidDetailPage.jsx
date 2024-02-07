@@ -1,12 +1,13 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import KidProfileImage from "../components/Kids/KidProfileImage";
 import PotSimpleCard from "../components/Pots/PotSimpleCard";
 import PotAddSimpleCard from "../components/Pots/PotAddSimpleCard";
 import kidImg from "../test/kid1.png";
-import { useNavigate } from "react-router-dom";
 
-export default function KidDetailPage(props) {
+export default function KidDetailPage() {
+  const { user_id } = useParams();
   const [user, setUser] = useState({
     userId: 0,
     nickname: "",
@@ -30,16 +31,15 @@ export default function KidDetailPage(props) {
     const getUser = async () => {
       try {
         const response = await axios.get(
-          "https://i10e101.p.ssafy.io/v1/user/pot/1",
+          `https://i10e101.p.ssafy.io/v1/user/${user_id}`,
         );
         setUser(response.data);
-        console.log(response.data);
       } catch (e) {
         console.log(e);
       }
     };
     getUser();
-  }, []);
+  }, [user_id]);
 
   return (
     <div>
