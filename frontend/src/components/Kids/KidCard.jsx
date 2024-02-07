@@ -3,7 +3,7 @@ import KidProfileImage from "./KidProfileImage";
 
 export default function KidCard(props) {
   return (
-    <BaseDetailCard size="w-72">
+    <BaseDetailCard>
       <div className="flex flex-col gap-1">
         <div className="flex h-full items-center gap-4 font-semibold">
           <div className="basis-2/5 overflow-hidden rounded-xl">

@@ -7,8 +7,9 @@ import { PotStateService } from 'src/pot-state/pot-state.service';
 import { CalenderService } from 'src/calender/calender.service';
 import { CalenderCreateDto } from 'src/calender/calender-req.dto';
 
-@WebSocketGateway(8080, {
-  cors: { origin: ["http://172.23.48.1:3000/","192.168.30.*"],},
+@WebSocketGateway(7080, {
+  cors: { origin: "*",},
+  headers: { Authorization: 'base64 auth' }
 })
 
 @Injectable()
@@ -28,7 +29,7 @@ export class SocketGateway {
 
   @SubscribeMessage('login')
   async handleClientConnect(@ConnectedSocket() client: Socket, @MessageBody('serial_number') serial_number: string){
-    const result = await this.socketService.login(serial_number)
+    const result = await this.socketService.login(client.id, serial_number)
     client.emit('login_result', result)
   }
 
@@ -39,7 +40,10 @@ export class SocketGateway {
   }
 
   @SubscribeMessage('stt')
-  async saveSttFile( @ConnectedSocket() client: Socket, @MessageBody('text') text: string, @MessageBody('talk_id') talk_id: number, @MessageBody('file') base64Data: string): Promise<string>{
+  async saveSttFile( @ConnectedSocket() client: Socket, 
+        @MessageBody('text') text: string, 
+        @MessageBody('talk_id') talk_id: string, 
+        @MessageBody('file') base64Data: string): Promise<string>{
     if (text==null) text=""
     if (base64Data==null) base64Data=""
     const returnData = await this.socketService.stt(text, talk_id, base64Data)
@@ -60,7 +64,15 @@ export class SocketGateway {
   }
 
   @SubscribeMessage('hot_word')
-  async hotWord( @ConnectedSocket() client: Socket ): Promise<void>{
+  async hotWord( @ConnectedSocket() client: Socket, @MessageBody('pot_id') pot_id: number ): Promise<void>{
+    const dto = new CalenderCreateDto;
+    dto.pot_id = pot_id
+    dto.code = 'T'
+    this.calenderService.save(dto)
     client.emit('talk_id',{talk_id: 1})
+  }
+
+  async refresh( clientId: string): Promise<void>{
+    this.server.to(clientId).emit('refresh')
   }
 }

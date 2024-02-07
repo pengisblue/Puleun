@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, JoinColumn, OneToOne } from 'typeorm';
 import { Pot } from '../pot/pot.entity';
+import { Talk } from 'src/talk/talk.entity';
 import { UserLogin } from 'src/user-login/user-login.entity';
 
 @Entity()
@@ -30,8 +31,9 @@ export class User {
   @OneToMany(() => Pot, (pot) => pot.user)
   pots: Pot[];
 
-  @OneToOne(() => UserLogin, (userLogin) => userLogin.user, {cascade: true})
-  userLogin: UserLogin;
+  @OneToMany(() => Talk, talk => talk.talk_id)
+  talk: Talk[];
 
-  // Other columns and relationships can be added as needed.
+  @OneToOne(() => UserLogin, userLogin => userLogin.user)
+  userLogin: UserLogin;
 }

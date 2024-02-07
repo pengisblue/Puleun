@@ -1,10 +1,10 @@
 import { Exclude, Type } from "class-transformer";
-import { IsString } from 'class-validator';
-import { IsOptional } from 'class-validator';
+import { IsString, IsOptional, IsNumber } from 'class-validator';
 
 @Exclude()
 export class DeviceCreateDto{
     @IsString()
+    @Type(()=> String)
     serial_number: string;
 
     @Type( () => Boolean )
@@ -17,4 +17,15 @@ export class DeviceCreateDto{
     @Type( () => Number )
     @IsOptional()
     pot_id?: number=null;
+}
+
+@Exclude()
+export class SelectDeviceDto{
+
+    @IsString()
+    @Type( () => String )
+    serial_number: string;
+
+    @IsNumber()
+    pot_id: number;
 }

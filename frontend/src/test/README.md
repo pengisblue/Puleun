@@ -17,5 +17,11 @@
     - import { potSimpleList } from "../test/potList";
     - import { userList } from "../test/userList";
 
+- PotDetailPage.jsx
+    - import { potDetailList } from "../test/potList";
+    - import { CALANDER } from "../test/calander";
+    - import { potStatus as potStatusInfo } from "../test/potData";
+
+
 ### App.js
 - 테스트 페이지 삭제

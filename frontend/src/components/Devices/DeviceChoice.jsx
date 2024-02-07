@@ -1,6 +1,7 @@
 import DeviceCard from "./DeviceCard";
 import DeviceBaseCard from "../UI/DeviceBaseCard";
 import DeviceAddCard from "./DeviceAddCard";
+import DeviceAddModal from "./DeviceAddModal";
 import radioOff from "../../asset/radio_off.svg";
 import radioOn from "../../asset/radio_on.svg";
 import { useState } from "react";
@@ -9,14 +10,21 @@ import { RadioGroup } from "@headlessui/react";
 import "swiper/css";
 
 export default function DeviceChoice({ deviceList, onSelect, selectedDevice }) {
+  // 선택된 기기
   const [selected, setSelected] = useState(selectedDevice);
-
   const handleChange = function (value) {
     setSelected(value);
     onSelect(value);
   };
 
-  const goCreatDevice = function () {};
+  // 기기 등록 모달
+  const [isOpen, setIsOpen] = useState(false);
+  const openDeviceAddModal = () => {
+    setIsOpen(true)
+  };
+  const closeDeviceAddModal = () => {
+    setIsOpen(false)
+  };
 
   return (
     <RadioGroup value={selected} onChange={handleChange}>
@@ -43,9 +51,10 @@ export default function DeviceChoice({ deviceList, onSelect, selectedDevice }) {
 
         {/* 기기 추가 */}
         <SwiperSlide key="deviceAdd" className="me-2 w-auto-important">
-          <div onClick={goCreatDevice} className="cursor-pointer">
+          <div onClick={openDeviceAddModal} className="cursor-pointer">
             <DeviceAddCard />
           </div>
+          <DeviceAddModal isOpen={isOpen} closeModal={closeDeviceAddModal} />
         </SwiperSlide>
       </Swiper>
     </RadioGroup>

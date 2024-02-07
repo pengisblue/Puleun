@@ -58,3 +58,22 @@ export class StatusResultDto{
     @Type(() => String)
     mois_state: string;
 }
+
+
+export class CompareDataDto{
+    @IsNumber()
+    current_temp: number;
+
+    @IsNumber()
+    current_mois: number;
+
+    @IsNumber()
+    yesterday_temp: number;
+
+    @IsNumber()
+    yesterday_mois: number;
+}
+
+export class PotStateDto{
+    
+}

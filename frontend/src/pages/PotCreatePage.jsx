@@ -158,8 +158,8 @@ export default function PotCreatePage() {
               <Input
                 type="text"
                 onChange={handlePotNameInput}
-                extraClasses="w-full"
-                isRequired={true}
+                className="w-full"
+                required
               />
             </section>
           </div>
@@ -187,16 +187,16 @@ export default function PotCreatePage() {
               type="number"
               value={minTemperature}
               onChange={handleMinTemperatureChange}
-              extraClasses="w-20 text-center"
-              isRequired={true}
+              className="w-20 text-center"
+              required
             />
             <span>~</span>
             <Input
               type="number"
               value={maxTemperature}
               onChange={handleMaxTemperatureChange}
-              extraClasses="w-20 text-center"
-              isRequired={true}
+              className="w-20 text-center"
+              required
             />
           </label>
           <label className="my-4 flex items-center gap-4">
@@ -205,8 +205,8 @@ export default function PotCreatePage() {
               type="number"
               value={minMoisture}
               onChange={handleMinMoistureChange}
-              extraClasses="w-20 text-center"
-              isRequired={true}
+              className="w-20 text-center"
+              required
               max={100}
             />
             <span>~</span>
@@ -214,8 +214,8 @@ export default function PotCreatePage() {
               type="number"
               value={maxMoisture}
               onChange={handleMaxMoistureChange}
-              extraClasses="w-20 text-center"
-              isRequired={true}
+              className="w-20 text-center"
+              required
               max={100}
             />
           </label>
@@ -228,13 +228,15 @@ export default function PotCreatePage() {
             type="date"
             value={plantingDate}
             onChange={handleDateChange}
-            extraClasses="block"
-            isRequired={true}
+            className="block"
+            required
           />
         </section>
       </div>
+
+      {/* 등록 버튼 */}
       <div className="grid place-content-center">
-        <Button isDisabled={false}>등록하기</Button>
+        <Button className="bg-amber-300 hover:bg-amber-400 text-white" isDisabled={false}>등록하기</Button>
       </div>
 
       {/* 임시 확인용 */}

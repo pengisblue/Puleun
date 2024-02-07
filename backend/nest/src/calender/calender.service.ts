@@ -32,16 +32,14 @@ export class CalenderService {
         })
         return temp[0]?.createdAt;
     }
-    // async findAll(pot_id: number): Promise<Calender[]>{
-    //     const entity = await this.calenderRepository.createQueryBuilder('calender')
-    //         .where('calender.pot_id= :pot_id', {pot_id})
-    //         .leftJoinAndSelect('calender.pot', 'pot')
-    //         .select([
-    //             'calender',
-    //             'pot.pot_id',
-    //             'pot.pot_name',
-    //             'pot.pot_species'
-    //         ]).getMany();
-    //     return entity;
-    // }
+
+    async getLastTalkDay(pot_id: number): Promise<Date>{
+        const temp = await this.calenderRepository.find({
+            where: {pot_id: pot_id, code:'T'},
+            order: {createdAt: 'DESC'},
+            select: {createdAt: true},
+            take: 1
+        })
+        return temp[0]?.createdAt;
+    }
 }
