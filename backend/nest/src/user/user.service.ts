@@ -3,7 +3,10 @@ import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto, UpdateUserDto } from './user-req.dto';
-import { UserDetailDto, UserListDto } from './user-res.dto';
+import { SpeciesWithUser, UserDetailDto, UserListDto } from './user-res.dto';
+import { plainToInstance } from 'class-transformer';
+import { Pot } from 'src/pot/pot.entity';
+import { AllUserDto } from 'src/user-login/user-login.dto';
 
 @Injectable()
 export class UserService {
@@ -14,7 +17,8 @@ export class UserService {
 
     async findByParent(user_id: number):Promise<UserListDto[]>{
         const child = await this.UserRepository.findBy({parent_id:user_id})
-        return child;
+        child.push( await this.UserRepository.findOneBy({user_id}) )
+        return plainToInstance(UserListDto, child);
     }
 
     async find(user_id: number): Promise<UserDetailDto>{
@@ -28,7 +32,7 @@ export class UserService {
     async save(data: CreateUserDto): Promise<number>{
         const user = this.UserRepository.create(data)
         try{
-            if (user.parent_id == null || user.parent_id == 0) user.parent_id = null // parent_id==null인 경우 사용자 본인
+            if (user.parent_id == 0) user.parent_id = null // parent_id==null인 경우 사용자 본인
             await this.UserRepository.save(user)
             return 1;
         }catch(e){
@@ -37,9 +41,7 @@ export class UserService {
     }
 
     async update(user_id: number, data: UpdateUserDto): Promise<number>{
-        const user = await this.UserRepository.findOneBy({
-            user_id
-        })
+        const user = await this.UserRepository.findOneBy({user_id})
 
         if (!user) throw new HttpException('Bad_REQUEST', HttpStatus.NOT_FOUND)
         try{
@@ -57,5 +59,37 @@ export class UserService {
         }catch(e){
             throw new HttpException('Bad_REQUEST', HttpStatus.BAD_REQUEST)
         }
+    }
+
+    async findPot(user_id: number): Promise<User>{
+        const user: User = await this.UserRepository.createQueryBuilder('user')
+            .where('user.user_id= :user_id', {user_id})
+            .leftJoinAndSelect('user.pots', 'pot', 'pot.user_id=user.user_id')
+            .select([
+                'user', 'pot.pot_id', 'pot.pot_name', 'pot.pot_species'
+            ])
+            .getOne()
+        return user;
+    }
+
+    async findByUserIdInTalk(user_id: number): Promise<User>{
+        return await this.UserRepository.findOne({
+            relations: {talk: true},
+            where: {user_id: user_id},
+        })
+    }
+
+    async simpleUser(user_id: number): Promise<User>{
+        return await this.UserRepository.findOne({
+            where: {user_id: user_id},
+            select: {user_id: true, nickname: true}
+        })
+    }
+
+    async findUserWithInfo(): Promise<AllUserDto[]>{
+        const result = await this.UserRepository.find({
+            relations: {userLogin: true}
+        });
+        return result;
     }
 }
