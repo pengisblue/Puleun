@@ -98,12 +98,6 @@ def refresh(): # 새로고침 신호
     # 측정값을 받아서 보낸다. > pot_state
     print("refreshing...")
 
-
-# 표정 상태값
-@sio.on('')
-def emotion(data):
-    pass
-
 @sio.on('situation')
 # data = {
 #     'situation_id':int, # 상황번호
