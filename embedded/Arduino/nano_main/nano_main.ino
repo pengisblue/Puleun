@@ -13,6 +13,9 @@ const int MOISTURE_THRESHOLD = 50; // 급격한 변화를 감지할 임계값
 int lastMoistureLevel = 0; // 마지막으로 측정된 수분 수준
 bool rapidChangeDetected = false; // 급변 감지 플래그
 
+// 초음파 센서 설정
+long distance = 0;
+
 Scheduler runner;
 
 // 초음파 센서 핀 설정
@@ -32,7 +35,7 @@ task - 1초마다
 토양수분 센서로 습도 읽기: M20
 
 측정하다가 급격한 변화 > 라즈베리한테 알려줘: Water
-요청하면 > 라즈베리한테 알려줘 > 이거 안됨...ㅜ
+요청하면 > 라즈베리한테 알려줘 > 이제 되지만 일단 다른 로직으로 구성함
 */
 
 
@@ -74,6 +77,19 @@ void readMoistureSensor() {
 }
 
 
+// 초음파센서 데이터 읽기
+void readDistance () {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  long duration = pulseIn(echoPin, HIGH);
+  distance = duration * 0.034 / 2;
+  Serial.print("Distance: ");
+  Serial.println(distance);
+}
+
 // 양쪽 팔 동시에 흔들기
 void arm_both() {
   servo1.write(90);
@@ -108,6 +124,7 @@ void arm_single(Servo servo) {
 // 1초마다 센서 읽기
 Task taskReadHumidity(1000, TASK_FOREVER, &readTempSensor);
 Task taskReadMoisture(1000, TASK_FOREVER, &readMoistureSensor); 
+Task taskReadDistance(1000, TASK_FOREVER, &readDistance); 
 
 void setup() {
   Serial.begin(9600);
@@ -116,8 +133,10 @@ void setup() {
   runner.init();
   runner.addTask(taskReadHumidity);
   runner.addTask(taskReadMoisture);
+  runner.addTask(taskReadDistance);
   taskReadHumidity.enable();
   taskReadMoisture.enable();
+  taskReadDistance.enable();
 
   // 초기 값 설정
   lastMoistureLevel = analogRead(MOISTURE_SENSOR_PIN);
@@ -135,23 +154,26 @@ void setup() {
 
 void loop() {
   runner.execute();
-  // 초음파 센서 테스트
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
-  long duration = pulseIn(echoPin, HIGH);
-  long distance = duration * 0.034 / 2;
-  Serial.print("Distance: ");
-  Serial.println(distance);
   
   // 거리 가까우면 오른팔 흔들기
   if ( distance == 100) {
     arm_single(servo1);
   }
 
-  // 오른쪽- 1m, 왼쪽- 말 시작할때, 양쪽같이- 호출어, 양쪽 번갈아-알람
-
-  delay(1000);
+  // 왼쪽- 말 시작할때, 양쪽같이- 호출어, 양쪽 번갈아-알람
+  if (Serial.available() > 0) { // 라즈베리에서 신호를 주면
+    String input = Serial.readStringUntil('\n'); // 라즈베리파이로부터 전송된 데이터를 한 줄씩 읽음
+    if (input.equals("alarm")) { // 알람
+      Serial.println("alarm");
+      arm_switch();
+    }
+    else if (input.equals("hotword")) { // 호출어 인식
+      Serial.println("hotword");
+      arm_both();
+    }
+    else if (input.equals("talk start")) { // 말 시작할때
+      Serial.println("talk start");
+      arm_single(servo2);
+    }
+  }
 }
