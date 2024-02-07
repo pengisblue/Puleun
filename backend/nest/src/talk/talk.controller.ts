@@ -24,8 +24,8 @@ export class TalkController {
 
     @Post()
     @ApiOperation({summary: '대화 생성'})
-    async talkSave(@Body() talkDto: TalkDto): Promise<number>{
-        await this.talkService.talkSave(talkDto);
+    async talkSave(@Body() talk_id: number): Promise<number>{
+        await this.talkService.saveTalk(talk_id);
         return 1;
     }
 

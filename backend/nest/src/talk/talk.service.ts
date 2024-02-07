@@ -3,10 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Talk } from './talk.entity';
 import { Repository } from 'typeorm';
 import { TalkDto } from './talk.dto';
-import { plainToInstance } from 'class-transformer';
 import { User } from 'src/user/user.entity';
 import { UserService } from 'src/user/user.service';
 import { RedisService } from 'src/redis/redis.service';
+import { SentenceService } from 'src/sentence/sentence.service';
+import { SentenceCreateDto } from 'src/sentence/sentence-res.dto';
 
 @Injectable()
 export class TalkService {
@@ -14,12 +15,23 @@ export class TalkService {
         @InjectRepository(Talk) 
         private readonly talkRepository: Repository<Talk>,
         private readonly userService: UserService,
-        private readonly redisService: RedisService
+        private readonly redisService: RedisService,
+        private readonly sentenceService: SentenceService,
     ){}
 
-    async talkSave(talkDto: TalkDto){
-        const dto = await this.talkRepository.save(talkDto);
-        return plainToInstance(TalkDto, dto);
+    /** save talk from redis to Mysql */
+    async saveTalk(talk_id: number): Promise<string>{
+        try {
+            const talkArray = (await this.redisService.get(`${talk_id}:array`)).split(".")
+            for (const sentence of talkArray) {
+                const sentenceJson: SentenceCreateDto= JSON.parse(sentence)
+                const res = await this.sentenceService.save(sentenceJson)
+                if (res=="fail") console.log(`wrong data in talk ${talk_id} : ${talkArray.toString}`)
+            }
+            return "success"
+        } catch (e) {
+            return "fail"
+        }
     }
 
     async talkDelete(talk_id: number): Promise<number>{
