@@ -55,6 +55,7 @@ export default function KidCreatePage() {
           <div className="col-span-5">
             <section class="mb-3">
               <label htmlFor="">아이 애칭</label>
+              <br></br>
               <Input
                 type="text"
                 onChange={handleNickname}
@@ -64,6 +65,7 @@ export default function KidCreatePage() {
             </section>
             <section class="mb-3">
               <span>생년월일</span>
+              <br></br>
               <Input
                 type="date"
                 value={birthDate}
@@ -100,7 +102,7 @@ export default function KidCreatePage() {
                 className="col-span-8 mt-2 w-full"
               />
             </section>
-            <div className="mt-5 grid place-content-center">
+            <div className="mt-5 grid place-content-center rounded-full bg-yellow-400">
               <Button isDisabled={false}>등록하기</Button>
             </div>
           </div>

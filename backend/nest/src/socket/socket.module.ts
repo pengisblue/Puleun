@@ -10,9 +10,10 @@ import { CalenderModule } from 'src/calender/calender.module';
 import { TtsModule } from 'src/tts/tts.module';
 import { RedisModule } from 'src/redis/redis.module';
 import { FileModule } from 'src/file/file.module';
+import { TalkModule } from 'src/talk/talk.module';
 
 @Module({
-  imports: [ TypeOrmModule.forFeature([PotState]), PotStateModule, FileModule,
+  imports: [ TypeOrmModule.forFeature([PotState]), PotStateModule, FileModule, TalkModule,
   DeviceModule, SentenceModule, CalenderModule, TtsModule, RedisModule],
   providers:[SocketGateway, SocketService],})
 export class SocketModule {

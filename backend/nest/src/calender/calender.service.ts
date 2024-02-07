@@ -17,32 +17,22 @@ export class CalenderService {
         return entity;
     }
 
-    /** */
-    async save(calenderCreateDto: CalenderCreateDto): Promise<number>{
-        await this.calenderRepository.save(calenderCreateDto)
-        return 1;
+    /** save "W" day or "T" day*/
+    async save(calenderCreateDto: CalenderCreateDto): Promise<string>{
+        const res = this.getLastDay(calenderCreateDto.pot_id, calenderCreateDto.code)
+        if (!res) await this.calenderRepository.save(calenderCreateDto)
+        return "success";
     }
 
     async findAllCalender(): Promise<Calender[]>{
         return await this.calenderRepository.find();
     }
 
-    async getLastWaterDay(pot_id: number): Promise<Date>{
-        const temp = await this.calenderRepository.find({
-            where: {pot_id: pot_id, code:'W'},
+    async getLastDay(pot_id: number, code:string):Promise<Date>{
+        const temp = await this.calenderRepository.findOne({
+            where: {pot_id, code},
             order: {createdAt: 'DESC'},
-            select: {createdAt: true},
-            take: 1
-        })
-        return temp[0]?.createdAt;
-    }
-
-    async getLastTalkDay(pot_id: number): Promise<Date>{
-        const temp = await this.calenderRepository.find({
-            where: {pot_id: pot_id, code:'T'},
-            order: {createdAt: 'DESC'},
-            select: {createdAt: true},
-            take: 1
+            select: {createdAt: true}
         })
         return temp[0]?.createdAt;
     }

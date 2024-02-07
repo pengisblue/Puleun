@@ -11,6 +11,7 @@ import KidDetailPage from "./pages/KidDetailPage";
 import KidSelectPage from "./pages/KidSelectPage";
 import TalkListPage from "./pages/TalkListPage";
 import TalkDetailPage from "./pages/TalkDetailPage";
+import LandingPage from "./pages/LandingPage";
 
 // import Example from "./test/Example";
 
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       { path: "/talk/:talkId", element: <TalkDetailPage /> },
       { path: "/kid/select", element: <KidSelectPage></KidSelectPage> },
     ],
+  },
+  {
+    path: "/hello",
+    element: <LandingPage />,
   },
   // 테스트용
   // {

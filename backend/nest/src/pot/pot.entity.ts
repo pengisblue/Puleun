@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColum
 import { User } from '../user/user.entity'; // 다른 엔터티에 따라 수정해야 합니다.
 import { Calender } from 'src/calender/calender.entity';
 import { Alarm } from 'src/alarm/alarm.entity';
+import { Talk } from 'src/talk/talk.entity';
 
 @Entity()
 export class Pot {
@@ -49,6 +50,9 @@ export class Pot {
   // OneToMany에서는 참조하는 테이블의 PK가 아니라 FK를 지정해야한다
   @OneToMany(() => Alarm, alarm => alarm.pot)
   alarm: Alarm[];
+
+  @OneToMany( () => Talk, talk => talk.pot)
+  talk: Talk[]
 
   @Column({ type: 'int', nullable: true})
   happy_cnt: number;

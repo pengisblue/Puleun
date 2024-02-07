@@ -2,18 +2,37 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import plus from "../asset/plus_slate.svg";
 import KidCard from "../components/Kids/KidCard";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import kidImg from "../test/kid3.png";
+import AddDetailCard from "../components/UI/AddDetailCard";
 
 export default function KidListPage() {
   const [kidList, setKidList] = useState([]);
   const navigate = useNavigate();
 
-  const goDetailKid = (userId) => {
-    return () => navigate(`/kid/${userId}`);
-  };
-
   const goCreateKid = () => {
     navigate("/kid/create");
+  };
+
+  const handledList = () => {
+    const result = [];
+
+    for (let i = 0; i < kidList.length - 1; i++) {
+      result.push(
+        <Link to={`/kid/${kidList[i].user_id}`}>
+          <div key={kidList[i].user_id} className="cursor-pointer">
+            <KidCard
+              nickname={kidList[i].nickname}
+              profile_img_url={kidImg}
+              size="w-80 h-44"
+              display="hidden"
+            ></KidCard>
+          </div>
+        </Link>,
+      );
+    }
+
+    return result;
   };
 
   useEffect(() => {
@@ -22,7 +41,6 @@ export default function KidListPage() {
         const response = await axios.get(
           "https://i10e101.p.ssafy.io/v1/user/child/1",
         );
-        console.log(response);
         setKidList(response.data);
       } catch (e) {
         console.log(e);
@@ -44,12 +62,12 @@ export default function KidListPage() {
           />
         </div>
       </header>
-      <div className="my-6 grid w-full grid-cols-3 place-items-center gap-3 md:grid-cols-3 lg:grid-cols-3">
-        {kidList.map((kid) => (
-          <div onClick={goDetailKid(kid.userId)} className="cursor-pointer">
-            <KidCard key={kid.userId} nickname={kid.nickname}></KidCard>
-          </div>
-        ))}
+
+      <div className="my-6 grid w-full grid-cols-1 place-items-center md:grid-cols-2 lg:grid-cols-3">
+        {handledList()}
+        <div onClick={goCreateKid} className="cursor-pointer">
+          <AddDetailCard text="아이 추가하기" size="w-80 h-44" />
+        </div>
       </div>
     </div>
   );

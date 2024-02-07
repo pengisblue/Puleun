@@ -6,6 +6,7 @@ import { SocketService } from "./socket.service";
 import { PotStateService } from 'src/pot-state/pot-state.service';
 import { CalenderService } from 'src/calender/calender.service';
 import { CalenderCreateDto } from 'src/calender/calender-req.dto';
+import { TalkService } from 'src/talk/talk.service';
 
 @WebSocketGateway(7080, {
   cors: { origin: "*",},
@@ -21,6 +22,7 @@ export class SocketGateway {
     private readonly socketService: SocketService,
     private readonly potStateService: PotStateService,
     private readonly calenderService: CalenderService,
+    private readonly talkService: TalkService,
   ){}
 
   handleConnection( client: Socket ){
@@ -69,7 +71,8 @@ export class SocketGateway {
     dto.pot_id = pot_id
     dto.code = 'T'
     this.calenderService.save(dto)
-    client.emit('talk_id',{talk_id: 1})
+    const talk_id = await this.talkService.talkStart()
+    client.emit('talk_id',{talk_id})
   }
 
   async refresh( clientId: string): Promise<void>{
