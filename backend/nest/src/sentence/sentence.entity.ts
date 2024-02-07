@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, CreateDateColumn } from 'typeorm';
 import { Talk } from '../talk/talk.entity';
 
 @Entity()
@@ -12,7 +12,7 @@ export class Sentence {
   @Column({ length: 100, nullable: false })
   audio: string;
 
-  @Column({ type: 'datetime', nullable: false })
+  @CreateDateColumn()
   sentence_DTN: Date;
 
   @Column({ type: 'tinyint', nullable: false })

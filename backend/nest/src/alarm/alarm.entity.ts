@@ -13,7 +13,7 @@ export class Alarm {
   @Column({ length: 100, nullable: false })
   alarm_content: string;
 
-  @Column({ type: 'tinyint', nullable: false })
+  @Column({ type: 'tinyint', nullable: false , default: 0})
   active_FG: boolean;
 
   // routine이 null이라면 해당 날짜에만 울리기
@@ -25,10 +25,7 @@ export class Alarm {
   @Column({ type: 'tinyint', nullable: true })
   routine: number;
 
-  @ManyToOne(() => Pot, pot => pot.pot_id, {cascade: ['update', 'remove']})
+  @ManyToOne(() => Pot, pot => pot.pot_id, {onDelete: 'CASCADE', onUpdate: 'CASCADE'})
   @JoinColumn({name: "pot_id"})
-  pot_id: number;
-
-
-  // Other columns and relationships can be added as needed.
+  pot: Pot;
 }

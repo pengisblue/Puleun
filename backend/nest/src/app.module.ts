@@ -11,26 +11,35 @@ import { CalenderModule } from './calender/calender.module';
 import { TalkModule } from './talk/talk.module';
 import { SentenceModule } from './sentence/sentence.module';
 import { AlarmModule } from './alarm/alarm.module';
-import { CalenderCodeModule } from './calender-code/calender-code.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FileModule } from './file/file.module';
 import { SocketModule } from './socket/socket.module';
+import { ConfigModule } from '@nestjs/config';
+import { TtsModule } from './tts/tts.module';
+import { RedisModule } from './redis/redis.module';
 
 @Module({
-  imports: [UserModule, PotModule, FileModule,
+  imports: [UserModule, PotModule, FileModule, SocketModule,
     PotStateModule, SpeciesModule, UserLoginModule, DeviceModule, 
-    CalenderModule, TalkModule, SentenceModule, AlarmModule, CalenderCodeModule,
+    CalenderModule, TalkModule, SentenceModule, AlarmModule,
+    // 얘가 있어야 .env 파일을 nest에서 읽을 수 있음
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '1234',
-      database: 'test',
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT, 10),
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE,
+      logging: true,
+      synchronize: true,
+      // entities의 경로가 잘못되어 있어서 db가 연동이 되지 않았음
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true, // 개발 환경에서만 사용 (production에서는 비활성화 권장)
+      migrations: ['src/migrations/*.ts'],
+      subscribers: ['src/subscribers/*.ts'],
     }),
-    SocketModule,
+    TtsModule,
+    RedisModule,
   ],
   controllers: [AppController],
   providers: [AppService],
