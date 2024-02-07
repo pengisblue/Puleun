@@ -51,6 +51,7 @@ export class TalkService {
         })
     }
 
+    /** find all talk list by user_id */
     async findByUserId(user_id: number): Promise<TalkListDto[]>{
         return await this.talkRepository.createQueryBuilder('talk')
             .select(['talk.talk_id',
