@@ -14,4 +14,10 @@ export class CalenderController {
     async findAll(@Param('pot_id') pot_id: number): Promise<Calender[]>{
         return await this.calenderService.findCalenderByPotId(pot_id);
     }
+
+    @Get()
+    @ApiOperation({summary: '모든 캘린더 조회'})
+    async findAllCalender(): Promise<Calender[]>{
+        return await this.calenderService.findAllCalender();
+    }
 }
