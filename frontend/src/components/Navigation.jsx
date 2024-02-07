@@ -25,7 +25,7 @@ export default function Navigation() {
   };
 
   return (
-    <Disclosure as="nav" className="bg-green-200">
+    <Disclosure as="nav" className="fixed top-0 z-20 w-full bg-green-200">
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">

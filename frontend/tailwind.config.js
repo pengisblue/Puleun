@@ -5,6 +5,7 @@ module.exports = {
     extend: {
       colors: {
         "amber-overlay": "rgba(255, 253, 247, 1)", // Amber-50에 흰색 투명도 60%를 적용한 색상
+        "amber-cloudy": "rgba(203, 194, 159, 1)", // Amber-100에 검은색 투명도 20%를 적용한 색상
       },
       width: {
         "auto-important": "auto!important",
