@@ -31,7 +31,8 @@ transcript = None # stt 텍스트
 encoded_wav = None # stt 음성파일
 
 # 아두이노 포트 설정
-arduino_port = 'COM6'
+# arduino_port = 'COM6'
+arduino_port = 'COM3'
 arduino_port_1 = '/dev/ttyACM0' # LCD
 arduino_port_2 = '/dev/ttyUSB0' # nano
 
@@ -123,10 +124,11 @@ def situation(data):
         # 팔 신호보내기
         send_sig_to_arduino(ser2, "alarm")
     else: # 나머지
+        situation_sig = str(situation_id)
         # 음원받아서 재생 - tts
         wav_play(basic_voice)
         # lcd 바꾸기
-        send_sig_to_arduino(ser1, situation_id)
+        send_sig_to_arduino(ser1, situation_sig)
 
 # -------------------------------------------- 함수 ------------------------------------------------
 
@@ -263,6 +265,7 @@ if __name__ == '__main__':
     time.sleep(2)
     # -----------
     # keyword() # 호출어 인식 테스트
+    send_sig_to_arduino(ser1, '1')
 
     # 메인 루프
     # while True:

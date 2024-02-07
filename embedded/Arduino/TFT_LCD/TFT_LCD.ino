@@ -221,15 +221,15 @@ void loop()
     
     if (Serial.available() > 0) { // 라즈베리에서 신호를 주면
         String input = Serial.readStringUntil('\n'); // 라즈베리파이로부터 전송된 데이터를 한 줄씩 읽음
-        if (input.equals("start")) {
+        if (input.equals("start")) { // 대화 시작(tts 음성)
             is_talking = true;
             talking();
         }
-        else if (input.equals("0")) {
+        else if (input.equals("0")) { // 대화 끝
             is_talking = false;
             openDraw(0);
         }
-        else {
+        else { // 상태에 따라 표정 바꾸기
             int data = input.toInt();
 
             Serial.println(data);
