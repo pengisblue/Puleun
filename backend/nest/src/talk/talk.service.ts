@@ -20,21 +20,7 @@ export class TalkService {
         private readonly sentenceService: SentenceService,
     ){}
 
-    /** save talk from redis to Mysql */
-    async updateTalk(talk_id: number): Promise<string>{
-        try {
-            const talkArray = (await this.redisService.get(`${talk_id}:array`)).split(".")
-            for (const sentence of talkArray) {
-                const sentenceJson: SentenceCreateDto= JSON.parse(sentence)
-                const res = await this.sentenceService.save(sentenceJson)
-                if (res=="fail") console.log(`wrong data in talk ${talk_id} : ${talkArray.toString}`)
-            }
-            return "success"
-        } catch (e) {
-            return "fail"
-        }
-    }
-
+    
     /** make talk by talk start */
     async saveTalk(talk_title: string, talk_DT: string): Promise<number>{
         const dto:TalkCreateDto = new TalkCreateDto()
@@ -49,30 +35,43 @@ export class TalkService {
         })
         return res.talk_id
     }
-
-    async findRedis(talk_){
-        
-    }
-
-    async find(talk_id: number): Promise<Talk>{
+    
+    /** find all sentence by talk_id */
+    async find(talk_id: number): Promise<TalkListDto>{
         const [res] =await this.talkRepository.find({
+            // select: ['talk_id', 'talk_title', 'talk_DT'],
             relations: {sentence: true},
             where: {talk_id},
             take: 1
         })
         return res
     }
-
+    
     /** find all talk list by user_id */
     async findByUserId(user_id: number): Promise<TalkListDto[]>{
         return await this.talkRepository.createQueryBuilder('talk')
-            .select(['talk.talk_id',
-                    'talk.talk_title',
-                    'talk.talk_DT',
-                    'talk.read_FG'])
-            .leftJoin('talk.pot','pot','talk.pot_id = pot.pot_id')
-            .leftJoin('pot.user', 'user','pot.user_id = user.user_id')
-            .where('user.user_id = :user_id',{user_id})
-            .getMany()
+        .select(['talk.talk_id',
+        'talk.talk_title',
+        'talk.talk_DT',
+        'talk.read_FG'])
+        .leftJoin('talk.pot','pot','talk.pot_id = pot.pot_id')
+        .leftJoin('pot.user', 'user','pot.user_id = user.user_id')
+        .where('user.user_id = :user_id',{user_id})
+        .getMany()
     }
 }
+
+// /** save talk from redis to Mysql */
+// async updateTalk(talk_id: number): Promise<string>{
+//     try {
+//         const talkArray = (await this.redisService.get(`${talk_id}:array`)).split(".")
+//         for (const sentence of talkArray) {
+//             const sentenceJson: SentenceCreateDto= JSON.parse(sentence)
+//             const res = await this.sentenceService.save(sentenceJson)
+//             if (res=="fail") console.log(`wrong data in talk ${talk_id} : ${talkArray.toString}`)
+//         }
+//         return "success"
+//     } catch (e) {
+//         return "fail"
+//     }
+// }

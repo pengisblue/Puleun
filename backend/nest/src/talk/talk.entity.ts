@@ -21,6 +21,7 @@ export class Talk {
   pot: Pot;
   
   @OneToMany(() => Sentence, sentence => sentence.sentence_id)
+  @JoinColumn({name: 'sentence_id'})
   sentence: Sentence[];
 
 }

@@ -15,10 +15,10 @@ export class Sentence {
   @CreateDateColumn()
   sentence_DTN: Date;
 
-  @Column({ type: 'tinyint', nullable: false })
-  talker_FG: boolean;
+  @Column({ length: 3, nullable: false })
+  talker: string;
 
-  @ManyToOne(() => Talk)
+  @ManyToOne(() => Talk, talk => talk.talk_id)
   @JoinColumn({name: 'talk_id'})
   talk: Talk;
 
