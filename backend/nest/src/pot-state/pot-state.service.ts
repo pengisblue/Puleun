@@ -65,7 +65,6 @@ export class PotStateService {
 
   // 전날 온습도 데이터
   async yesterdayMoisAndTemp(pot_state_id: number): Promise<any>{
-    console.log(`${pot_state_id}가 왜 출력이 안되는걸까`);
     const today = new Date();
     const yesterdayStart = new Date(today);
     yesterdayStart.setDate(today.getDate() - 1);
@@ -93,9 +92,6 @@ export class PotStateService {
       order:{measure_DT: 'DESC'},
       select: {data: true, measure_DT:true}
     })
-
-    console.log(yester_mois);
-    console.log(yester_temp);
     
     return {
       temperature: yester_temp,
