@@ -13,8 +13,8 @@ export class TalkController {
     @Get('/:talk_id')
     @ApiOperation({description: 'get talk detail (all sentence)'})
     @ApiOkResponse({type:Talk})
-    async findByTalkId(@Param('talk_id') talk_id: number): Promise<Talk[]>{
-        return await this.talkService.findAll(talk_id);
+    async findByTalkId(@Param('talk_id') talk_id: number): Promise<Talk>{
+        return await this.talkService.find(talk_id);
     }
 
     @Get('/all/:user_id')
