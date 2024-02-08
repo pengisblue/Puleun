@@ -95,7 +95,8 @@ def owner_change(data):
 # 대화 id 받기
 @sio.on('talk_id')
 def get_talk_id(talk_id):
-    talk_id = talk_id   
+    talk_id = talk_id  
+    print('talk_id:', talk_id) 
 
 
 # 새로고침 시 보낼 데이터
