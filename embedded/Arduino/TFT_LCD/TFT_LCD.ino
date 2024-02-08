@@ -141,7 +141,7 @@ void draw_bmp_picture(File fp)
 
 // 내가 만든 함수
 
-void openDraw(data) {
+void openDraw(int data) {
     bmp_file = SD.open(file_name[data]);
 
     if(!bmp_file) {
@@ -163,12 +163,10 @@ void openDraw(data) {
 }
 
 
-def talking() {
+void talking() {
     while (is_talking == true) {
         openDraw(9);
-        delay(1000);
         openDraw(0);
-        delay(1000);
     }
 }
 
@@ -192,10 +190,10 @@ void setup()
    else //320*480
    {
       strcpy(file_name[0],"smile.bmp"); // 완전 기본 - 말할때
-      strcpy(file_name[1],"need_talk.bmp");
-      strcpy(file_name[2],"water_flood.bmp");
-      strcpy(file_name[3],"water_enough.bmp");
-      strcpy(file_name[4],"water_dry.bmp");
+      strcpy(file_name[1],"needtalk.bmp");
+      strcpy(file_name[2],"flood.bmp");
+      strcpy(file_name[3],"enough.bmp");
+      strcpy(file_name[4],"dry.bmp");
       //  strcpy(file_name[5],"sad24bi.bmp"); // 알람은 파일 없음
       strcpy(file_name[6],"cold.bmp");
       strcpy(file_name[7],"hot.bmp");
@@ -221,15 +219,15 @@ void loop()
     
     if (Serial.available() > 0) { // 라즈베리에서 신호를 주면
         String input = Serial.readStringUntil('\n'); // 라즈베리파이로부터 전송된 데이터를 한 줄씩 읽음
-        if (input.equals("start")) { // 대화 시작(tts 음성)
+        if (input.equals("start")) {
             is_talking = true;
             talking();
         }
-        else if (input.equals("0")) { // 대화 끝
+        else if (input.equals("0")) {
             is_talking = false;
             openDraw(0);
         }
-        else { // 상태에 따라 표정 바꾸기
+        else {
             int data = input.toInt();
 
             Serial.println(data);
