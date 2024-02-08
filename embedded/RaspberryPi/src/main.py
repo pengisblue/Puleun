@@ -24,6 +24,7 @@ is_owner = False # 주인 연결 여부
 is_connected = False # 백과 연결 여부
 is_water = False # 백에 물 준 날 전송 여부 / day
 status_flag = False # 백에 화분 상태 전송 여부 / hour
+is_talking = False # 대화 중
 talk_id = 1 # 대화 번호
 serial_number = get_serial_number() # 시리얼 번호
 transcript = None # stt 텍스트
@@ -38,7 +39,6 @@ arduino_port_2 = '/dev/ttyUSB0' # nano
 # 라즈베리와 백엔드 연결
 @sio.event
 def connect():
-    global serial_number
     print('Connected with serial number:', serial_number)
 
     # 시리얼 넘버 보내기
@@ -56,7 +56,6 @@ def disconnect():
 # login 확인 시 받을 data
 @sio.on('login_result')
 def login_result(data):
-    global is_owner, pot_id
     is_owner = data['is_owner'] # 주인 연결 여부 받기
     pot_id = data['pot_id'] # 화분 고유 id 받기
     print(data)
@@ -74,7 +73,6 @@ def talk_tts(data):
 # data==True일 때 이름 파일 받아서 저장
 @sio.on('owner_change')
 def owner_change(data): 
-    global is_owner
     # data={
     #     'is_owner': bool,
     #     'name_voice': wavfile,
@@ -90,7 +88,9 @@ def owner_change(data):
 # 대화 id 받기
 @sio.on('talk_id')
 def get_talk_id(talk_id):
-    talk_id = talk_id   
+    talk_id = talk_id  
+    is_talking = True
+    print('talk_id:', talk_id) 
 
 
 # 새로고침 시 보낼 데이터
@@ -114,15 +114,22 @@ def situation(data):
     base64_basic_voice = data['basic_voice']
     basic_voice_path = "basic_voice.wav"
 
-    # 효과음과 이름 음원 재생 + 멘트
-    start_sound()
-    save_sound(base64_basic_voice, basic_voice_path)
-    play_sound(basic_voice_path)
+    # 대화 중이 아닐 경우
+    if is_talking == False:
+        # 효과음과 이름 음원 재생 + 멘트
+        start_sound()
+        save_sound(base64_basic_voice, basic_voice_path)
+        play_sound(basic_voice_path)
+        
+        if situation_id == 5: # 알람일때
+            send_sig_to_arduino(ser2, "alarm") # 팔 신호보내기
+    
+    # 대화 중일 경우 kill
+    else:
+        pass
 
-    if situation_id == 5: # 알람일때
-        send_sig_to_arduino(ser2, "alarm") # 팔 신호보내기
-    else: # 나머지
-        send_sig_to_arduino(ser1, situation_id) # lcd 바꾸기
+    send_sig_to_arduino(ser1, situation_id) # lcd 바꾸기
+    
 
 # -------------------------------------------- 함수 ------------------------------------------------
 
@@ -153,6 +160,7 @@ def start_sound():
     effect_path = "effect_sound.wav"
     name_voice_path = "name_voice.wav"
 
+    send_sig_to_arduino("talk start")
     play_sound(effect_path)  # 효과음 재생
     play_sound(name_voice_path)  # 이름 음성 파일 재생
 
@@ -161,8 +169,9 @@ def start_sound():
 def keyword(): 
     hotword()
     sio.emit('hot_word') # 서버에게 hot_word 요청
+    send_sig_to_arduino('hotword')
     print("키워드인식", talk_id)
-    STT()   # 호출어 인식이 되면 stt 실행     
+    STT()   # 호출어 인식이 되면 stt 실행
 
 
 # stt 텍스트, 음성파일 전송
@@ -185,6 +194,7 @@ def STT():
         })
     else:
         # transcript 값이 없으면 대화 종료 로직을 수행
+        is_talking = False
         return
 
 
