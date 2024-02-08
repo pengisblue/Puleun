@@ -29,11 +29,13 @@ export class CalenderService {
     }
 
     async getLastDay(pot_id: number, code:string):Promise<Date>{
-        const temp = await this.calenderRepository.findOne({
+        const [temp] = await this.calenderRepository.find({
             where: {pot_id, code},
             order: {createdAt: 'DESC'},
-            select: {createdAt: true}
+            select: {createdAt: true},
+            take: 1
         })
-        return temp[0]?.createdAt;
+        if (temp == null) return ("9999-99-99" as unknown as Date)
+        return temp.createdAt;
     }
 }
