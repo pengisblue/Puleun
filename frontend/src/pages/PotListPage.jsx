@@ -82,9 +82,13 @@ export default function PotListPage() {
       </div>
 
       {/* 화분 카드 */}
-      <div className="my-6 grid w-full grid-cols-2 place-items-center md:grid-cols-3 lg:grid-cols-4">
+      <div className="my-6 grid w-full grid-cols-2 place-items-center">
         {filteredPots.map((pot) => (
-          <div key={pot.potId} onClick={goPotDetail(pot.potId)} className="cursor-pointer">
+          <div
+            key={pot.potId}
+            onClick={goPotDetail(pot.potId)}
+            className="cursor-pointer"
+          >
             <PotSimpleCard {...pot} />
           </div>
         ))}
