@@ -29,7 +29,7 @@ talk_id = 1 # 대화 번호
 serial_number = 'jkfjksdjs12331'
 transcript = None # stt 텍스트
 encoded_wav = None # stt 음성파일
-
+name_voice = None # 이름 음성 파일
 # 아두이노 포트 설정
 arduino_port = 'COM6'
 arduino_port_1 = '/dev/ttyACM0' # LCD
@@ -68,19 +68,27 @@ def login_result(data):
 @sio.on('tts')
 def talk_tts(data):
     save_tts_file(data)
-    # 이 다음에 stt 실행
-
-
-# 알람이 왔을 때 tts 실행
-@sio.on('alarm')
-def alarm_tts(data):
-    save_tts_file(data)  
+    # 이 다음에 stt 실행 > 이렇게 하니까 끊겨서 save_tts_file함수 안에서 stt를 실행했음
 
 
 # 주인 변했을때 == 주인이 생겼을때/없어졌을때
+# data==True일 때 이름 파일 받아서 저장
 @sio.on('owner_change')
 def owner_change(data): 
-    is_owner = data
+    global is_owner, name_voice
+    # 받는 데이터 형식
+    # data={
+    #     'is_owner': bool,
+    #     'name_voice': wavfile,
+    # }
+
+    is_owner = data['is_owner']
+    base64_data = data['name_voice']
+    # 이름 음성 파일 저장
+    file_data = base64.b64decode(base64_data)
+    with open('name_voice.wav', 'wb') as file:
+        file.write(file_data)
+
     print("owner status changed")
 
 
@@ -97,14 +105,74 @@ def refresh(): # 새로고침 신호
     # 아두이노야 측정해줘
     # 측정값을 받아서 보낸다. > pot_state
     print("refreshing...")
+    pot_state()
 
 
-# 표정 상태값
-@sio.on('')
-def emotion(data):
-    pass
+# 상태 별 액션
+@sio.on('situation')
+def situation(data):
+    # data = {
+    #     'situation_id':int, # 상황번호
+    #     'basic_voice':wav_file, # 기본멘트 음성파일(랜덤으로 보내주세요), 알람일땐 tts 파일
+    # } 
+    situation_id = data['situation_id']
+    basic_voice = data['basic_voice']
+
+    # 이거 두개는 라즈베리파이에서 저장해두고 쓰기
+    # effect = "effect.wav"
+    # name_voice = "name_voice.wav"
+    
+    start_sound()
+    if situation_id == 5: # 알람일때
+        wav_play(basic_voice)
+        # 팔 신호보내기
+        send_sig_to_arduino(ser2, "alarm")
+    else: # 나머지
+        # 음원받아서 재생 - tts
+        wav_play(basic_voice)
+        # lcd 바꾸기
+        send_sig_to_arduino(ser1, situation_id)
 
 # -------------------------------------------- 함수 ------------------------------------------------
+
+# 음성 재생
+def play_sound(file_path):
+    data, fs = sf.read(file_path)  # 파일 읽기
+    sd.play(data, fs)  # 소리 재생
+    sd.wait()  # 재생이 끝날 때까지 대기
+
+
+# 효과음 + 이름 재생
+def start_sound():
+    effect_file_path = "effect_sound.wav"
+    name_voice_file_path = "name_voice.wav"
+
+    play_sound(effect_file_path)  # 효과음 재생
+    play_sound(name_voice_file_path)  # 이름 음성 파일 재생
+
+
+# wav 파일 재생
+def wav_play(data):
+    # .wav 디코딩해서 재생하기
+    base64_data = data['base64Data']
+    file_data = base64.b64decode(base64_data) # base64 디코딩
+
+    # 파일로 저장 (ex: received_file.wav)
+    with open('received_file.wav', 'wb') as file:
+        file.write(file_data)
+
+    print("File received and saved.")
+    time.sleep(1)
+
+    # 오디오 재생
+    file_path = "received_file.wav"
+
+    data, fs = sf.read(file_path)
+    # 음원 재생
+    sd.play(data, fs)
+    # 재생이 완료될 때까지 대기
+    sd.wait()
+
 
 # stt 텍스트, 음성파일 전송
 def send_stt_file(): 
@@ -142,27 +210,10 @@ def keyword():
 
 # 음성 파일 저장 + 출력 함수
 def save_tts_file(data): 
-    # .wav 디코딩해서 재생하기
-    base64_data = data['base64Data']
-    file_data = base64.b64decode(base64_data) # base64 디코딩
-
-    # 파일로 저장 (ex: received_file.wav)
-    with open('received_file.wav', 'wb') as file:
-        file.write(file_data)
-
-    print("File received and saved.")
-    time.sleep(1)
-
-    # 오디오 재생
-   
-    file_path = "received_file.wav"
-
-    data, fs = sf.read(file_path)
-    # 음원 재생
-    sd.play(data, fs)
-    # 재생이 완료될 때까지 대기
-    sd.wait()
-
+    # lcd에 신호 보내기
+    send_sig_to_arduino(ser1, 'start')
+    wav_play(data)
+    send_sig_to_arduino(ser1, 0)
     send_stt_file()
     
     # pygame.mixer.init()
@@ -201,13 +252,13 @@ def pot_state():
         print(sensor_value)
 
         # Socket.IO로 데이터 전송
-        # sio.emit('pot_state', {'pot_id' : pot_id, 'data': sensor_value, 'isTemp_FG': is_temp})
+        sio.emit('pot_state', {'pot_id' : pot_id, 'data': sensor_value, 'isTemp_FG': is_temp})
 
 # 아두이노로 메시지 보내기
-def send_sig_to_arduino(msg):
+def send_sig_to_arduino(ser, msg):
     msg = msg + '\n'
     msg = bytes(msg, 'utf-8')
-    ser2.write(msg)
+    ser.write(msg)
 
     # 테스트용으로 완료신호 받는 함수
     # time.sleep(1)
@@ -217,7 +268,6 @@ def send_sig_to_arduino(msg):
     #     print(answer)
 
 
-
 # 메인 실행문
 if __name__ == '__main__': 
     server_url = os.getenv('SERVER_URL')
@@ -225,8 +275,10 @@ if __name__ == '__main__':
 
     # 시리얼 열기
     # 시리얼 통신 객체 생성
-    # ser2 = serial.Serial(arduino_port_2, 9600)  # 아두이노와의 통신 속도에 맞게 설정
-    ser2 = serial.Serial(arduino_port, 9600)  # 아두이노와의 통신 속도에 맞게 설정
+    # ser2 = serial.Serial(arduino_port, 9600)  # 아두이노와의 통신 속도에 맞게 설정 > 윈도우
+    ser1 = serial.Serial("COM5", 115200)  # 아두이노와의 통신 속도에 맞게 설정 > 윈도우
+    # ser1 = serial.Serial(arduino_port_1, 115200)  # TFT_LCD & arduino uno
+    # ser2 = serial.Serial(arduino_port_2, 9600)  # arduino nano    
     time.sleep(2)
     # -----------
     # keyword() # 호출어 인식 테스트
