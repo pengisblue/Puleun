@@ -71,7 +71,7 @@ export class SocketGateway {
     dto.pot_id = pot_id
     dto.code = 'T'
     this.calenderService.save(dto)
-    const talk_id = await this.talkService.talkStart()
+    const talk_id = await this.talkService.saveTalk("푸른 푸르른", "2023-02-01")
     client.emit('talk_id',{talk_id})
   }
 
