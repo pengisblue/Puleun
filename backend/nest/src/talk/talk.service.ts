@@ -36,19 +36,31 @@ export class TalkService {
     }
 
     /** make talk by talk start */
-    async saveTalk(talk_title: string, talk_DT: string){
+    async saveTalk(talk_title: string, talk_DT: string): Promise<number>{
         const dto:TalkCreateDto = new TalkCreateDto()
         const DT = talk_DT as unknown as Date
         dto.talk_DT = DT
         dto.talk_title = talk_title
-        this.talkRepository.save(dto)
+        await this.talkRepository.save(dto)
+        const [res] = await this.talkRepository.find({
+            select:['talk_id'],
+            where: {talk_DT:DT, talk_title},
+            take: 1
+        })
+        return res.talk_id
     }
 
-    async findAll(talk_id: number): Promise<Talk[]>{
-        return await this.talkRepository.find({
+    async findRedis(talk_){
+        
+    }
+
+    async find(talk_id: number): Promise<Talk>{
+        const [res] =await this.talkRepository.find({
             relations: {sentence: true},
             where: {talk_id},
+            take: 1
         })
+        return res
     }
 
     /** find all talk list by user_id */
@@ -62,10 +74,5 @@ export class TalkService {
             .leftJoin('pot.user', 'user','pot.user_id = user.user_id')
             .where('user.user_id = :user_id',{user_id})
             .getMany()
-    }
-
-    /** get talk_id */
-    async talkStart(): Promise<number>{
-        return this.redisService.getTalkId()
     }
 }
