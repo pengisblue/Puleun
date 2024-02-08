@@ -68,7 +68,7 @@ def login_result(data):
 @sio.on('tts')
 def talk_tts(data):
     save_tts_file(data)
-    # 이 다음에 stt 실행
+    # 이 다음에 stt 실행 > 이렇게 하니까 끊겨서 save_tts_file함수 안에서 stt를 실행했음
 
 
 # 주인 변했을때 == 주인이 생겼을때/없어졌을때
@@ -210,7 +210,10 @@ def keyword():
 
 # 음성 파일 저장 + 출력 함수
 def save_tts_file(data): 
+    # lcd에 신호 보내기
+    send_sig_to_arduino(ser1, 'start tts')
     wav_play(data)
+    send_sig_to_arduino(ser1, 0)
     send_stt_file()
     
     # pygame.mixer.init()
@@ -273,8 +276,8 @@ if __name__ == '__main__':
     # 시리얼 열기
     # 시리얼 통신 객체 생성
     # ser2 = serial.Serial(arduino_port, 9600)  # 아두이노와의 통신 속도에 맞게 설정 > 윈도우
-    ser1 = serial.Serial(arduino_port_1, 9600)  # 아두이노와의 통신 속도에 맞게 설정, 포트번호 수정필요
-    ser2 = serial.Serial(arduino_port_2, 9600)  # 아두이노와의 통신 속도에 맞게 설정    
+    ser1 = serial.Serial(arduino_port_1, 115200)  # TFT_LCD & arduino uno
+    ser2 = serial.Serial(arduino_port_2, 9600)  # arduino nano    
     time.sleep(2)
     # -----------
     # keyword() # 호출어 인식 테스트
