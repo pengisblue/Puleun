@@ -10,6 +10,10 @@ module.exports = {
       width: {
         "auto-important": "auto!important",
       },
+      fontFamily: {
+        katuri: ["Katuri", "Pretendard Variable"],
+        KCCMurukmuruk: ["KCCMurukmuruk", "Pretendard Variable"],
+      },
     },
     fontSize: {
       title: [

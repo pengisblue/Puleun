@@ -1,7 +1,7 @@
 import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Pot } from './pot.entity';
-import { Repository, SelectQueryBuilder } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CollectionDto, CreatePotDto, PotWithStatusDto, SelectPotDto, UpdatePotDto } from './pot.dto';
 import { PotStateService } from 'src/pot-state/pot-state.service';
 import { CalenderService } from 'src/calender/calender.service';
@@ -92,7 +92,7 @@ export class PotService {
             .leftJoinAndSelect('pot.user', 'user', 'user.user_id = pot.user_id')
             .select(['pot.pot_id', 'pot.pot_name', 'pot.pot_species', 'user.user_id', 'user.nickname'])
             .getOne();
-    }
+    }  
 
     async save(createPotDto: CreatePotDto) {
         await this.potRepository.save(createPotDto);
