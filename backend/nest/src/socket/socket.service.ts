@@ -26,8 +26,8 @@ export class SocketService {
     // 파라미터 없음
     if (serial_number==null) throw new HttpException("plz serial_number", HttpStatus.BAD_REQUEST);
 
-    // redis에 소켓 id 저장
-    await this.redisService.set(serial_number, clientId)
+    // 소켓 id 저장 해야함
+
 
     // 처음온 연결인 경우
     if (device == null){
