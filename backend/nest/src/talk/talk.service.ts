@@ -38,9 +38,9 @@ export class TalkService {
     
     /** find all sentence by talk_id */
     async find(talk_id: number): Promise<TalkListDto>{
-        const [res] =await this.talkRepository.find({
-            // select: ['talk_id', 'talk_title', 'talk_DT'],
-            relations: {sentence: true},
+        const [res] = await this.talkRepository.find({
+            select: ['talk_id', 'talk_title', 'talk_DT'],
+            relations: ['sentences'],
             where: {talk_id},
             take: 1
         })
