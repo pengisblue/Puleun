@@ -1,8 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Controller, Get, Param, } from '@nestjs/common';
 import { TalkService } from './talk.service';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Talk } from './talk.entity';
-import { User } from 'src/user/user.entity';
 import { TalkListDto } from './talk-res.dto';
 
 @Controller('talk')

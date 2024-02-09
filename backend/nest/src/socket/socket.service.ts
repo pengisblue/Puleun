@@ -1,13 +1,11 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import * as fs from 'fs';
 import { DeviceService } from './../device/device.service';
 import { SocketLoginDto } from './socket.dto';
 import { DeviceCreateDto } from 'src/device/device-req.dto';
 import { SentenceService } from 'src/sentence/sentence.service';
 import { TtsService } from 'src/tts/tts.service';
-import { RedisService } from 'src/redis/redis.service';
 import { FileService } from './../file/file.service';
-import { TalkService } from 'src/talk/talk.service';
 import { SentenceCreateDto } from 'src/sentence/sentence-req.dto';
 
 @Injectable()
@@ -16,9 +14,7 @@ export class SocketService {
     private readonly deviceService: DeviceService,
     private readonly sentenceService: SentenceService,
     private readonly ttsService: TtsService,
-    private readonly redisService: RedisService,
     private readonly fileService: FileService,
-    private readonly talkService: TalkService,
   ){}
 
   // device 정보 + socket id 저장

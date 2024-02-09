@@ -1,4 +1,4 @@
-import { Entity, PrimaryColumn, Column, ManyToOne, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, ManyToOne, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm';
 import { Pot } from '../pot/pot.entity';
 import { User } from 'src/user/user.entity';
 
