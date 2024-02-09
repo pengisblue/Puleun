@@ -6,7 +6,7 @@ export class Sentence {
   @PrimaryGeneratedColumn()
   sentence_id: number;
 
-  @Column({ length: 100, nullable: false })
+  @Column({ length: 200, nullable: false })
   content: string;
 
   @Column({ length: 100, nullable: false })
@@ -15,7 +15,7 @@ export class Sentence {
   @CreateDateColumn()
   sentence_DTN: Date;
 
-  @Column({ length: 3, nullable: false })
+  @Column({ length: 4, nullable: false })
   talker: string;
 
   @ManyToOne(() => Talk, talk => talk.talk_id)

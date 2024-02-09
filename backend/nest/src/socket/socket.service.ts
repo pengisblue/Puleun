@@ -7,6 +7,8 @@ import { SentenceService } from 'src/sentence/sentence.service';
 import { TtsService } from 'src/tts/tts.service';
 import { RedisService } from 'src/redis/redis.service';
 import { FileService } from './../file/file.service';
+import { TalkService } from 'src/talk/talk.service';
+import { SentenceCreateDto } from 'src/sentence/sentence-req.dto';
 
 @Injectable()
 export class SocketService {
@@ -16,6 +18,7 @@ export class SocketService {
     private readonly ttsService: TtsService,
     private readonly redisService: RedisService,
     private readonly fileService: FileService,
+    private readonly talkService: TalkService,
   ){}
 
   // device 정보 + socket id 저장
@@ -48,28 +51,27 @@ export class SocketService {
   }
 
   /** stt-> tts : stt 받아서 tts로 return */
-  async stt(text: string, talk_id: string, base64Data: string): Promise<string>{
+  async stt(text: string, talk_id: number, base64Data: string): Promise<string>{
     const today = this.fileService.getToday()
     const filePath = "./upload/talk/" + today + "/"
     if (!fs.existsSync(filePath)) fs.mkdir(filePath, (e)=>{if (e) throw e})
 
-    // 대화내용 배열에 저장
-    var talkArray = []
-    try {
-      talkArray = (await this.redisService.get(`${talk_id}:array`)).split(".")
-    } catch (e) {
-      talkArray = [] 
-    }
-
-    const saveFilePath =  filePath + talk_id + "-" + talkArray.length + ".mp3"
+    let nextSentenceId = await this.sentenceService.nestSentenceId(talk_id)
+    const saveFilePath =  filePath + talk_id + "-" + nextSentenceId + ".mp3"
     const decodedBuffer = Buffer.from(base64Data, 'base64');
     fs.writeFileSync(saveFilePath, decodedBuffer);
 
-    talkArray.push(`{"content":"${text}", "sentence_DTN":"${today}", "talker_FG":"true", "talk_id":"${talk_id}", "audio":"${saveFilePath}"}.`)
+    const sentenceDto = new SentenceCreateDto()
+    sentenceDto.content = text
+    sentenceDto.audio = saveFilePath
+    sentenceDto.sentence_DTN = today as unknown as Date
+    sentenceDto.talker = "user"
+    sentenceDto.talk_id = talk_id
+    await this.sentenceService.save(sentenceDto)
     // gpt api
     const answerText = await this.sentenceService.answer(text)
     
-    const uploadFilePath = filePath + talk_id + "-" + talkArray.length + ".wav"
+    const uploadFilePath = filePath + talk_id + "-" + (nextSentenceId+1) + ".wav"
     // message -> tts
     await this.ttsService.tts(answerText, uploadFilePath)
     
@@ -87,8 +89,14 @@ export class SocketService {
     // text, answerText 파일 저장 -> redis
     console.log(text)
     
-    talkArray.push(`{"content":"${answerText}", "sentence_DTN":"${today}", "talker_FG":"false", "talk_id":"${talk_id}", "audio":"${uploadFilePath}"}.`)
-    await this.redisService.set(`${talk_id}:array`, talkArray.toString())
+    const sentenceDto2 = new SentenceCreateDto()
+    sentenceDto2.content = answerText
+    sentenceDto2.audio = uploadFilePath
+    sentenceDto.sentence_DTN = today as unknown as Date
+    sentenceDto2.talker = "ai"
+    sentenceDto2.talk_id = talk_id
+    await this.sentenceService.save(sentenceDto2)
+
     return Buffer.from(content).toString('base64')
   }
 }

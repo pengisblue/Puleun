@@ -6,9 +6,10 @@ import { User } from 'src/user/user.entity';
 import { UserService } from 'src/user/user.service';
 import { RedisService } from 'src/redis/redis.service';
 import { SentenceService } from 'src/sentence/sentence.service';
-import { SentenceCreateDto } from 'src/sentence/sentence-res.dto';
+import { SentenceCreateDto } from 'src/sentence/sentence-req.dto';
 import { TalkCreateDto } from './talk-req.dto';
 import { TalkListDto } from './talk-res.dto';
+import { promises } from 'dns';
 
 @Injectable()
 export class TalkService {

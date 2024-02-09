@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import OpenAI from "openai";
 import { Sentence } from './sentence.entity';
 import { Repository } from 'typeorm';
-import { SentenceCreateDto } from './sentence-res.dto';
+import { SentenceCreateDto } from './sentence-req.dto';
 
 @Injectable()
 export class SentenceService {
@@ -43,4 +43,9 @@ export class SentenceService {
         }
     }
 
+    async nestSentenceId(talk_id: number): Promise<number>{
+        let res = await this.sentenceRepository.countBy({talk_id})
+        res += 1
+        return res
+    }
 }
