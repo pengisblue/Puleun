@@ -15,6 +15,7 @@ from dotenv import load_dotenv
 from serial_number import get_serial_number
 from stt import record_wav, speech_to_text
 from hot_word.porcu import hotword
+from threading import Thread
 
 load_dotenv()
 
@@ -264,18 +265,59 @@ def send_sig_to_arduino(ser, msg):
     #     print(answer)
 
 
+
+# Threading
+def arduino_work(ser2):
+    while True:
+        # water 들어오면 emit하기
+        while ser2.in_waiting > 0:
+            sensor_value = ser2.readline().decode('utf-8').strip()
+            if (sensor_value == 'Water' and is_water == False):
+                print('sending water signal')
+                is_water = True
+                # sio.emit('water', {'pot_id' : pot_id})
+
+        # 정각마다 pot_state 실행
+        now = datetime.datetime.now()
+        if now.minute == 0:
+            if status_flag == False:
+                pot_state()
+                status_flag = True
+            if now.hour == 0:
+                is_water = False
+
+
+# test
+def test():
+    now = datetime.datetime.now()
+    print(now)
+    time.sleep(2)
+
 # 메인 실행문
 if __name__ == '__main__': 
+    global ser1, ser2
     server_url = os.getenv('SERVER_URL')
     # sio.connect(server_url)
 
     # 시리얼 열기
     # 시리얼 통신 객체 생성
     # ser2 = serial.Serial(arduino_port, 9600)  # 아두이노와의 통신 속도에 맞게 설정 > 윈도우
-    ser1 = serial.Serial("COM5", 115200)  # 아두이노와의 통신 속도에 맞게 설정 > 윈도우
-    # ser1 = serial.Serial(arduino_port_1, 115200)  # TFT_LCD & arduino uno
-    # ser2 = serial.Serial(arduino_port_2, 9600)  # arduino nano    
-    time.sleep(2)
+    # ser1 = serial.Serial("COM5", 115200)  # 아두이노와의 통신 속도에 맞게 설정 > 윈도우
+    ser1 = serial.Serial(arduino_port_1, 115200)  # TFT_LCD & arduino uno
+    ser2 = serial.Serial(arduino_port_2, 9600)  # arduino nano    
+    time.sleep(10) # 시리얼 통신 기다리기 (+ login 정보 받기?)
+    pot_state() # 시작 시 보낼 데이터
+
+    # ----- 내맘대로 만들어본 부분
+    # thread 지정
+    rasp = Thread(target=keyword, args=())
+    ard = Thread(target=arduino_work, args=(ser2))
+    # process 시작
+    rasp.start()
+    ard.start()
+    while True:
+        pass
+
     # -----------
     # keyword() # 호출어 인식 테스트
 
@@ -284,22 +326,7 @@ if __name__ == '__main__':
         # keyword()
 
         # time.sleep(1)
-        # water 들어오면 emit하기
-        # while ser2.in_waiting > 0:
-        #     sensor_value = ser2.readline().decode('utf-8').strip()
-        #     if (sensor_value == 'Water' and is_water == False):
-        #         print('sending water signal')
-        #         is_water = True
-        #         # sio.emit('water', {'pot_id' : pot_id})
-
-        # # 정각마다 pot_state 실행
-        # now = datetime.datetime.now()
-        # if now.minute == 0:
-        #     if status_flag == False:
-        #         pot_state()
-        #         status_flag = True
-        #     if now.hour == 0:
-        #         is_water = False
+        
         
     # -----
         
