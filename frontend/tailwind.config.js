@@ -10,6 +10,9 @@ module.exports = {
       width: {
         "auto-important": "auto!important",
       },
+      maxWidth: {
+        "page": "26rem",
+      },
       fontFamily: {
         katuri: ["Katuri", "Pretendard Variable"],
         KCCMurukmuruk: ["KCCMurukmuruk", "Pretendard Variable"],
