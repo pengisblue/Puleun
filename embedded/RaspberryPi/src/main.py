@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 from serial_number import get_serial_number
 from stt import record_wav, speech_to_text
 from hot_word.porcu import hotword
-from threading import Thread
+from threading import Thread, Event
 
 load_dotenv()
 
@@ -57,6 +57,7 @@ def disconnect():
 # login 확인 시 받을 data
 @sio.on('login_result')
 def login_result(data):
+    global is_owner, pot_id
     is_owner = data['is_owner'] # 주인 연결 여부 받기
     pot_id = data['pot_id'] # 화분 고유 id 받기
     print(data)
@@ -78,17 +79,24 @@ def owner_change(data):
     #     'is_owner': bool,
     #     'name_voice': wavfile,
     # }
+    global is_owner_event
     is_owner = data['is_owner']
     base64_name_voice = data['name_voice']
     name_voice_path = "name_voice.wav"
     save_sound(base64_name_voice, name_voice_path)
-
+    if is_owner:
+        is_owner_event.set()
+        print('프로세스 실행')
+    else:
+        is_owner_event.clear()
+        print('프로세스 종료')
     print("owner status changed : ", is_owner)
 
 
 # 대화 id 받기
 @sio.on('talk_id')
 def get_talk_id(talk_id):
+    global is_talking
     talk_id = talk_id  
     is_talking = True
     print('talk_id:', talk_id) 
@@ -166,18 +174,22 @@ def start_sound():
     play_sound(name_voice_path)  # 이름 음성 파일 재생
 
 
-# 호출어 인식
+# 호출어 인식 - process로 만듦
 def keyword(): 
-    hotword()
-    sio.emit('hot_word') # 서버에게 hot_word 요청
-    send_sig_to_arduino('hotword')
-    print("키워드인식", talk_id)
-    STT()   # 호출어 인식이 되면 stt 실행
+    while is_owner == True:
+        is_owner_event.wait()
+        print('keyword start')
+        hotword()
+        sio.emit('hot_word') # 서버에게 hot_word 요청
+        send_sig_to_arduino('hotword')
+        print("키워드인식", talk_id)
+        STT()   # 호출어 인식이 되면 stt 실행
+
 
 
 # stt 텍스트, 음성파일 전송
 def STT(): 
-    global transcript, talk_id, encoded_wav
+    global transcript, talk_id, encoded_wav, is_talking
     stt_voice_path = "recorded_audio.wav"
     record_wav(stt_voice_path)
     transcript = speech_to_text(stt_voice_path)
@@ -266,9 +278,11 @@ def send_sig_to_arduino(ser, msg):
 
 
 
-# Threading
-def arduino_work(ser2):
-    while True:
+# Threading - Process로 만듦
+def arduino_work():
+    while is_owner == True:
+        is_owner_event.wait()
+        print('arduino start')
         # water 들어오면 emit하기
         while ser2.in_waiting > 0:
             sensor_value = ser2.readline().decode('utf-8').strip()
@@ -287,36 +301,31 @@ def arduino_work(ser2):
                 is_water = False
 
 
-# test
-def test():
-    now = datetime.datetime.now()
-    print(now)
-    time.sleep(2)
-
 # 메인 실행문
 if __name__ == '__main__': 
     global ser1, ser2
+
     server_url = os.getenv('SERVER_URL')
-    # sio.connect(server_url)
+    sio.connect(server_url)    
+
+    # threading event
+    is_owner_event = Event()
 
     # 시리얼 열기
     # 시리얼 통신 객체 생성
     # ser2 = serial.Serial(arduino_port, 9600)  # 아두이노와의 통신 속도에 맞게 설정 > 윈도우
     # ser1 = serial.Serial("COM5", 115200)  # 아두이노와의 통신 속도에 맞게 설정 > 윈도우
-    ser1 = serial.Serial(arduino_port_1, 115200)  # TFT_LCD & arduino uno
-    ser2 = serial.Serial(arduino_port_2, 9600)  # arduino nano    
+    # ser1 = serial.Serial(arduino_port_1, 115200)  # TFT_LCD & arduino uno
+    # ser2 = serial.Serial(arduino_port_2, 9600)  # arduino nano    
     time.sleep(10) # 시리얼 통신 기다리기 (+ login 정보 받기?)
     pot_state() # 시작 시 보낼 데이터
 
-    # ----- 내맘대로 만들어본 부분
     # thread 지정
-    rasp = Thread(target=keyword, args=())
-    ard = Thread(target=arduino_work, args=(ser2))
+    rasp = Thread(target=keyword, args=(), daemon=True)
+    ard = Thread(target=arduino_work, args=(), daemon=True)
     # process 시작
     rasp.start()
     ard.start()
-    while True:
-        pass
 
     # -----------
     # keyword() # 호출어 인식 테스트
