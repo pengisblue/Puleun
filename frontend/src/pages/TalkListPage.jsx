@@ -16,8 +16,8 @@ export default function TalkListPage() {
 
   return (
     <div className="">
-      <div className="fixed top-16 w-full bg-amber-overlay pe-12 pt-2">
-        <div className="left-0 m-2 flex items-center justify-between">
+      <div className="fixed top-16 w-full max-w-page bg-amber-overlay pt-2">
+        <div className="left-0 m-2 flex items-center justify-between px-6">
           <h1 className="text-title">우리 대화</h1>
           <img src={cog} alt="cog" className="w-7 cursor-pointer" />
         </div>
@@ -26,13 +26,14 @@ export default function TalkListPage() {
         <div className="flex border-amber-300 text-center text-xl font-semibold">
           <p
             onClick={handleClickAll}
-            className={`basis-1/2 cursor-pointer border-r-4 border-amber-300 py-3 pr-2 ${isStar ? "text-amber-cloudy" : "text-slate-950"}`}
+            className={`basis-1/2 cursor-pointer py-3 ${isStar ? "text-amber-cloudy" : "text-slate-950"}`}
           >
             전체
           </p>
+          <div className="my-3 box-border w-0.5 bg-amber-300"></div>
           <p
             onClick={handleClickFavorite}
-            className={`basis-1/2 cursor-pointer py-3 pl-2 ${isStar ? "text-slate-950" : "text-amber-cloudy"}`}
+            className={`basis-1/2 cursor-pointer py-3 ${isStar ? "text-slate-950" : "text-amber-cloudy"}`}
           >
             즐겨찾기
           </p>
@@ -40,7 +41,7 @@ export default function TalkListPage() {
       </div>
 
       {/* 대화 목록 */}
-      <div className="mx-2 flex flex-wrap gap-1 pt-28">
+      <div className="mx-2 flex flex-wrap gap-1 px-6 pt-28">
         {TALK_LIST.filter((talk) => !isStar || talk.isFavorite).map((talk) => (
           <TalkTitleCard key={talk.talkID} {...talk} />
         ))}

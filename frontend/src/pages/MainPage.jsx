@@ -57,7 +57,7 @@ export default function MainPage() {
           <h1 className="text-title">새로운 대화</h1>
           <img src={chevron} alt="goTalkList" className="w-8 cursor-pointer" />
         </div>
-        <div className="mx-2 flex flex-wrap gap-1">
+        <div className="justify-center flex flex-wrap gap-1">
           {NEW_TALK_LIST.map((talk) => (
             <TalkTitleCard key={talk.talkID} {...talk} />
           ))}
