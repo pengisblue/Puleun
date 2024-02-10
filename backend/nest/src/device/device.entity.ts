@@ -21,11 +21,13 @@ export class Device {
   @Column({ nullable: true })
   user_id: number
 
+  @Column({ type: 'string', nullable: true, default: null})
+  client_id: string
+
   @OneToOne(() => Pot)
   @JoinColumn({ name: 'pot_id' })
   pot: Pot;
 
   @Column({type: 'int', nullable: true})
   pot_id: number;
-  // Other columns and relationships can be added as needed.
 }
