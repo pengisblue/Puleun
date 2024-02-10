@@ -3,7 +3,6 @@ import BaseSimpleCard from "../UI/BaseSimpleCard";
 import UserProfileImage from "../Users/UserProfileImage";
 
 export default function PotSimpleCard({
-  userName,
   userImgUrl,
   potName,
   potImgUrl,

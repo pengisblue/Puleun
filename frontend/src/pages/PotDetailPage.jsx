@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 // 하드코딩용
-import { potDetailList } from "../test/potList";
+import { potDetailInfo } from "../test/potList";
 import { CALANDER } from "../test/calander";
 import { potStatus as potStatusInfo } from "../test/potData";
 
@@ -54,9 +54,9 @@ export default function PotDetailPage() {
   }, [potId, navigate]);
 
   // 하드코딩용
-  const pot = potDetailList[potId - 1];
+  const pot = potDetailInfo;
 
-  const [claInfo, setCalInfo] = useState(CALANDER);
+  const [calInfo, setCalInfo] = useState(CALANDER);
   const handleCalInfo = () => {
     setCalInfo(CALANDER);
   };
@@ -101,8 +101,8 @@ export default function PotDetailPage() {
         <h2 className="text-section mb-2">함께 한 기록</h2>
         <div className="max-w-[30rem] overflow-hidden rounded-xl border shadow-md">
           <PotCalander
-            wateringDayList={claInfo.water}
-            talkDayList={claInfo.talk}
+            wateringDayList={calInfo.water}
+            talkDayList={calInfo.talk}
           />
         </div>
       </section>
@@ -149,7 +149,7 @@ export default function PotDetailPage() {
       {/* 테스트 */}
       <div>
         <button onClick={handleCalInfo}>test</button>
-        {/* <pre>{JSON.stringify(claInfo, null, 2)}</pre> */}
+        {/* <pre>{JSON.stringify(calInfo, null, 2)}</pre> */}
         {/* <pre>{JSON.stringify(potStatus, null, 2)}</pre> */}
         <button onClick={handlePotStatus}>test2</button>
       </div>

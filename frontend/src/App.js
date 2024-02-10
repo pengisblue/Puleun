@@ -12,6 +12,7 @@ import KidSelectPage from "./pages/KidSelectPage";
 import TalkListPage from "./pages/TalkListPage";
 import TalkDetailPage from "./pages/TalkDetailPage";
 import LandingPage from "./pages/LandingPage";
+import CollectionPage from "./pages/CollectionPage";
 
 // import Example from "./test/Example";
 
@@ -29,6 +30,7 @@ const router = createBrowserRouter([
       { path: "/pot/:potId", element: <PotDetailPage /> },
       { path: "/kid/:userId", element: <KidDetailPage></KidDetailPage> },
       { path: "/talk/:talkId", element: <TalkDetailPage /> },
+      { path: "/collection/:userId", element: <CollectionPage /> },
       { path: "/kid/select", element: <KidSelectPage></KidSelectPage> },
     ],
   },
@@ -45,7 +47,7 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <div className="min-h-screen max-w-page mx-auto bg-amber-overlay">
+    <div className="mx-auto min-h-screen max-w-page bg-amber-overlay">
       <RouterProvider router={router} />
     </div>
   );
