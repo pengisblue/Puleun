@@ -7,6 +7,7 @@ import { PotStateService } from 'src/pot-state/pot-state.service';
 import { CalenderService } from 'src/calender/calender.service';
 import { CalenderCreateDto } from 'src/calender/calender-req.dto';
 import { TalkService } from 'src/talk/talk.service';
+import { DeviceService } from 'src/device/device.service';
 
 @WebSocketGateway(7080, {
   cors: { origin: "*",},
@@ -23,10 +24,15 @@ export class SocketGateway {
     private readonly potStateService: PotStateService,
     private readonly calenderService: CalenderService,
     private readonly talkService: TalkService,
+    private readonly deviceService: DeviceService,
   ){}
 
   handleConnection( client: Socket ){
     console.log(client.id)
+  }
+
+  async handleDisconnect( client: Socket){
+    await this.deviceService.disconnectDevice( client.id )
   }
 
   @SubscribeMessage('login')
@@ -60,10 +66,10 @@ export class SocketGateway {
 
   @SubscribeMessage('water')
   async water( @MessageBody('pot_id') pot_id: number ): Promise<void>{
-    const dto = new CalenderCreateDto;
-    dto.pot_id = pot_id
-    dto.code = 'W'
-    this.calenderService.save(dto)
+    const waterDto = new CalenderCreateDto;
+    waterDto.pot_id = pot_id
+    waterDto.code = 'W'
+    this.calenderService.save(waterDto)
   }
 
   @SubscribeMessage('hot_word')

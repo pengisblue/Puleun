@@ -26,7 +26,7 @@ export class SocketService {
     if (serial_number==null) throw new HttpException("plz serial_number", HttpStatus.BAD_REQUEST);
 
     // 소켓 id 저장 해야함
-
+    await this.deviceService.connectDevice(serial_number, clientId)
 
     // 처음온 연결인 경우
     if (device == null){

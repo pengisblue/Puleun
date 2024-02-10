@@ -34,6 +34,16 @@ export class DeviceService {
     })
   }
 
+  async connectDevice(serial_number: string, client_id: string): Promise<string>{
+    await this.deviceRepository.update(serial_number, {empty_FG:false, client_id})
+    return "success"
+  }
+
+  async disconnectDevice(client_id: string): Promise<string>{
+    await this.deviceRepository.update(client_id, {empty_FG:true, client_id:null})
+    return "success"
+  }
+
   async mappingDevice(device_id: number){
     const flag = (await this.deviceRepository.findOne({where: {device_id: device_id}})).empty_FG;
     console.log(flag);

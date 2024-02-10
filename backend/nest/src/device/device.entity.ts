@@ -21,7 +21,7 @@ export class Device {
   @Column({ nullable: true })
   user_id: number
 
-  @Column({ type: 'string', nullable: true, default: null})
+  @Column({ length:50 , nullable: true, default: null})
   client_id: string
 
   @OneToOne(() => Pot)
