@@ -92,9 +92,10 @@ export default function KidDetailPage() {
                 className="cursor-pointer"
               >
                 <PotSimpleCard
-                  userImgUrl={user.profile_img_url}
+                  userImgUrl={user.userImgUrl}
                   potName={pot.pot_name}
                   potImgUrl={pot.pot_img_url}
+                  className="w-36"
                 />
               </div>
             ))}

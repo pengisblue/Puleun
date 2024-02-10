@@ -70,7 +70,7 @@ export default function PotListPage() {
       </header>
 
       {/* 주인 선택 필터 */}
-      <div className="ms-auto w-60 mt-6">
+      <div className="ms-auto mt-6 w-60">
         <Filter
           targetList={userList}
           filterKey="userId"
@@ -84,12 +84,16 @@ export default function PotListPage() {
       {/* 화분 카드 */}
       <div className="my-6 grid w-full grid-cols-2 place-items-center">
         {filteredPots.map((pot) => (
-          <div key={pot.potId} onClick={goPotDetail(pot.potId)} className="cursor-pointer">
-            <PotSimpleCard {...pot} />
+          <div
+            key={pot.potId}
+            onClick={goPotDetail(pot.potId)}
+            className="cursor-pointer"
+          >
+            <PotSimpleCard {...pot} className="w-36" />
           </div>
         ))}
         <div onClick={goCreatPot} className="cursor-pointer">
-          <PotAddSimpleCard />
+          <PotAddSimpleCard className="w-36" />
         </div>
       </div>
     </div>

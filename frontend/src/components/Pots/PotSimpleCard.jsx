@@ -6,9 +6,10 @@ export default function PotSimpleCard({
   userImgUrl,
   potName,
   potImgUrl,
+  className,
 }) {
   return (
-    <BaseSimpleCard>
+    <BaseSimpleCard className={className}>
       <div className="flex h-full flex-col justify-evenly">
         {/* 화분 사진 */}
         <div className="mx-auto w-full overflow-hidden rounded-lg">
