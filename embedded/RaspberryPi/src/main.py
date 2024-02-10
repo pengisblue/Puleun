@@ -176,7 +176,7 @@ def start_sound():
 
 # 호출어 인식 - process로 만듦
 def keyword(): 
-    while is_owner == True:
+    while True:
         is_owner_event.wait()
         print('keyword start')
         hotword()
@@ -280,7 +280,7 @@ def send_sig_to_arduino(ser, msg):
 
 # Threading - Process로 만듦
 def arduino_work():
-    while is_owner == True:
+    while True:
         is_owner_event.wait()
         print('arduino start')
         # water 들어오면 emit하기
@@ -315,8 +315,8 @@ if __name__ == '__main__':
     # 시리얼 통신 객체 생성
     # ser2 = serial.Serial(arduino_port, 9600)  # 아두이노와의 통신 속도에 맞게 설정 > 윈도우
     # ser1 = serial.Serial("COM5", 115200)  # 아두이노와의 통신 속도에 맞게 설정 > 윈도우
-    # ser1 = serial.Serial(arduino_port_1, 115200)  # TFT_LCD & arduino uno
-    # ser2 = serial.Serial(arduino_port_2, 9600)  # arduino nano    
+    ser1 = serial.Serial(arduino_port_1, 115200)  # TFT_LCD & arduino uno
+    ser2 = serial.Serial(arduino_port_2, 9600)  # arduino nano    
     time.sleep(10) # 시리얼 통신 기다리기 (+ login 정보 받기?)
     pot_state() # 시작 시 보낼 데이터
 
@@ -326,6 +326,10 @@ if __name__ == '__main__':
     # process 시작
     rasp.start()
     ard.start()
+
+    # main 함수 끝나지 않도록 설정
+    while True:
+        pass
 
     # -----------
     # keyword() # 호출어 인식 테스트
