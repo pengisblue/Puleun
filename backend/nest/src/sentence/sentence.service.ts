@@ -3,11 +3,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import OpenAI from "openai";
 import { Sentence } from './sentence.entity';
 import { Repository } from 'typeorm';
-import { SentenceDto } from './sentence.dto';
+import { SentenceCreateDto } from './sentence-req.dto';
 
 @Injectable()
 export class SentenceService {
-    constructor(@InjectRepository(Sentence) private readonly sentenceRepository: Repository<Sentence>){}
+    constructor(
+        @InjectRepository(Sentence) 
+        private readonly sentenceRepository: Repository<Sentence>,
+    ){}
 
     openai: any = new OpenAI({
         organization: 'org-XvLEOTgNTjznmJI9U3UnwBOk',
@@ -30,14 +33,19 @@ export class SentenceService {
         return completion.choices[0].message.content;
     }
 
-    // 별을 찍은걸 redis로 보내기?
-    async sentenceSave(dto: SentenceDto): Promise<SentenceDto>{
-        return await this.sentenceRepository.save(dto);
+    /** sentence save from redis to mysql */
+    async save(dto: SentenceCreateDto): Promise<string>{
+        try {
+            await this.sentenceRepository.save(dto)
+            return "success"
+        } catch (e) {
+            return "fail"
+        }
     }
 
-    async sentenceFindAll(talk_id: number): Promise<SentenceDto[]>{
-        return await this.sentenceRepository.find({
-            where: {talk_id}
-        })
+    async nestSentenceId(talk_id: number): Promise<number>{
+        let res = await this.sentenceRepository.countBy({talk_id})
+        res += 1
+        return res
     }
 }

@@ -3,8 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Alarm } from './alarm.entity';
 import { Repository } from 'typeorm';
 import { AlarmDto, CreateAlarmDto } from './alarm.dto';
-import { Pot } from 'src/pot/pot.entity';
-import { plainToClass } from 'class-transformer';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class AlarmService {
@@ -27,17 +26,11 @@ export class AlarmService {
             where: {alarm_id}
         });
     }
-
-    async userAlarm(pot_id: number): Promise<Alarm[]>{
-        const alarm = await this.alarmRepository.createQueryBuilder('alarm')
-            .where('alarm.pot_id= :pot_id', {pot_id})
-            .leftJoinAndSelect('alarm.pot', 'pot')
-            .select([
-                'alarm.alarm_id', 'alarm.alarm_name', 'alarm.alarm_content',
-                 'alarm.active_FG', 'alarm.alarm_date', 'alarm.routine',
-                 'pot.pot_id', 'pot.pot_name'
-            ])
-            .getMany();
-        return alarm;
-    }
+    // 초 분 시 일 월 요일
+    // 0 - 6 일요일부터 토요일까지
+    // 0 30 7 * * 1,3,6 -> 월 수 토 7시 30분 00초에 실행
+    // @Cron('0 * * * * *')
+    // handleCron(){
+    //     console.log('Cron Test!');
+    // }
 }

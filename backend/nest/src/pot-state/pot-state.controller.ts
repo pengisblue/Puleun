@@ -19,7 +19,7 @@ export class PotStateController {
     async save(@Body() createPotStateDto:CreatePotStateDto): Promise<number>{
         return this.potStateService.save(createPotStateDto)
     }
-
+    
     @Get(':parent_id')
     @ApiOperation({summary: '부모가 가진 화분과 상태 표현'})
     @ApiOkResponse({type:StatusResultDto})

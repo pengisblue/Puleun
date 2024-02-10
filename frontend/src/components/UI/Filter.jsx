@@ -14,7 +14,7 @@ export default function Filter({
     <div>
       <select
         onChange={handleChange}
-        className="mt-6 block w-full rounded-lg border-gray-100 text-gray-800 shadow-md
+        className="mt-2 block w-full rounded-lg border-gray-100 text-gray-800 shadow-md
         focus:border-amber-100 focus:ring focus:ring-amber-200 focus:ring-opacity-50"
       >
         <option value="" className={"hidden"}>

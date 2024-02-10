@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Exclude, Expose } from 'class-transformer';
-import {IsString, Length} from 'class-validator';
+import { Exclude, Expose, Type } from 'class-transformer';
+import {IsString, Length, IsNumber, IsDate} from 'class-validator';
+import { isDate } from 'util/types';
 
 @Exclude()
 export class UserLoginDto{
@@ -36,4 +37,29 @@ export class LoginDto{
     @Length(1, 30)
     @Expose()
     user_password: string;
+}
+
+@Exclude()
+export class AllUserDto{
+    @IsNumber()
+    @ApiProperty({example: 1})
+    user_id: number;
+
+    @IsString()
+    nickname: string;
+
+    @IsDate()
+    birth_DT: Date;
+
+    @IsString()
+    gender: string;
+
+    @IsString()
+    profile_img_url: string;
+
+    @IsNumber()
+    parent_id: number;
+
+    // @Type(()=> UserLoginDto)
+    // userLoginDto: UserLoginDto[];
 }

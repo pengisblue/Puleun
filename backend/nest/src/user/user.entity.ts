@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, JoinColumn, OneToOne } from 'typeorm';
 import { Pot } from '../pot/pot.entity';
 import { Talk } from 'src/talk/talk.entity';
+import { UserLogin } from 'src/user-login/user-login.entity';
 
 @Entity()
 export class User {
@@ -17,7 +18,7 @@ export class User {
   @Column({ length: 1, nullable: false })
   gender: string;
 
-  @Column({ length: 200, nullable: true })
+  @Column({ length: 200, nullable: true, default: __dirname + "../upload/image/noImage.jpg"})
   profile_img_url: string;
 
   @ManyToOne(() => User, (user) => user.user_id)
@@ -32,4 +33,7 @@ export class User {
 
   @OneToMany(() => Talk, talk => talk.talk_id)
   talk: Talk[];
+
+  @OneToOne(() => UserLogin, userLogin => userLogin.user)
+  userLogin: UserLogin;
 }

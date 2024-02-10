@@ -22,6 +22,48 @@ def record_wav(file_path, duration=5, sample_rate=44100):
     write_wav(file_path, wav_data, sample_rate)
     print(f"File saved at: {file_path}")
 
+# ----------------------------------------------------------------
+# def record_wav(file_path, sample_rate=44100, threshold=0.5, timeout=5):
+#     print("Voice detection started. Speak now...")
+
+#     # 오디오 데이터를 담을 리스트
+#     recorded_frames = []
+#     start_recording = False
+#     last_voice_time = None
+
+#     def callback(indata, frames, time, status):
+#         nonlocal start_recording, last_voice_time
+#         if status:
+#             print(status)
+        
+#         # 목소리 감지
+#         if np.any(indata > threshold):
+#             if not start_recording:
+#                 print("Recording...")
+#             start_recording = True
+#             last_voice_time = time.inputBufferAdcTime
+
+#         # 녹음 중 목소리가 없는 경우
+#         if start_recording and (time.inputBufferAdcTime - last_voice_time) > timeout:
+#             print("Silence detected, stop recording.")
+#             raise sd.CallbackAbort  # 콜백 중단
+
+#         if start_recording:
+#             recorded_frames.append(indata.copy())
+
+#     # InputStream으로 오디오 스트리밍 처리
+#     with sd.InputStream(callback=callback, channels=1, samplerate=sample_rate, dtype='int16'):
+#         try:
+#             while True:
+#                 sd.sleep(100)
+#         except sd.CallbackAbort:
+#             pass  # 콜백 중단 시 루프 종료
+
+#     data = np.concatenate(recorded_frames, axis=0)
+#     write_wav(file_path, data.flatten(), sample_rate)
+#     print(f"File saved at: {file_path}")
+#    ----------------------------------------------------------------
+
 def write_wav(file_path, data, sample_rate):
     with wave.open(file_path, 'w') as wf:
         wf.setnchannels(1)
@@ -48,9 +90,12 @@ def speech_to_text(file_path, language_code='ko-KR'):
 
     # print("response: ",response)
 
+    transcript = ""
     for result in response.results:
         print("Transcript: {}".format(result.alternatives[0].transcript))
+        transcript += result.alternatives[0].transcript + " "
 
+    return transcript.strip()
 
 if __name__ == "__main__":
     wav_file_path = "recorded_audio.wav"

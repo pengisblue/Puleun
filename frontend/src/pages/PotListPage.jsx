@@ -63,7 +63,7 @@ export default function PotListPage() {
   };
 
   return (
-    <div className="">
+    <div className="px-6">
       <header className="m-2 flex items-center justify-between">
         <h1 className="text-title">화분 목록</h1>
         <div className="flex gap-2">
@@ -78,7 +78,7 @@ export default function PotListPage() {
       </header>
 
       {/* 주인 선택 필터 */}
-      <div className="ms-auto w-60">
+      <div className="ms-auto mt-6 w-60">
         <Filter
           targetList={userList}
           filterKey="userId"
@@ -90,18 +90,18 @@ export default function PotListPage() {
       </div>
 
       {/* 화분 카드 */}
-      <div className="my-6 grid w-full grid-cols-2 place-items-center md:grid-cols-3 lg:grid-cols-4">
+      <div className="my-6 grid w-full grid-cols-2 place-items-center">
         {filteredPots.map((pot) => (
           <div
             key={pot.potId}
             onClick={goPotDetail(pot.potId)}
             className="cursor-pointer"
           >
-            <PotSimpleCard {...pot} />
+            <PotSimpleCard {...pot} className="w-36" />
           </div>
         ))}
         <div onClick={goCreatPot} className="cursor-pointer">
-          <PotAddSimpleCard />
+          <PotAddSimpleCard className="w-36" />
         </div>
       </div>
     </div>
