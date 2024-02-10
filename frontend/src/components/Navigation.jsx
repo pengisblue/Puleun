@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { Disclosure, Menu, Switch, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Session from "react-session-api";
-import navImg from "../test/pot2-removebg-preview.png";
+import navImg from "../asset/log.svg";
 import kidImg from "../test/kid3.png";
 
 const navigation = [
@@ -36,7 +36,7 @@ export default function Navigation() {
   return (
     <Disclosure
       as="nav"
-      className="max-w-page fixed top-0 z-20 w-full bg-green-200"
+      className="fixed top-0 z-20 w-full max-w-page bg-green-200"
     >
       {({ open }) => (
         <>
