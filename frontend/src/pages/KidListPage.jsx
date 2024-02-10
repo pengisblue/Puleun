@@ -56,7 +56,7 @@ export default function KidListPage() {
   }, []);
 
   return (
-    <div className="">
+    <div className="px-6">
       <header className="m-2 flex items-center justify-between">
         <h1 className="text-title">아이 목록</h1>
         <div className="flex gap-2">
@@ -69,7 +69,7 @@ export default function KidListPage() {
         </div>
       </header>
 
-      <div className="my-6 grid w-full grid-cols-1 place-items-center md:grid-cols-2 lg:grid-cols-3">
+      <div className="my-6 grid w-full grid-cols-1 place-items-center">
         {handledList()}
         <div onClick={goCreateKid} className="cursor-pointer">
           <AddDetailCard text="아이 추가하기" size="w-80 h-44" />

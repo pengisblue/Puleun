@@ -38,7 +38,7 @@ export default function KidDetailPage() {
   }, [user_id]);
 
   return (
-    <div>
+    <div className="px-6">
       <div className="mb-12 mt-6 flex flex-col gap-4">
         <h1 className="text-xl font-bold">아이 정보</h1>
         <div className="grid grid-flow-row-dense grid-cols-8 gap-2">
@@ -71,7 +71,7 @@ export default function KidDetailPage() {
         </div>
         <section className="mt-5">
           <h1 className="text-xl font-bold">화분 정보</h1>
-          <div className="my-6 grid w-full grid-cols-1 place-items-center md:grid-cols-2 lg:grid-cols-2">
+          <div className="my-6 grid w-full grid-cols-2 place-items-center">
             {user.pots.map((pot) => (
               <div
                 key={pot.pot_id}

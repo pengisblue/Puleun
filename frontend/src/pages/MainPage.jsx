@@ -33,42 +33,36 @@ export default function MainPage() {
   };
 
   return (
-    <>
-      <div className="flex flex-col gap-8">
-        {/* 화분 상태 요약 */}
-        <section>
-          <div
-            onClick={goPotList}
-            className="mb-3 flex cursor-pointer items-center justify-between"
-          >
-            <h1 className="text-title">우리 화분</h1>
-            <img src={chevron} alt="goPotList" className="w-8 cursor-pointer" />
-          </div>
-          <div className="flex items-center">
-            <PotSwiper potList={potDetailList} />
-          </div>
-        </section>
+    <div className="flex flex-col gap-8 px-6">
+      {/* 화분 상태 요약 */}
+      <section>
+        <div
+          onClick={goPotList}
+          className="mb-3 flex cursor-pointer items-center justify-between"
+        >
+          <h1 className="text-title">우리 화분</h1>
+          <img src={chevron} alt="goPotList" className="w-8 cursor-pointer" />
+        </div>
+        <div className="flex items-center">
+          <PotSwiper potList={potDetailList} />
+        </div>
+      </section>
 
-        {/* 새로운 대화 */}
-        <section>
-          <div
-            onClick={goTalkList}
-            className="mb-3 flex cursor-pointer items-center justify-between"
-          >
-            <h1 className="text-title">새로운 대화</h1>
-            <img
-              src={chevron}
-              alt="goTalkList"
-              className="w-8 cursor-pointer"
-            />
-          </div>
-          <div className="mx-2 flex flex-wrap gap-1">
-            {NEW_TALK_LIST.map((talk) => (
-              <TalkTitleCard key={talk.talkID} {...talk} />
-            ))}
-          </div>
-        </section>
-      </div>
-    </>
+      {/* 새로운 대화 */}
+      <section>
+        <div
+          onClick={goTalkList}
+          className="mb-3 flex cursor-pointer items-center justify-between"
+        >
+          <h1 className="text-title">새로운 대화</h1>
+          <img src={chevron} alt="goTalkList" className="w-8 cursor-pointer" />
+        </div>
+        <div className="mx-2 flex flex-wrap gap-1">
+          {NEW_TALK_LIST.map((talk) => (
+            <TalkTitleCard key={talk.talkID} {...talk} />
+          ))}
+        </div>
+      </section>
+    </div>
   );
 }
