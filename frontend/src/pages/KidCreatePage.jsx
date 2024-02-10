@@ -2,11 +2,11 @@ import { useState } from "react";
 import Button from "../components/UI/Button";
 import Input from "../components/UI/Input";
 import KidProfileImage from "../components/Kids/KidProfileImage";
-import kidImg from "../test/kid1.png";
+import defaultImg from "../asset/no_profile_img.png";
 
 export default function KidCreatePage() {
   // 이미지
-  const [preview, setPreview] = useState(kidImg);
+  const [preview, setPreview] = useState(defaultImg);
   const [inputImg, setInputImg] = useState(null);
   const handleInputImg = (event) => {
     const files = event.target.files;
