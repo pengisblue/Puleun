@@ -88,7 +88,7 @@ export default function TalkDetailPage() {
       </div>
 
       {/* 대화 */}
-      <div className="flex flex-col gap-4 px-6 pt-24">
+      <div className="flex flex-col gap-6 px-6 pt-24 py-4">
         {sentence.map((chat) =>
           chat.talker === "kid" ? (
             <div className="me-auto" key={chat.id}>

@@ -131,5 +131,53 @@ export const TALK_DETAIL = {
       content: "다음엔 두 그릇 먹어봐!",
       file: "audio",
     },
+    {
+      id: 5,
+      talker: "kid",
+      content: "오늘 점심에 볶음밥이 너무 맛있었어",
+      file: "audio",
+    },
+    {
+      id: 6,
+      talker: "gpt",
+      content: "와, 볶음밥 좋지! 뭐 들어갔어? 다음엔 같이 먹어보자!",
+      file: "audio",
+    },
+    {
+      id: 7,
+      talker: "kid",
+      content: "두그릇 먹고싶었는데 못먹어서 아쉬워",
+      file: "audio",
+    },
+    {
+      id: 8,
+      talker: "gpt",
+      content: "다음엔 두 그릇 먹어봐!",
+      file: "audio",
+    },
+    {
+      id: 9,
+      talker: "kid",
+      content: "오늘 점심에 볶음밥이 너무 맛있었어",
+      file: "audio",
+    },
+    {
+      id: 10,
+      talker: "gpt",
+      content: "와, 볶음밥 좋지! 뭐 들어갔어? 다음엔 같이 먹어보자!",
+      file: "audio",
+    },
+    {
+      id: 11,
+      talker: "kid",
+      content: "두그릇 먹고싶었는데 못먹어서 아쉬워",
+      file: "audio",
+    },
+    {
+      id: 12,
+      talker: "gpt",
+      content: "다음엔 두 그릇 먹어봐!",
+      file: "audio",
+    },
   ],
 };

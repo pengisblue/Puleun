@@ -1,6 +1,6 @@
 import UserProfileImage from "../Users/UserProfileImage";
-import play from "../../asset/play_circle.svg"
-import pause from "../../asset/pause_circle.svg"
+import play from "../../asset/play_circle.svg";
+import pause from "../../asset/pause_circle.svg";
 import { useState } from "react";
 
 export default function KidChatBubble({ children, userImg, userName }) {
@@ -18,6 +18,8 @@ export default function KidChatBubble({ children, userImg, userName }) {
       <div className="flex flex-col gap-1">
         <div className="flex items-center gap-2">
           <span className="font-semibold">{userName}</span>
+
+          {/* 음성 재생 */}
           <img
             onClick={handlePlayState}
             src={playState ? pause : play}
@@ -25,7 +27,11 @@ export default function KidChatBubble({ children, userImg, userName }) {
             alt="play button"
           />
         </div>
-        <p>{children}</p>
+
+        {/* 텍스트 */}
+        <div className="max-w-56 text-wrap rounded-b-2xl rounded-tr-2xl bg-amber-200 p-4">
+          <p>{children}</p>
+        </div>
       </div>
     </div>
   );
