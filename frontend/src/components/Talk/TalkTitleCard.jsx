@@ -3,7 +3,7 @@ import PotProfileImage from "../Pots/PotProfileImage";
 import Star from "../UI/star";
 import wateringCan from "../../asset/watering_can.svg";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 
 export default function TalkTitleCard({
@@ -16,6 +16,7 @@ export default function TalkTitleCard({
   isFavorite,
 }) {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [starState, setStarState] = useState(isFavorite);
   const handleStar = () => {
@@ -33,7 +34,7 @@ export default function TalkTitleCard({
   const goTalkDetail = function (talkID) {
     return () => {
       handleRead();
-      navigate(`/talk/${talkID}`);
+      navigate(`/talk/${talkID}`, { state: { from: location } });
     };
   };
 

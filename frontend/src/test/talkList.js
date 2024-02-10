@@ -103,6 +103,7 @@ export const TALK_DETAIL = {
   created_DT: "2024-02-04 18:44",
   talkTitle: "2월4일18시의 대화",
   userImg: kidImg1,
+  userName: "성주",
   potImg: potImg1,
   isFavorite: false,
   sentence: [

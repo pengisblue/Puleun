@@ -1,5 +1,7 @@
-export default function GptChatBubble({children}) {
+export default function GptChatBubble({ children }) {
   return (
-    <div>gpt: {children}</div>
-  )
+    <div className="">
+      <p>{children}</p>
+    </div>
+  );
 }
