@@ -17,7 +17,7 @@ export default function PotDetailCard({
   daysSincePlanting,
   // css 정보
   size,
-  display,
+  nameDisplay,
 }) {
   // 이름이 받침으로 끝나는지 확인
   function hasCoda(name) {
@@ -49,7 +49,7 @@ export default function PotDetailCard({
   return (
     <BaseDetailCard size={size}>
       <div className="grid grid-cols-12 place-content-center gap-1">
-        <h1 className={`col-span-12 flex flex-wrap font-bold ${textSize(userName, potName)} ${display}`}>
+        <h1 className={`col-span-12 flex flex-wrap font-bold ${textSize(userName, potName)} ${nameDisplay}`}>
           <span className="me-2">
             {userName}
             {selectPostposition(userName)}

@@ -1,7 +1,7 @@
 import { Body, Controller, Param, Post } from '@nestjs/common';
 import { SentenceService } from './sentence.service';
 import { ApiTags } from '@nestjs/swagger';
-import { SentenceCreateDto } from './sentence-res.dto';
+import { SentenceCreateDto } from './sentence-req.dto';
 
 @Controller('sentence')
 @ApiTags('sentence')

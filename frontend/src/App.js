@@ -45,7 +45,7 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <div className="min-h-screen bg-amber-overlay">
+    <div className="min-h-screen max-w-page mx-auto bg-amber-overlay">
       <RouterProvider router={router} />
     </div>
   );

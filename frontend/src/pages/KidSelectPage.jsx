@@ -27,8 +27,8 @@ export default function KidSelectPage() {
   }, []);
 
   return (
-    <div className="">
-      <div className="my-6 grid w-full grid-cols-2 place-items-center md:grid-cols-3 lg:grid-cols-4">
+    <div className="px-6">
+      <div className="my-6 grid w-full grid-cols-2 place-items-center">
         {kidList.map((kid) => (
           <div
             key={kid.user_id}
@@ -37,7 +37,7 @@ export default function KidSelectPage() {
           >
             <BaseSimpleCard>
               <div className="flex h-full flex-col justify-evenly">
-                {/* 화분 사진 */}
+                {/* 아이 사진 */}
                 <div className="mx-auto w-full overflow-hidden rounded-lg">
                   <div className="flex aspect-square items-center overflow-hidden">
                     <img
@@ -48,7 +48,7 @@ export default function KidSelectPage() {
                   </div>
                 </div>
 
-                {/* 아이 사진 & 화분 이름 */}
+                {/* 아이 이름 */}
                 <div className="flex items-center gap-2">
                   <div className="text- basis-3/4">{kid.nickname}</div>
                 </div>

@@ -18,7 +18,7 @@ export class User {
   @Column({ length: 1, nullable: false })
   gender: string;
 
-  @Column({ length: 200, nullable: true })
+  @Column({ length: 200, nullable: true, default: __dirname + "../upload/image/noImage.jpg"})
   profile_img_url: string;
 
   @ManyToOne(() => User, (user) => user.user_id)

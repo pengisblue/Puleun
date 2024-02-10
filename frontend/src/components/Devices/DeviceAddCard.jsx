@@ -1,4 +1,4 @@
-import DeviceBaseCard from "../UI/DeviceBaseCard";
+import DeviceBaseCard from "./DeviceBaseCard";
 import plus from "../../asset/plus_circle_slate.svg";
 
 export default function DeviceAddCard() {

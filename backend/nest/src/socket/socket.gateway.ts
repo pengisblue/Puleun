@@ -44,10 +44,11 @@ export class SocketGateway {
   @SubscribeMessage('stt')
   async saveSttFile( @ConnectedSocket() client: Socket, 
         @MessageBody('text') text: string, 
-        @MessageBody('talk_id') talk_id: string, 
+        @MessageBody('talk_id') talk_id: number, 
         @MessageBody('file') base64Data: string): Promise<string>{
     if (text==null) text=""
     if (base64Data==null) base64Data=""
+    console.log(talk_id)
     const returnData = await this.socketService.stt(text, talk_id, base64Data)
     try{
       client.emit('tts', {base64Data:returnData} );
@@ -71,7 +72,7 @@ export class SocketGateway {
     dto.pot_id = pot_id
     dto.code = 'T'
     this.calenderService.save(dto)
-    const talk_id = await this.talkService.talkStart()
+    const talk_id = await this.talkService.saveTalk("푸른 푸르른", "2023-02-01")
     client.emit('talk_id',{talk_id})
   }
 

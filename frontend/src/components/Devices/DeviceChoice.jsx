@@ -1,5 +1,5 @@
 import DeviceCard from "./DeviceCard";
-import DeviceBaseCard from "../UI/DeviceBaseCard";
+import DeviceBaseCard from "./DeviceBaseCard";
 import DeviceAddCard from "./DeviceAddCard";
 import DeviceAddModal from "./DeviceAddModal";
 import radioOff from "../../asset/radio_off.svg";
@@ -31,7 +31,7 @@ export default function DeviceChoice({ deviceList, onSelect, selectedDevice }) {
       <Swiper slidesPerView={"auto"}>
         {/* 기기 목록 */}
         {deviceList.map((device) => (
-          <SwiperSlide key={device.diviceId} className="me-2 w-auto-important">
+          <SwiperSlide key={device.diviceId} className="me-4 w-auto-important">
             <RadioGroup.Option value={device} className="outline-none">
               {({ active, checked }) => (
                 <DeviceBaseCard>
