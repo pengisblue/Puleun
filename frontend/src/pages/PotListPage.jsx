@@ -3,14 +3,14 @@ import PotAddSimpleCard from "../components/Pots/PotAddSimpleCard";
 import Filter from "../components/UI/Filter";
 import plus from "../asset/plus_slate.svg";
 import cog from "../asset/cog-8-tooth.svg";
-import axios from "axios"
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../config/config";
 
 // 하드코딩 테스트용 데이터
-import { potSimpleList } from "../test/potList";
-import { userList } from "../test/userList";
+// import { potSimpleList } from "../test/potList";
+// import { userList } from "../test/userList";
 
 // api1 = {
 //   화분 아이디,
@@ -41,24 +41,53 @@ export default function PotListPage() {
     navigate("/pot/create");
   };
 
+  // axios 요청
   useEffect(() => {
-    axios.get(`${API_URL}/pot/user/1`);
-  });
+    // 전체 화분 리스트
+    // 16번 사용자로 로그인한 경우 (로그인 로직 구현 후 수정해야함)
+    axios
+      .get(`${API_URL}/pot/16`)
+      .then((res) => {
+        const potList = res.data.map((item) => ({
+          potId: item.pot_id,
+          potName: item.pot_name,
+          potImgUrl: item.pot_img_url,
+          userId: item.user_id,
+          userImgUrl: item.profile_img_url,
+        }));
+        setPotList(potList);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    // 유저 리스트 (필터목록)
+    // 16번 사용자로 로그인한 경우 (로그인 로직 구현 후 수정해야함)
+    axios
+      .get(`${API_URL}/user/child/16`)
+      .then((res) => {
+        const userList = res.data.map((item) => ({
+          userId: item.user_id,
+          userName: item.nickname,
+        }));
+        setUserList(userList);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   // 주인 필터링 확인
   useEffect(() => {
     if (selectedUser) {
-      setFilteredPots(
-        potSimpleList.filter((pot) => pot.userId === selectedUser),
-      );
+      setFilteredPots(potList.filter((pot) => pot.userId === selectedUser));
     } else {
-      setFilteredPots(potSimpleList);
+      setFilteredPots(potList);
     }
-  }, [selectedUser]);
+  }, [selectedUser, potList]);
 
   // 필터링된 주인 화분만 띄우기
   const handleUserChange = (value) => {
-    console.log(value);
     setSelectedUser(value);
   };
 
