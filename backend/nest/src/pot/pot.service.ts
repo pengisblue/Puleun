@@ -41,7 +41,7 @@ export class PotService {
             .select(['pot.pot_id', 'pot.pot_name', 'pot.pot_species','pot.createdAt', 
                         'user.parent_id', 'pot.temperature','pot.min_temperature', 'pot.max_temperature',
                         'pot.min_moisture', 'pot.max_moisture',
-                        'pot.moisture', 'pot_img_url', 'user.user_id', 'user.nickname',
+                        'pot.moisture', 'pot.pot_img_url', 'user.user_id', 'user.nickname',
                         'user.profile_img_url', 'calender.code', 'calender.createdAt'])                         
             .getMany();
     
