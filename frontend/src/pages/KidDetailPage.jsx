@@ -3,8 +3,10 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import KidProfileImage from "../components/Kids/KidProfileImage";
 import PotSimpleCard from "../components/Pots/PotSimpleCard";
-import kidImg from "../test/kid1.png";
 import Button from "../components/UI/Button";
+
+// 하드코딩용
+import kidImg from "../test/kid1.png";
 
 export default function KidDetailPage() {
   const { userId } = useParams();

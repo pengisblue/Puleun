@@ -8,10 +8,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../config/config";
 
-// 하드코딩 테스트용 데이터
-// import { potSimpleList } from "../test/potList";
-// import { userList } from "../test/userList";
-
 // api1 = {
 //   화분 아이디,
 //   화분 이름,

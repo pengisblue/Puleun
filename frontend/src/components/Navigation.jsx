@@ -4,6 +4,8 @@ import { Disclosure, Menu, Switch, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Session from "react-session-api";
 import navImg from "../asset/log.svg";
+
+// 하드코딩용
 import kidImg from "../test/kid3.png";
 
 const navigation = [
