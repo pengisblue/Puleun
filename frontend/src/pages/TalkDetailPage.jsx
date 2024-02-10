@@ -59,18 +59,23 @@ export default function TalkDetailPage() {
   return (
     <div>
       {/* 타이틀 */}
-      <div className="fixed left-0 top-16 flex w-full items-center justify-between gap-2 bg-amber-100 px-4 py-3">
+      <div className="fixed top-16 flex w-full max-w-page items-center justify-between gap-2 border-b-2 border-amber-600 bg-amber-100 px-4 py-3">
         {/* 뒤로가기 */}
-        <img onClick={handleBack} src={chevron} alt="back" className="w-8 cursor-pointer" />
+        <img
+          onClick={handleBack}
+          src={chevron}
+          alt="back"
+          className="w-8 cursor-pointer"
+        />
         {/* 제목, 화분, 날짜 */}
         <div className="flex flex-col gap-2">
-          <h1 className="max-w-64 truncate text-xl">{talkTitle}</h1>
-          <div className="ms-auto flex items-center gap-2">
+          <div className="flex items-center gap-2">
             <div className="w-6 overflow-hidden rounded-full">
               <PotProfileImage imgUrl={potImg} alt="pot" />
             </div>
-            <p>{createdAt}</p>
+            <h1 className="max-w-52 truncate text-xl">{talkTitle}</h1>
           </div>
+          <p className="ms-auto text-xs">{createdAt}</p>
         </div>
         {/* 즐겨찾기 */}
         <div className="p-1">
@@ -83,7 +88,7 @@ export default function TalkDetailPage() {
       </div>
 
       {/* 대화 */}
-      <div className="flex flex-col pt-28">
+      <div className="flex flex-col gap-4 px-6 pt-24">
         {sentence.map((chat) =>
           chat.talker === "kid" ? (
             <div className="me-auto" key={chat.id}>
@@ -100,16 +105,24 @@ export default function TalkDetailPage() {
       </div>
 
       {/* 재생바 */}
-      <div className="fixed bottom-0 left-0 flex w-full justify-center bg-amber-100 p-4">
+      <div className="fixed bottom-0 flex w-full max-w-page justify-center bg-amber-100 p-4">
         <div className="flex w-full max-w-80 justify-between gap-4">
-          <img src={rewind} className="w-10 cursor-pointer" alt="rewind button" />
+          <img
+            src={rewind}
+            className="w-10 cursor-pointer"
+            alt="rewind button"
+          />
           <img
             onClick={handlePlayState}
             src={playState ? pause : play}
             className="w-8 cursor-pointer"
             alt="play button"
           />
-          <img src={foward} className="w-10 cursor-pointer" alt="foward button" />
+          <img
+            src={foward}
+            className="w-10 cursor-pointer"
+            alt="foward button"
+          />
         </div>
       </div>
     </div>

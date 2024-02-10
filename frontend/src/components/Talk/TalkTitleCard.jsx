@@ -56,7 +56,7 @@ export default function TalkTitleCard({
 
       {/* 대화 내용 */}
       <div
-        onClick={handleRead}
+        onClick={goTalkDetail(talkID)}
         className={`h-full w-full cursor-pointer p-3 ${isReadState ? "bg-amber-50" : "bg-amber-200"}`}
       >
         <div className="flex justify-between flex-wrap">
