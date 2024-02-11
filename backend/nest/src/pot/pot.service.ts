@@ -38,7 +38,7 @@ export class PotService {
             .andWhere('pot.collection_FG= :flag', {flag: false})
             .andWhere('user.user_id= :parent_id', {parent_id})
             .orWhere('user.parent_id= :parent_id', {parent_id})
-            .select(['pot.pot_id', 'pot.pot_name', 'pot.pot_species','pot.createdAt', 
+            .select(['pot.pot_id', 'pot.pot_name', 'pot.pot_species','pot.planting_day', 
                         'user.parent_id', 'pot.temperature','pot.min_temperature', 'pot.max_temperature',
                         'pot.min_moisture', 'pot.max_moisture',
                         'pot.moisture', 'pot_img_url', 'user.user_id', 'user.nickname',
@@ -60,7 +60,7 @@ export class PotService {
                 else lastTalkDay = Math.floor((now.getTime() - arr.createdAt.getTime())/(1000 * 24 * 24 * 60));
             })
 
-            const together_day = await this.potStateService.theDayWeWereTogether(element.createdAt);
+            const together_day = await this.potStateService.theDayWeWereTogether(element.planting_day);
             const moisState = await this.potStateService.moisState(element.min_moisture, element.max_moisture, element.moisture);
             const tempState = await this.potStateService.tempState(element.min_temperature, element.max_temperature, element.temperature);
 
@@ -76,7 +76,7 @@ export class PotService {
             statusDto.temp_state = tempState;
             statusDto.mois_state = moisState
             statusDto.last_water = lastWaterDay;
-            statusDto.planting_day = element.createdAt;
+            statusDto.planting_day = element.planting_day;
             statusDto.together_day = together_day;
             statusDto.last_talk = lastTalkDay;
             statusDto.parent_id = element.user.parent_id;
