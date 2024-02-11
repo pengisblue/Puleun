@@ -41,8 +41,21 @@ export class UserController {
     @ApiOperation({ summary: '유저 등록 & 아이 등록'})
     @ApiOkResponse({ type:'1', description:'1 for SUCCESS' })
     @ApiNotFoundResponse({ description:'wrong data request' })
-    async save(@Body() user:UserWithUserLoginDto): Promise<string>{
-        await this.userService.save(user)
+    @UseInterceptors(FileInterceptor('profile_img'))
+    async save(
+        @Body() user:UserWithUserLoginDto,
+        @UploadedFile(
+            new ParseFilePipeBuilder()
+                .addFileTypeValidator({
+                    fileType: 'image'
+                })
+                .build({
+                    fileIsRequired: false,
+                    errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+                })
+        ) file?: Express.Multer.File,
+        ): Promise<string>{
+        await this.userService.save(user, file)
         return 'SUCCESS';
     }
 
@@ -52,16 +65,18 @@ export class UserController {
     @ApiOkResponse({ type:'1', description:'1 for SUCCESS'})
     @UseInterceptors(FileInterceptor('profile_img'))
     async update(
+        @Param('user_id') user_id:number, @Body('user') user:UpdateUserDto,
         @UploadedFile(
             new ParseFilePipeBuilder()
                 .addFileTypeValidator({
                     fileType: 'image'
                 })
                 .build({
+                    fileIsRequired: false,
                     errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
                 })
-        ) file: Express.Multer.File,
-        @Param('user_id') user_id:number, @Body('user') user:UpdateUserDto): Promise<number>{
+        ) file?: Express.Multer.File,
+        ): Promise<number>{
             return this.userService.update(user_id, user, file)
     }
     

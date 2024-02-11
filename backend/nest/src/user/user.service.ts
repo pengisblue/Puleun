@@ -38,13 +38,24 @@ export class UserService {
         return user;
     }
 
-    async save(data: UserWithUserLoginDto): Promise<number>{
+    async save(data: UserWithUserLoginDto, file): Promise<number>{
         const user = this.userRepository.create(data);
         const userLogin = await this.userLoginService.create(data);
         try{
             this.userLoginService.save(userLogin);
             if (user.parent_id == 0) user.parent_id = null // parent_id==null인 경우 사용자 본인
             await this.userRepository.save(user)
+            
+            try{
+                const split = file.originalname.split('.')
+                const extension = split[split.length -1]
+                const filePath = join(process.cwd(), '/upload/profile/')
+                const fileName = user.user_id + '.' + extension
+                fs.writeFileSync(filePath+fileName, file.buffer);
+                data.profile_img_url = filePath+fileName
+            } catch (e){
+                data.profile_img_url = join(process.cwd(), '/upload/profile/noImg.png')
+            }
             return 1;
         }catch(e){
             throw new HttpException('Bad_REQUEST', HttpStatus.BAD_REQUEST)
@@ -63,7 +74,6 @@ export class UserService {
             fs.writeFileSync(filePath+fileName, file.buffer);
             data.profile_img_url = filePath+fileName
         } catch (e){
-            console.log(e)
             data.profile_img_url = join(process.cwd(), '/upload/profile/noImg.png')
         }
         try{
