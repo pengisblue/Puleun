@@ -1,10 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Exclude, Expose, Type } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 import {IsString, Length, IsNumber, IsDate} from 'class-validator';
-import { isDate } from 'util/types';
 
 @Exclude()
-export class UserLoginDto{
+export class UserLoginSaveDto{
     @ApiProperty({example: '실제 이름'})
     @IsString()
     @Length(1, 10)

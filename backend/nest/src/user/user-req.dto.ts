@@ -1,9 +1,9 @@
-import { IsDate, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsDate, IsNumber, IsOptional, IsString, Length } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
-import { Exclude, Type } from "class-transformer";
+import { Expose, Type } from "class-transformer";
 
 export class CreateUserDto{
-    @ApiProperty({example:'박지예'})
+    @ApiProperty({example:'박지예', description: '유저의 별칭'})
     @IsString()
     nickname: string;
 
@@ -20,6 +20,8 @@ export class CreateUserDto{
     @Type(()=>Number)
     parent_id: number;
 
+    @IsString()
+    @IsOptional()
     profile_img_url?: string="";
 }
 
@@ -40,4 +42,24 @@ export class UpdateUserDto{
     gender: string;
 
     profile_img_url?: string="";
+}
+
+export class UserWithUserLoginDto extends CreateUserDto{
+    @ApiProperty({example: '실제 이름'})
+    @IsString()
+    @Length(1, 10)
+    @Expose()
+    user_name: string;
+
+    @ApiProperty({example: 'email@purun.com'})
+    @IsString()
+    @Length(1, 30)
+    @Expose()
+    user_email: string;
+
+    @ApiProperty({example: 1234})
+    @IsString()
+    @Length(1, 30)
+    @Expose()
+    user_password: string;
 }
