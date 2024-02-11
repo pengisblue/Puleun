@@ -1,20 +1,19 @@
-import { Body, Controller, Delete, Get, HttpStatus, Inject, Param, ParseFilePipeBuilder, Post, Put, UploadedFile, UseInterceptors, forwardRef } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, ParseFilePipe, ParseFilePipeBuilder, Post, Put, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDto, UserWithUserLoginDto } from './user-req.dto';
-import { ApiBody, ApiConsumes, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ApiExtraModels } from "@nestjs/swagger";
 import { UserDetailDto, UserListDto } from './user-res.dto';
 import { User } from './user.entity';
-import { UserLoginService } from 'src/user-login/user-login.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('user')
 @ApiTags('User')
 @ApiExtraModels(UserListDto, CreateUserDto, UpdateUserDto)
 export class UserController {
-    constructor(private readonly userService: UserService,
-                @Inject(forwardRef(() => UserLoginService))
-                private readonly userLoginService: UserLoginService){}
+    constructor(
+        private readonly userService: UserService,
+    ){}
 
     @Get()
     @ApiOperation({summary: '모든 유저 조회'})
@@ -53,8 +52,7 @@ export class UserController {
                     fileIsRequired: false,
                     errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
                 })
-        ) file?: Express.Multer.File,
-        ): Promise<string>{
+        ) file?: Express.Multer.File): Promise<string>{
         await this.userService.save(user, file)
         return 'SUCCESS';
     }
@@ -75,8 +73,7 @@ export class UserController {
                     fileIsRequired: false,
                     errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
                 })
-        ) file?: Express.Multer.File,
-        ): Promise<number>{
+        ) file?: Express.Multer.File,): Promise<number>{
             return this.userService.update(user_id, user, file)
     }
     
