@@ -39,7 +39,6 @@ export class Pot {
 
   @Column({ length: 200, nullable: false, default: 'noimage.png' })
   pot_img_url: string;
-
   
   @Column({ type: 'int', nullable: true})
   happy_cnt: number;
