@@ -1,11 +1,12 @@
-import { Body, Controller, Delete, Get, Inject, Param, Post, Put, forwardRef } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Inject, Param, ParseFilePipeBuilder, Post, Put, UploadedFile, UseInterceptors, forwardRef } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDto, UserWithUserLoginDto } from './user-req.dto';
-import { ApiBody, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ApiExtraModels } from "@nestjs/swagger";
 import { UserDetailDto, UserListDto } from './user-res.dto';
 import { User } from './user.entity';
 import { UserLoginService } from 'src/user-login/user-login.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('user')
 @ApiTags('User')
@@ -49,8 +50,19 @@ export class UserController {
     @ApiBody( { type: UpdateUserDto } )
     @ApiOperation({ summary: '유저 & 아이 정보 수정'})
     @ApiOkResponse({ type:'1', description:'1 for SUCCESS'})
-    async update(@Param('user_id') user_id:number, @Body('user') user:UpdateUserDto): Promise<number>{
-        return this.userService.update(user_id, user)
+    @UseInterceptors(FileInterceptor('profile_img'))
+    async update(
+        @UploadedFile(
+            new ParseFilePipeBuilder()
+                .addFileTypeValidator({
+                    fileType: 'image'
+                })
+                .build({
+                    errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+                })
+        ) file: Express.Multer.File,
+        @Param('user_id') user_id:number, @Body('user') user:UpdateUserDto): Promise<number>{
+            return this.userService.update(user_id, user, file)
     }
     
     @Delete(':user_id')
