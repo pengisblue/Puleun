@@ -85,13 +85,56 @@ export class PotService {
         return statusDtos;
     }
 
-    async potDetail(pot_id: number): Promise<Pot>{
-        return await this.potRepository.createQueryBuilder('pot')
-            .where({pot_id: pot_id, collection_FG: false})
-            // pot.user AS user라는 뜻
+    async potDetail(pot_id: number): Promise<PotWithStatusDto>{
+        const now = new Date();
+        const pot = await this.potRepository.createQueryBuilder('pot')
             .leftJoinAndSelect('pot.user', 'user', 'user.user_id = pot.user_id')
-            .select(['pot.pot_id', 'pot.pot_name', 'pot.pot_species', 'user.user_id', 'user.nickname'])
+            .leftJoinAndSelect('pot.calender', 'calender','calender.pot_id = pot.pot_id')
+            .where('(calender.pot_id IS NULL) OR (calender.pot_id, calender.code, calender.createdAt) IN ' +
+                '(SELECT pot_id, code, MAX(createdAt) ' +
+                'FROM calender ' +
+                'GROUP BY pot_id, code)'
+            )
+            .andWhere('pot.collection_FG= :flag', {flag: false})
+            .andWhere('pot.pot_id= :pot_id', {pot_id})
+            .select(['pot.pot_id', 'pot.pot_name', 'pot.pot_species','pot.planting_day', 
+                        'user.parent_id', 'pot.temperature','pot.min_temperature', 'pot.max_temperature',
+                        'pot.min_moisture', 'pot.max_moisture',
+                        'pot.moisture', 'pot.pot_img_url', 'user.user_id', 'user.nickname',
+                        'user.profile_img_url', 'calender.code', 'calender.createdAt'])                         
             .getOne();
+
+        const statusDto = new PotWithStatusDto();
+
+        let lastWaterDay = 0;
+        let lastTalkDay = 0;
+
+        pot.calender.forEach(arr => {
+            if(arr.code == 'W') lastWaterDay = Math.floor((now.getTime() - arr.createdAt.getTime())/(1000 * 24 * 24 * 60));
+            else lastTalkDay = Math.floor((now.getTime() - arr.createdAt.getTime())/(1000 * 24 * 24 * 60));
+        })
+
+        const together_day = await this.potStateService.theDayWeWereTogether(pot.planting_day);
+        const moisState = await this.potStateService.moisState(pot.min_moisture, pot.max_moisture, pot.moisture);
+        const tempState = await this.potStateService.tempState(pot.min_temperature, pot.max_temperature, pot.temperature);
+
+        statusDto.pot_id = pot.pot_id;
+        statusDto.pot_name = pot.pot_name;
+        statusDto.pot_img_url = pot.pot_img_url;
+        statusDto.pot_species = pot.pot_species;
+        statusDto.temperature = pot.temperature;
+        statusDto.moisture = pot.moisture;            
+        statusDto.user_id = pot.user.user_id;
+        statusDto.profile_img_url = pot.user.profile_img_url;
+        statusDto.nickname = pot.user.nickname;
+        statusDto.temp_state = tempState;
+        statusDto.mois_state = moisState
+        statusDto.last_water = lastWaterDay;
+        statusDto.planting_day = pot.planting_day;
+        statusDto.together_day = together_day;
+        statusDto.last_talk = lastTalkDay;
+        statusDto.parent_id = pot.user.parent_id;
+        return statusDto;
     }  
 
     async save(createPotDto: CreatePotDto) {
