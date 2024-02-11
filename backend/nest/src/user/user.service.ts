@@ -38,7 +38,7 @@ export class UserService {
         return user;
     }
 
-    async save(data: UserWithUserLoginDto, file): Promise<number>{
+    async save(data: UserWithUserLoginDto, file?: Express.Multer.File): Promise<number>{
         const user = this.userRepository.create(data);
         const userLogin = await this.userLoginService.create(data);
         try{
@@ -62,7 +62,7 @@ export class UserService {
         }
     }
 
-    async update(user_id: number, data: UpdateUserDto, file: Express.Multer.File): Promise<number>{
+    async update(user_id: number, data: UpdateUserDto, file?: Express.Multer.File): Promise<number>{
         const user = await this.userRepository.findOneBy({user_id})
         if (!user) throw new HttpException('Bad_REQUEST', HttpStatus.NOT_FOUND)
         

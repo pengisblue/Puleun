@@ -53,8 +53,12 @@ export class UserController {
                     errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
                 })
         ) file?: Express.Multer.File): Promise<string>{
-        await this.userService.save(user, file)
-        return 'SUCCESS';
+        try {
+            await this.userService.save(user, file)
+            return 'SUCCESS';
+        }catch (e){
+            return 'FAIL'
+        }
     }
 
     @Put(':user_id')
