@@ -66,4 +66,6 @@ export class Pot {
   @OneToMany( () => Talk, talk => talk.pot)
   talk: Talk[]
 
+  @Column({type: 'datetime', nullable: true, default: () => 'CURRENT_TIMESTAMP', name: 'planting_day'})
+  planting_day: Date;
 }

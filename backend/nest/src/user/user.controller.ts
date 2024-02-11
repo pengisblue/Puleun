@@ -1,16 +1,19 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Inject, Param, Post, Put, forwardRef } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto, UpdateUserDto } from './user-req.dto';
+import { CreateUserDto, UpdateUserDto, UserWithUserLoginDto } from './user-req.dto';
 import { ApiBody, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ApiExtraModels } from "@nestjs/swagger";
 import { UserDetailDto, UserListDto } from './user-res.dto';
 import { User } from './user.entity';
+import { UserLoginService } from 'src/user-login/user-login.service';
 
 @Controller('user')
 @ApiTags('User')
 @ApiExtraModels(UserListDto, CreateUserDto, UpdateUserDto)
 export class UserController {
-    constructor(private readonly userService: UserService){}
+    constructor(private readonly userService: UserService,
+                @Inject(forwardRef(() => UserLoginService))
+                private readonly userLoginService: UserLoginService){}
 
     @Get()
     @ApiOperation({summary: '모든 유저 조회'})
@@ -33,13 +36,13 @@ export class UserController {
     }
 
     @Post()
-    @ApiBody( { type: CreateUserDto } )
+    @ApiBody( { type: UserWithUserLoginDto } )
     @ApiOperation({ summary: '유저 등록 & 아이 등록'})
     @ApiOkResponse({ type:'1', description:'1 for SUCCESS' })
     @ApiNotFoundResponse({ description:'wrong data request' })
-    async save(@Body() user:CreateUserDto): Promise<number>{
-        console.log(user)
-        return this.userService.save(user)
+    async save(@Body() user:UserWithUserLoginDto): Promise<string>{
+        await this.userService.save(user)
+        return 'SUCCESS';
     }
 
     @Put(':user_id')

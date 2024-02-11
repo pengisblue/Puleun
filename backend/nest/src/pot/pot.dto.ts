@@ -248,7 +248,7 @@ export class PotWithStatusDto{
     @IsNumber()
     last_water: number;
 
-    @IsDate()
+    @IsString()
     planting_day: Date;
 
     @IsNumber()

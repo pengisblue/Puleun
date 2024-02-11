@@ -85,4 +85,10 @@ export class SocketGateway {
   async refresh( clientId: string): Promise<void>{
     this.server.to(clientId).emit('refresh')
   }
+
+  @SubscribeMessage('situation')
+  async situation(@ConnectedSocket() client: Socket, @MessageBody('pot_id') pot_id: number){
+    const situationDto = await this.socketService.situation(pot_id);
+    client.emit('situation', situationDto);
+  }
 }
