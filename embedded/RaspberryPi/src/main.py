@@ -28,8 +28,6 @@ status_flag = False # 백에 화분 상태 전송 여부 / hour
 is_talking = False # 대화 중
 talk_id = 1 # 대화 번호
 serial_number = get_serial_number() # 시리얼 번호
-transcript = None # stt 텍스트
-encoded_wav = None # stt 음성파일
 # 아두이노 포트 설정
 arduino_port = 'COM6'
 arduino_port_1 = '/dev/ttyACM0' # LCD
@@ -61,7 +59,14 @@ def login_result(data):
     is_owner = data['is_owner'] # 주인 연결 여부 받기
     pot_id = data['pot_id'] # 화분 고유 id 받기
     print(data)
-
+    if is_owner:
+        is_owner_event.set()
+        print('프로세스 실행')
+    else:
+        is_owner_event.clear()
+        print('프로세스 종료')
+    
+    
 
 # 대화 중 tts 실행
 @sio.on('tts')
@@ -79,7 +84,6 @@ def owner_change(data):
     #     'is_owner': bool,
     #     'name_voice': wavfile,
     # }
-    global is_owner_event
     is_owner = data['is_owner']
     base64_name_voice = data['name_voice']
     name_voice_path = "name_voice.wav"
@@ -179,17 +183,19 @@ def keyword():
     while True:
         is_owner_event.wait()
         print('keyword start')
-        hotword()
-        sio.emit('hot_word') # 서버에게 hot_word 요청
-        send_sig_to_arduino('hotword')
-        print("키워드인식", talk_id)
-        STT()   # 호출어 인식이 되면 stt 실행
-
+        if hotword():
+            sio.emit('hot_word') # 서버에게 hot_word 요청
+            send_sig_to_arduino('hotword')
+            print("키워드인식")
+            STT()   # 호출어 인식이 되면 stt 실행
+        else:
+            # 호출어 인식 실패 시
+            pass
 
 
 # stt 텍스트, 음성파일 전송
 def STT(): 
-    global transcript, talk_id, encoded_wav, is_talking
+    global talk_id, is_talking
     stt_voice_path = "recorded_audio.wav"
     record_wav(stt_voice_path)
     transcript = speech_to_text(stt_voice_path)
@@ -260,7 +266,7 @@ def pot_state():
         print(sensor_value)
 
         # Socket.IO로 데이터 전송
-        sio.emit('pot_state', {'pot_id' : pot_id, 'data': sensor_value, 'isTemp_FG': is_temp})
+        # sio.emit('pot_state', {'pot_id' : pot_id, 'data': sensor_value, 'isTemp_FG': is_temp})
 
 
 # 아두이노로 메시지 보내기
@@ -280,9 +286,9 @@ def send_sig_to_arduino(ser, msg):
 
 # Threading - Process로 만듦
 def arduino_work():
+    print('arduino start')
     while True:
         is_owner_event.wait()
-        print('arduino start')
         # water 들어오면 emit하기
         while ser2.in_waiting > 0:
             sensor_value = ser2.readline().decode('utf-8').strip()
@@ -306,7 +312,7 @@ if __name__ == '__main__':
     global ser1, ser2
 
     server_url = os.getenv('SERVER_URL')
-    sio.connect(server_url)    
+    sio.connect(server_url)
 
     # threading event
     is_owner_event = Event()
@@ -317,8 +323,10 @@ if __name__ == '__main__':
     # ser1 = serial.Serial("COM5", 115200)  # 아두이노와의 통신 속도에 맞게 설정 > 윈도우
     ser1 = serial.Serial(arduino_port_1, 115200)  # TFT_LCD & arduino uno
     ser2 = serial.Serial(arduino_port_2, 9600)  # arduino nano    
-    time.sleep(10) # 시리얼 통신 기다리기 (+ login 정보 받기?)
+    time.sleep(5) # 시리얼 통신 기다리기 (+ login 정보 받기?)
     pot_state() # 시작 시 보낼 데이터
+    
+    time.sleep(5)
 
     # thread 지정
     rasp = Thread(target=keyword, args=(), daemon=True)
@@ -326,20 +334,12 @@ if __name__ == '__main__':
     # process 시작
     rasp.start()
     ard.start()
+    
+
 
     # main 함수 끝나지 않도록 설정
     while True:
-        pass
-
-    # -----------
-    # keyword() # 호출어 인식 테스트
-
-    # 메인 루프
-    # while True:
-        # keyword()
-
-        # time.sleep(1)
-        
+        time.sleep(1)
         
     # -----
         
