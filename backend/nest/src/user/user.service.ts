@@ -2,7 +2,7 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { User } from './user.entity';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UpdateUserDto, UserWithUserLoginDto } from './user-req.dto';
+import { ChildSaveDto, CreateUserDto, UpdateUserDto, UserWithUserLoginDto } from './user-req.dto';
 import { SimpleUserListDto, UserDetailDto, UserListDto } from './user-res.dto';
 import { plainToInstance } from 'class-transformer';
 import { AllUserDto } from 'src/user-login/user-login.dto';
@@ -39,13 +39,12 @@ export class UserService {
     }
 
     async save(data: UserWithUserLoginDto, file?: Express.Multer.File): Promise<number>{
-        const user = this.userRepository.create(data);
+        const user = await this.userRepository.create(data);   
         const userLogin = await this.userLoginService.create(data);
         try{
-            this.userLoginService.save(userLogin);
             if (user.parent_id == 0) user.parent_id = null // parent_id==null인 경우 사용자 본인
             await this.userRepository.save(user)
-            
+            await this.userLoginService.save(userLogin);
             try{
                 const split = file.originalname.split('.')
                 const extension = split[split.length -1]
@@ -61,6 +60,27 @@ export class UserService {
             throw new HttpException('Bad_REQUEST', HttpStatus.BAD_REQUEST)
         }
     }
+
+    async saveChild(data: ChildSaveDto, file?: Express.Multer.File): Promise<number>{   
+        const child = await this.userRepository.create(data);
+        try{            
+            await this.userRepository.save(data)            
+            try{
+                const split = file.originalname.split('.')
+                const extension = split[split.length -1]
+                const filePath = join(process.cwd(), '/upload/profile/')
+                const fileName = child.user_id + '.' + extension
+                fs.writeFileSync(filePath+fileName, file.buffer);
+                data.profile_img_url = filePath+fileName
+            } catch (e){
+                data.profile_img_url = join(process.cwd(), '/upload/profile/noImg.png')
+            }
+            return 1;
+        }catch(e){
+            throw new HttpException('Bad_REQUEST', HttpStatus.BAD_REQUEST)
+        }
+    }
+
 
     async update(user_id: number, data: UpdateUserDto, file?: Express.Multer.File): Promise<number>{
         const user = await this.userRepository.findOneBy({user_id})

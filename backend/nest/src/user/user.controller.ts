@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, ParseFilePipe, ParseFilePipeBuilder, Post, Put, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto, UpdateUserDto, UserWithUserLoginDto } from './user-req.dto';
+import { ChildSaveDto, CreateUserDto, UpdateUserDto, UserWithUserLoginDto } from './user-req.dto';
 import { ApiBody, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ApiExtraModels } from "@nestjs/swagger";
 import { UserDetailDto, UserListDto } from './user-res.dto';
@@ -37,7 +37,7 @@ export class UserController {
 
     @Post()
     @ApiBody( { type: UserWithUserLoginDto } )
-    @ApiOperation({ summary: '유저 등록 & 아이 등록'})
+    @ApiOperation({ summary: '유저 등록'})
     @ApiOkResponse({ type:'1', description:'1 for SUCCESS' })
     @ApiNotFoundResponse({ description:'wrong data request' })
     @UseInterceptors(FileInterceptor('profile_img'))
@@ -55,6 +55,32 @@ export class UserController {
         ) file?: Express.Multer.File): Promise<string>{
         try {
             await this.userService.save(user, file)
+            return 'SUCCESS';
+        }catch (e){
+            return 'FAIL'
+        }
+    }
+
+    @Post('child')
+    @ApiBody( { type: ChildSaveDto } )
+    @ApiOperation({ summary: '아이 등록'})
+    @ApiOkResponse({ type:'1', description:'1 for SUCCESS' })
+    @ApiNotFoundResponse({ description:'wrong data request' })
+    @UseInterceptors(FileInterceptor('profile_img'))
+    async saveChild(
+        @Body() user:ChildSaveDto,
+        @UploadedFile(
+            new ParseFilePipeBuilder()
+                .addFileTypeValidator({
+                    fileType: 'image'
+                })
+                .build({
+                    fileIsRequired: false,
+                    errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+                })
+        ) file?: Express.Multer.File): Promise<string>{
+        try {
+            await this.userService.saveChild(user, file)
             return 'SUCCESS';
         }catch (e){
             return 'FAIL'
