@@ -44,7 +44,7 @@ export default function KidCreatePage() {
   };
 
   return (
-    <div>
+    <div className="px-6">
       <h1 className="mx-2 my-4 text-title">아이 추가</h1>
 
       <div className="mb-12 mt-6 flex flex-col gap-4">
@@ -53,30 +53,32 @@ export default function KidCreatePage() {
             <KidProfileImage imgUrl={preview} />
           </div>
           <div className="col-span-5">
-            <section class="mb-3">
+            <section className="mb-3">
               <label htmlFor="">아이 애칭</label>
+              <br></br>
               <Input
                 type="text"
                 onChange={handleNickname}
-                extraClasses="w-full"
-                isRequired={true}
+                className="w-full"
+                required
               />
             </section>
-            <section class="mb-3">
+            <section className="mb-3">
               <span>생년월일</span>
+              <br></br>
               <Input
                 type="date"
                 value={birthDate}
                 onChange={handleBirthDate}
-                extraClasses="block"
-                isRequired={true}
+                className="block"
+                required
               />
             </section>
-            <section class="mb-3">
+            <section className="mb-3">
               <span>성별</span>
               <br></br>
               <button
-                class="mt-2 rounded bg-blue-200 px-2 py-1 font-semibold text-slate-800"
+                className="mt-2 rounded bg-blue-200 px-2 py-1 font-semibold text-slate-800"
                 value="M"
                 onClick={handleGender}
               >
@@ -84,7 +86,7 @@ export default function KidCreatePage() {
               </button>
               &nbsp;
               <button
-                class="mt-2 rounded bg-red-200 px-2 py-1 font-semibold text-slate-800"
+                className="mt-2 rounded bg-red-200 px-2 py-1 font-semibold text-slate-800"
                 value="F"
                 onClick={handleGender}
               >
@@ -101,7 +103,12 @@ export default function KidCreatePage() {
               />
             </section>
             <div className="mt-5 grid place-content-center">
-              <Button isDisabled={false}>등록하기</Button>
+              <Button
+                isDisabled={false}
+                className="w-40 bg-amber-300 text-white hover:bg-amber-400"
+              >
+                등록하기
+              </Button>
             </div>
           </div>
         </div>

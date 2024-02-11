@@ -1,4 +1,4 @@
-const int MOISTURE_SENSOR_PIN = A0; // 토양 수분 센서 핀 설정 (A0 핀 사용)
+const int MOISTURE_SENSOR_PIN = A5; // 토양 수분 센서 핀 설정 (A0 핀 사용)
 
 void setup() {
   Serial.begin(9600); // 시리얼 통신 시작 (통신 속도 9600 bps)

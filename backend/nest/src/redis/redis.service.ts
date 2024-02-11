@@ -17,12 +17,19 @@ export class RedisService {
         await this.cacheManager.set(key, value)
     }
 
-    async makeIncrKey(key: string): Promise<void>{
-        await this.cacheManager.set(key, 0)
-    }
     async incr(key: string): Promise<number>{
-        const res = parseInt(await this.cacheManager.get(key)) + 1
-        await this.cacheManager.set(key, res)
-        return res
+        try{
+            const res = parseInt(await this.cacheManager.get(key)) + 1
+            await this.cacheManager.set(key, res)
+            return res
+        } catch (e) {
+            const res = 0;
+            await this.cacheManager.set(key, res)
+            return res
+        }
+    }
+
+    async getTalkId(): Promise<number>{
+        return await this.incr("talk_id")
     }
 }

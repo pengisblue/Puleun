@@ -47,3 +47,27 @@ export class SpeciesWithUser{
     @Expose()
     species: Species[];
 }
+
+
+export class SimpleUserListDto{
+    @IsNumber()
+    pot_id: number;
+
+    @IsString()
+    pot_name: string;
+
+    @IsNumber()
+    user_id: number;
+
+    @IsString()
+    profile_img_url: string;
+
+    @IsString()
+    nickname: string;
+
+    @IsString()
+    pot_img_url: string;
+
+    @IsNumber()
+    parent_id: number;
+}

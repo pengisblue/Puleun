@@ -1,16 +1,22 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { UserService } from './user.service';
-import { User } from './user.entity';
 import { CreateUserDto, UpdateUserDto } from './user-req.dto';
 import { ApiBody, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ApiExtraModels } from "@nestjs/swagger";
-import { SpeciesWithUser, UserDetailDto, UserListDto } from './user-res.dto';
+import { UserDetailDto, UserListDto } from './user-res.dto';
+import { User } from './user.entity';
 
 @Controller('user')
 @ApiTags('User')
 @ApiExtraModels(UserListDto, CreateUserDto, UpdateUserDto)
 export class UserController {
     constructor(private readonly userService: UserService){}
+
+    @Get()
+    @ApiOperation({summary: '모든 유저 조회'})
+    async findAllUser(): Promise<User[]>{
+        return await this.userService.findAllUser();
+    }
 
     @Get('child/:user_id')
     @ApiOperation({ summary: '아이 전체 조회'})
@@ -20,7 +26,7 @@ export class UserController {
     }
     
     @Get(':user_id')
-    @ApiOperation({ summary: 'user_id로 유저 조회' })
+    @ApiOperation({ summary: '유저 상세 조회' })
     @ApiOkResponse({ type:UserDetailDto, description:'유저 상세 조회' })
     async find(@Param('user_id') user_id:number):Promise<UserDetailDto>{
         return this.userService.find(user_id)
@@ -51,16 +57,15 @@ export class UserController {
         return this.userService.delete(user_id)
     }
 
-    @Get('pot/:user_id')
-    @ApiOperation({ summary: '유저의 화분 모두 조회'})
-    async findPotWithUserId(@Param('user_id') user_id: number): Promise<User>{
-        return await this.userService.findPot(user_id);
-    }
-
     @Get('create/:user_id')
-    @ApiOperation({summary: 'User와 자동완성 목록'})
-    async userAndSpecies(@Param('user_id') user_id: number): Promise<User>{
-        return await this.userService.simpleUser(user_id);
+    @ApiOperation({summary: '부모가 화분 등록시 화분 매핑이 되어있지 않는 아이 출력'})
+    async unMappingUser(@Param('user_id') user_id: number): Promise<UserListDto[]>{
+        return await this.userService.unMappingUser(user_id);
     }   
 
+    @Get('byParent/:parent_id')
+    @ApiOperation({summary: '부모의 아이에 대한 간단 출력'})
+    async simpleUserList(@Param('parent_id') parent_id: number){
+        return await this.userService.simpleUserList(parent_id);
+    }
 }

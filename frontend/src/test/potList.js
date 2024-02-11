@@ -84,3 +84,19 @@ export const potSimpleList = [
     potImgUrl: potImg2,
   },
 ];
+
+export const potDetailInfo = {
+  potId: 1,
+  userImgUrl: kidImg1,
+  userName: "성준",
+  potName: "방울이",
+  potImgUrl: potImg1,
+  potSpecies: "방울토마토",
+  nowTemprature: 22,
+  tempratureStatus: "적정",
+  nowMoisture: 50,
+  moistureStatus: "적정",
+  daysSinceWatering: 3,
+  plantDate: "2024-01-12",
+  daysSincePlanting: 14,
+};

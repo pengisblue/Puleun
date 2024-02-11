@@ -17,7 +17,7 @@ export default function PotChart({ potData, id, scheme }) {
   return (
     <ResponsiveLine
       data={data}
-      margin={{ top: 20, right: 30, bottom: 60, left: 60 }}
+      margin={{ top: 20, right: 30, bottom: 50, left: 50 }}
       xScale={{
         type: "time",
         format: "%H시%M분",
@@ -37,11 +37,11 @@ export default function PotChart({ potData, id, scheme }) {
       // axisRight={null}
       axisBottom={{
         tickValues: "every 2 hour",
-        tickSize: 5,
+        tickSize: 3,
         format: "%H시",
         legend: "시간",
         legendOffset: 36,
-        legendPosition: "middle",
+        legendPosition: "start",
       }}
       axisLeft={{
         tickSize: 5,

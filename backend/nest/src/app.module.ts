@@ -17,13 +17,14 @@ import { SocketModule } from './socket/socket.module';
 import { ConfigModule } from '@nestjs/config';
 import { TtsModule } from './tts/tts.module';
 import { RedisModule } from './redis/redis.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [UserModule, PotModule, FileModule, SocketModule,
     PotStateModule, SpeciesModule, UserLoginModule, DeviceModule, 
     CalenderModule, TalkModule, SentenceModule, AlarmModule,
     // 얘가 있어야 .env 파일을 nest에서 읽을 수 있음
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot(), ScheduleModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DB_HOST,

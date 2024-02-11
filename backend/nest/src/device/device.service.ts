@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Device } from './device.entity';
 import { Repository } from 'typeorm';
 import { DeviceCreateDto, SelectDeviceDto } from './device-req.dto';
-import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class DeviceService {

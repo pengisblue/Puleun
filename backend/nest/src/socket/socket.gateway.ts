@@ -6,6 +6,7 @@ import { SocketService } from "./socket.service";
 import { PotStateService } from 'src/pot-state/pot-state.service';
 import { CalenderService } from 'src/calender/calender.service';
 import { CalenderCreateDto } from 'src/calender/calender-req.dto';
+import { TalkService } from 'src/talk/talk.service';
 
 @WebSocketGateway(7080, {
   cors: { origin: "*",},
@@ -21,6 +22,7 @@ export class SocketGateway {
     private readonly socketService: SocketService,
     private readonly potStateService: PotStateService,
     private readonly calenderService: CalenderService,
+    private readonly talkService: TalkService,
   ){}
 
   handleConnection( client: Socket ){
@@ -42,10 +44,11 @@ export class SocketGateway {
   @SubscribeMessage('stt')
   async saveSttFile( @ConnectedSocket() client: Socket, 
         @MessageBody('text') text: string, 
-        @MessageBody('talk_id') talk_id: string, 
+        @MessageBody('talk_id') talk_id: number, 
         @MessageBody('file') base64Data: string): Promise<string>{
     if (text==null) text=""
     if (base64Data==null) base64Data=""
+    console.log(talk_id)
     const returnData = await this.socketService.stt(text, talk_id, base64Data)
     try{
       client.emit('tts', {base64Data:returnData} );
@@ -64,8 +67,13 @@ export class SocketGateway {
   }
 
   @SubscribeMessage('hot_word')
-  async hotWord( @ConnectedSocket() client: Socket ): Promise<void>{
-    client.emit('talk_id',{talk_id: 1})
+  async hotWord( @ConnectedSocket() client: Socket, @MessageBody('pot_id') pot_id: number ): Promise<void>{
+    const dto = new CalenderCreateDto;
+    dto.pot_id = pot_id
+    dto.code = 'T'
+    this.calenderService.save(dto)
+    const talk_id = await this.talkService.saveTalk("푸른 푸르른", "2023-02-01")
+    client.emit('talk_id',{talk_id})
   }
 
   async refresh( clientId: string): Promise<void>{

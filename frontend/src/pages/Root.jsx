@@ -9,7 +9,7 @@ export default function RootLayout() {
         <Navigation />
       </header>
 
-      <main className="px-6 py-16">
+      <main className="py-20">
         <Outlet />
       </main>
     </>

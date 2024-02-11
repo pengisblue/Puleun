@@ -5,7 +5,8 @@
 
 import { useState } from "react";
 import axios from "axios";
-
+import Button from "../components/UI/Button";
+import navImg from "../asset/log.svg";
 
 export default function Login() {
   const [userEmail, setEmail] = useState("");
@@ -26,8 +27,8 @@ export default function Login() {
     console.log(userEmail, userPassword);
 
     // 로컬스토리지에 key, value 저장
-    axios.post("https://i10e101.p.ssafy.io/v1/user-login"
-      ,{
+    axios.post("https://i10e101.p.ssafy.io/v1/user-login",
+      {
           user_email : userEmail,
           user_password : userPassword
       }
@@ -46,41 +47,81 @@ export default function Login() {
   }
 
   return (
-    <div>
-      <h1 className="mx-2 my-4 text-title">로그인</h1>
+    <>
+      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+          <img
+            className="mx-auto h-10 w-auto"
+            src={navImg}
+            alt="purun"
+          />
+          <h1 className="mx-2 my-4 text-title">로그인</h1>
+        </div>
 
-      <form onSubmit={handleSubmit}>
-        {/* 로그인 */}
-        <section>
-          {/* 입력폼 */}
-          <p><label for="user-email">USER EMAIL</label></p>
-          <input 
-            type="email" 
-            id="user-email"
-            placeholder="email@google.com"
-            value={userEmail}
-            onChange={handleEmail}
-          />
-        </section>
-        <section>
-          <p><label for="user-password">PASSWORD</label></p>
-          <input 
-            type="password" 
-            id="user-password"
-            value={userPassword}
-            onChange={handlePassword}
-          />
-        </section>
-        <section>
-          <p><button type="submit">로그인</button></p>
-          <p><button>카카오 로그인</button></p>
-        </section>
-        <section>
-          <p><button>비밀번호 찾기</button></p>
-          <p><button>회원가입</button></p>
-        </section>
-      </form>
-      
-    </div>
-  );
+        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            <section>
+              <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+                Email address
+              </label>
+              <div className="mt-2">
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  placeholder="email@google.com"
+                  value={userEmail}
+                  onChange={handleEmail}
+                  required
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-300 sm:text-sm sm:leading-6"
+                />
+              </div>
+            </section>
+
+            <section>
+              <div className="flex items-center justify-between">
+                <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
+                  Password
+                </label>
+                {/* <div className="text-sm">
+                  <a href="#" className="font-semibold text-green-400 hover:text-green-500">
+                    비밀번호 찾기
+                  </a>
+                </div> */}
+              </div>
+              <div className="mt-2">
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  autoComplete="current-password"
+                  value={userPassword}
+                  onChange={handlePassword}
+                  required
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-300 sm:text-sm sm:leading-6"
+                />
+              </div>
+            </section>
+
+            <section>
+              <button
+                type="submit"
+                className="flex w-full justify-center rounded-md bg-green-300 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+              >
+                로그인
+              </button>
+            </section>
+          </form>
+
+          <p className="mt-10 text-center text-m text-gray-500">
+            서비스를 이용하고 싶으신가요?{' '}
+            <a href="#" className="font-semibold leading-6 text-green-400 hover:text-green-500">
+              회원가입 바로가기
+            </a>
+          </p>
+        </div>
+      </div>
+    </>
+  )
 }

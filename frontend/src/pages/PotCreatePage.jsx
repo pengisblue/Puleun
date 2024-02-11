@@ -111,23 +111,25 @@ export default function PotCreatePage() {
   };
 
   return (
-    <div>
+    <div className="px-6">
       <h1 className="mx-2 my-4 text-title">식물 심기</h1>
 
-      <div className="mb-12 mt-6 flex flex-col gap-4">
+      <div className="mt-6 flex flex-col gap-4">
         {/* 기기 선택 */}
         <section>
-          <label htmlFor="">화분 선택</label>
-          <DeviceChoice
-            deviceList={deviceList}
-            onSelect={handleSelectedDevice}
-            selectedDevice={selectedDevice}
-          />
+          <label className="text-section">화분 선택</label>
+          <div className=" my-2 rounded-md bg-white p-6 shadow-md">
+            <DeviceChoice
+              deviceList={deviceList}
+              onSelect={handleSelectedDevice}
+              selectedDevice={selectedDevice}
+            />
+          </div>
         </section>
 
-        <div className="grid grid-flow-row-dense grid-cols-8 gap-2">
+        <div className="grid grid-flow-row-dense grid-cols-8 gap-4">
           {/* 프로필 이미지 */}
-          <div className="col-span-3">
+          <div className="col-span-4 self-center border border-amber-400">
             <PotProfileImage imgUrl={preview} />
           </div>
           <input
@@ -136,10 +138,10 @@ export default function PotCreatePage() {
             onChange={handleInputImg}
             className="col-span-8"
           />
-          <div className="col-span-5">
+          <div className="col-span-4 flex flex-col gap-4">
             {/* 주인 선택 */}
             <section>
-              <label htmlFor="">주인 선택</label>
+              <label className="text-section">주인 선택</label>
               <div>
                 <Filter
                   targetList={userList}
@@ -154,12 +156,12 @@ export default function PotCreatePage() {
 
             {/* 애칭 입력 */}
             <section>
-              <label htmlFor="">식물 애칭</label>
+              <label className="text-section">식물 애칭</label>
               <Input
                 type="text"
                 onChange={handlePotNameInput}
-                extraClasses="w-full"
-                isRequired={true}
+                className="w-full"
+                required
               />
             </section>
           </div>
@@ -167,7 +169,7 @@ export default function PotCreatePage() {
 
         {/* 품종 선택 */}
         <section>
-          <label htmlFor="">품종</label>
+          <label className="text-section">품종</label>
           <div className="mt-2">
             <SpeciesSelector
               plantList={plantList}
@@ -179,43 +181,43 @@ export default function PotCreatePage() {
 
         {/* 온,습도 정보 */}
         <section>
-          <p>세부 정보</p>
+          <p className="text-section">세부 정보</p>
 
-          <label className="my-4 flex items-center gap-4">
-            <span>온도: </span>
+          <label className="mb-2 flex items-center gap-4">
+            <span className="mt-2">온도: </span>
             <Input
               type="number"
               value={minTemperature}
               onChange={handleMinTemperatureChange}
-              extraClasses="w-20 text-center"
-              isRequired={true}
+              className="w-20 text-center"
+              required
             />
-            <span>~</span>
+            <span className="mt-2">~</span>
             <Input
               type="number"
               value={maxTemperature}
               onChange={handleMaxTemperatureChange}
-              extraClasses="w-20 text-center"
-              isRequired={true}
+              className="w-20 text-center"
+              required
             />
           </label>
-          <label className="my-4 flex items-center gap-4">
-            <span>습도: </span>
+          <label className="flex items-center gap-4">
+            <span className="mt-2">습도: </span>
             <Input
               type="number"
               value={minMoisture}
               onChange={handleMinMoistureChange}
-              extraClasses="w-20 text-center"
-              isRequired={true}
+              className="w-20 text-center"
+              required
               max={100}
             />
-            <span>~</span>
+            <span className="mt-2">~</span>
             <Input
               type="number"
               value={maxMoisture}
               onChange={handleMaxMoistureChange}
-              extraClasses="w-20 text-center"
-              isRequired={true}
+              className="w-20 text-center"
+              required
               max={100}
             />
           </label>
@@ -223,20 +225,25 @@ export default function PotCreatePage() {
 
         {/* 심은 날 */}
         <section>
-          <span>심은 날</span>
+          <span className="text-section">심은 날</span>
           <Input
             type="date"
             value={plantingDate}
             onChange={handleDateChange}
-            extraClasses="block"
-            isRequired={true}
+            className="block"
+            required
           />
         </section>
       </div>
 
       {/* 등록 버튼 */}
-      <div className="grid place-content-center">
-        <Button className="bg-amber-300 hover:bg-amber-400 text-white" isDisabled={false}>등록하기</Button>
+      <div className="grid place-content-center mt-6">
+        <Button
+          className="bg-amber-300 text-white w-40 hover:bg-amber-400"
+          isDisabled={false}
+        >
+          등록하기
+        </Button>
       </div>
 
       {/* 임시 확인용 */}

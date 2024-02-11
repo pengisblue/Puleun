@@ -1,6 +1,7 @@
 import { ApiOperation, ApiProperty } from "@nestjs/swagger";
 import { IsDate, IsInt, IsOptional, IsString, Length, IsNumber } from "class-validator";
 import { Exclude, Expose, Type } from "class-transformer";
+import { User } from "src/user/user.entity";
 
 
 export class PotUserDto{
@@ -161,6 +162,11 @@ export class SelectPotDto{
     @Expose()
     pot_img_url: string;
 
+    @IsNumber()
+    @ApiProperty()
+    @Expose()
+    user: User;
+
     // user_id가 0 이라면 이 화분은 부모가 키우고 있다는 것!
     // user_id가 존재한다면 아이가 키우고 있다는 것
     // @IsInt()
@@ -168,8 +174,6 @@ export class SelectPotDto{
     // @ApiProperty()
     // user_id ? : number = 0;    
 }
-
-
 
 export class CollectionDto{
     @IsString()
@@ -202,3 +206,56 @@ export class CollectionDto{
     @ApiProperty()
     happy_cnt ? : number;
 }
+
+
+export class PotWithStatusDto{
+    @IsNumber()
+    pot_id: number;
+
+    @IsString()
+    pot_name: string;
+
+    @IsString()
+    pot_img_url: string;
+
+    @IsString()
+    pot_species: string;
+
+    @IsNumber()
+    parent_id: number;
+
+    @IsNumber()
+    user_id: number;
+
+    @IsString()
+    profile_img_url: string;
+
+    @IsString()
+    nickname: string;
+
+    @IsNumber()
+    temperature: number;
+
+    @IsNumber()
+    moisture: number;
+
+    @IsString()
+    temp_state: string;
+
+    @IsString()
+    mois_state: string;
+
+    @IsNumber()
+    last_water: number;
+
+    @IsDate()
+    planting_day: Date;
+
+    @IsNumber()
+    together_day: number;
+
+    @IsNumber()
+    last_talk: number;
+}
+
+
