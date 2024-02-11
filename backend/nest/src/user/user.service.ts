@@ -2,14 +2,15 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { User } from './user.entity';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateUserDto, UpdateUserDto, UserWithUserLoginDto } from './user-req.dto';
+import { UpdateUserDto, UserWithUserLoginDto } from './user-req.dto';
 import { SimpleUserListDto, UserDetailDto, UserListDto } from './user-res.dto';
 import { plainToInstance } from 'class-transformer';
 import { AllUserDto } from 'src/user-login/user-login.dto';
 import { Pot } from 'src/pot/pot.entity';
 import { UserWithAlarmDto } from 'src/alarm/alarm-res.dto';
 import { UserLoginService } from 'src/user-login/user-login.service';
-import { UserLogin } from 'src/user-login/user-login.entity';
+import * as fs from 'fs';
+import { join } from 'path';
 
 @Injectable()
 export class UserService {
@@ -37,24 +38,44 @@ export class UserService {
         return user;
     }
 
-    async save(data: UserWithUserLoginDto): Promise<number>{
+    async save(data: UserWithUserLoginDto, file?: Express.Multer.File): Promise<number>{
         const user = this.userRepository.create(data);
         const userLogin = await this.userLoginService.create(data);
-        console.log(user);
         try{
             this.userLoginService.save(userLogin);
             if (user.parent_id == 0) user.parent_id = null // parent_id==null인 경우 사용자 본인
             await this.userRepository.save(user)
+            
+            try{
+                const split = file.originalname.split('.')
+                const extension = split[split.length -1]
+                const filePath = join(process.cwd(), '/upload/profile/')
+                const fileName = user.user_id + '.' + extension
+                fs.writeFileSync(filePath+fileName, file.buffer);
+                data.profile_img_url = filePath+fileName
+            } catch (e){
+                data.profile_img_url = join(process.cwd(), '/upload/profile/noImg.png')
+            }
             return 1;
         }catch(e){
             throw new HttpException('Bad_REQUEST', HttpStatus.BAD_REQUEST)
         }
     }
 
-    async update(user_id: number, data: UpdateUserDto): Promise<number>{
+    async update(user_id: number, data: UpdateUserDto, file?: Express.Multer.File): Promise<number>{
         const user = await this.userRepository.findOneBy({user_id})
-
         if (!user) throw new HttpException('Bad_REQUEST', HttpStatus.NOT_FOUND)
+        
+        try{
+            const split = file.originalname.split('.')
+            const extension = split[split.length -1]
+            const filePath = join(process.cwd(), '/upload/profile/')
+            const fileName = user.user_id + '.' + extension
+            fs.writeFileSync(filePath+fileName, file.buffer);
+            data.profile_img_url = filePath+fileName
+        } catch (e){
+            data.profile_img_url = join(process.cwd(), '/upload/profile/noImg.png')
+        }
         try{
             this.userRepository.update(user_id, {...data})
             return 1;
