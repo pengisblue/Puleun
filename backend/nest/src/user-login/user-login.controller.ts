@@ -1,7 +1,7 @@
-import { Body, Controller, Delete, Get, HttpStatus, Inject, Param, ParseFilePipeBuilder, Post, Put, UploadedFile, UseInterceptors, forwardRef } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Inject, Param, ParseFilePipeBuilder, Post, Put, UploadedFile, UseInterceptors, forwardRef } from '@nestjs/common';
 import { UserLoginService } from './user-login.service';
-import { ApiBody, ApiExtraModels, ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger';
-import { AllUserDto, LoginDto, UserLoginSaveDto } from './user-login.dto';
+import { ApiBody, ApiExtraModels, ApiOkResponse, ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger';
+import { AllUserDto, LoginDto, LoginReturnDto, UserLoginSaveDto } from './user-login.dto';
 import { UserService } from 'src/user/user.service';
 import { LoginUserDto } from './user-login.req.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -42,10 +42,12 @@ export class UserLoginController {
 
     @Post()
     @ApiOperation({summary: '로그인'})
-    @ApiProperty({type: LoginDto})
-    async login(@Body() loginDto: LoginDto): Promise<number>{
-        if(await this.userLoginService.login(loginDto)) return 1;
-        else return 0;
+    @ApiProperty({type: LoginDto, description: '로그인 실패시 null 리턴'})
+    @ApiOkResponse({type:LoginReturnDto})    
+    async login(@Body() loginDto: LoginDto): Promise<LoginReturnDto>{
+        const result = await this.userLoginService.login(loginDto);
+        if (result == null) return null;
+        return result;
     }
 
     @Get(':user_id')
