@@ -129,15 +129,12 @@ export default function PotCreatePage() {
 
         <div className="grid grid-flow-row-dense grid-cols-8 gap-4">
           {/* 프로필 이미지 */}
-          <div className="col-span-4 self-center border border-amber-400">
-            <PotProfileImage imgUrl={preview} />
+          <div className="col-span-4 space-y-2">
+            <div className="self-center border border-amber-400">
+              <PotProfileImage imgUrl={preview} />
+            </div>
+            <input type="file" accept=".png, .jpg" onChange={handleInputImg} />
           </div>
-          <input
-            type="file"
-            accept=".png, .jpg"
-            onChange={handleInputImg}
-            className="col-span-8"
-          />
           <div className="col-span-4 flex flex-col gap-4">
             {/* 주인 선택 */}
             <section>
@@ -237,9 +234,9 @@ export default function PotCreatePage() {
       </div>
 
       {/* 등록 버튼 */}
-      <div className="grid place-content-center mt-6">
+      <div className="mt-6 grid place-content-center">
         <Button
-          className="bg-amber-300 text-white w-40 hover:bg-amber-400"
+          className="w-40 bg-amber-300 text-white hover:bg-amber-400"
           isDisabled={false}
         >
           등록하기
