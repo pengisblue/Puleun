@@ -7,12 +7,10 @@ export default function LandingPage() {
 
   const goSignUp = () => {
     navigate("/signup");
-    // window.location.replace('/signup');
   };
 
   const goLogIn = () => {
     navigate("/login");
-    // window.location.replace('/login');
   };
 
   return (

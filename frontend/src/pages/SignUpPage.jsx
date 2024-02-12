@@ -1,12 +1,17 @@
 import { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Button from "../components/UI/Button";
 import Input from "../components/UI/Input";
 import logImg from "../asset/log.svg";
-import { useEffect } from "react";
-import { NavLink } from "react-router-dom";
 
 export default function SignUp() {
+  const navigate = useNavigate();
+
+  const goLanding = () => {
+    navigate("/hello");
+  };
+
   // 실제 이름
   const [userName, setName] = useState(null);
   const handleName = (event) => {
@@ -60,7 +65,7 @@ export default function SignUp() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    if (userPassword != confirmPassword) {
+    if (userPassword !== confirmPassword) {
       return alert("비밀번호와 비밀번호 확인이 같지 않습니다.");
     }
 
@@ -91,7 +96,12 @@ export default function SignUp() {
   return (
     <div className="px-8 py-12">
       <div>
-        <img className="mx-auto h-10 w-auto" src={logImg} alt="purun" />
+        <img
+          onClick={goLanding}
+          className="mx-auto h-10 w-auto"
+          src={logImg}
+          alt="purun"
+        />
         <h1 className="mx-2 my-4 text-title">회원가입</h1>
       </div>
 
@@ -177,7 +187,8 @@ export default function SignUp() {
         </div>
         <p className="text-m mt-6 text-center text-gray-500">
           이미 계정이 있으신가요?{" "}
-          <NavLink to="/login"
+          <NavLink
+            to="/login"
             className="font-semibold leading-6 text-green-400 hover:text-green-500
               focus-visible:outline-offset-2 focus-visible:outline-gray-300"
           >

@@ -1,15 +1,26 @@
-import { Form, NavLink, redirect } from "react-router-dom";
+import { Form, NavLink, redirect, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Button from "../components/UI/Button";
 import logImg from "../asset/log.svg";
 import Input from "../components/UI/Input";
 
 export default function Login() {
+  const navigate = useNavigate();
+
+  const goLanding = () => {
+    navigate("/hello");
+  };
+
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-8 py-12">
         <div className="">
-          <img className="mx-auto h-10 w-auto" src={logImg} alt="purun" />
+          <img
+            onClick={goLanding}
+            className="mx-auto h-10 w-auto"
+            src={logImg}
+            alt="purun"
+          />
           <h1 className="mx-2 my-4 text-title">로그인</h1>
         </div>
 
