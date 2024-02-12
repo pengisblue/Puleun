@@ -142,11 +142,11 @@ export class PotService {
     async save(createPotDto: CreatePotDto, file?: Express.Multer.File) {
         await this.potRepository.save(createPotDto);
         const [pot] = await this.potRepository.find({where:createPotDto, take:1})
+        const filePath = join(process.cwd(), '/upload/pot/')
+        if (!fs.existsSync(filePath)) fs.mkdir(filePath, (e)=>{if (e) throw e})
         try{
             const split = file.originalname.split('.')
             const extension = split[split.length -1]
-            const filePath = join(process.cwd(), '/upload/pot/')
-            if (!fs.existsSync(filePath)) fs.mkdir(filePath, (e)=>{if (e) throw e})
             const fileName = pot.pot_id + '.' + extension
             fs.writeFileSync(filePath+fileName, file.buffer);
             pot.pot_img_url = filePath + fileName

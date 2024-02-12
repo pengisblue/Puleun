@@ -47,9 +47,7 @@ export class CreatePotDto {
     max_moisture: number;
 
     @IsString()
-    @Length(1, 200)
     @IsOptional()
-    @ApiProperty({example: 'noimage.jpg'})
     pot_img_url: string;
 
     @IsNumber()
@@ -95,9 +93,7 @@ export class UpdatePotDto{
     max_moisture: number;
 
     @IsString()
-    @Length(1, 200)
     @IsOptional()
-    @ApiProperty({example: 'noimage.jpg', required:false})
     pot_img_url: string;
 }
 

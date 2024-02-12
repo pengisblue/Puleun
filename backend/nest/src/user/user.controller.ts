@@ -36,13 +36,13 @@ export class UserController {
     }
 
     @Post()
-    @ApiBody( { type: UserWithUserLoginDto } )
+    @ApiBody( { type: CreateUserDto } )
     @ApiOperation({ summary: '유저 등록'})
     @ApiOkResponse({ type:'1', description:'1 for SUCCESS' })
     @ApiNotFoundResponse({ description:'wrong data request' })
     @UseInterceptors(FileInterceptor('profile_img'))
     async save(
-        @Body() user:UserWithUserLoginDto,
+        @Body() user:CreateUserDto,
         @UploadedFile(
             new ParseFilePipeBuilder()
                 .addFileTypeValidator({

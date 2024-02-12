@@ -15,14 +15,14 @@ export class CreateUserDto{
     @ApiProperty({example:'F', description:'M for male'})
     gender: string;
 
-    @ApiProperty({example:0, description:'if user is parent'})
+    @ApiProperty({example:1, description:'0 if user is parent'})
     @IsNumber()
     @Type(()=>Number)
     parent_id: number;
 
     @IsString()
     @IsOptional()
-    profile_img_url?: string="";
+    profile_img_url?: string=null;
 }
 
 export class UpdateUserDto{

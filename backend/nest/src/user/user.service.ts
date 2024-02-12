@@ -8,7 +8,6 @@ import { plainToInstance } from 'class-transformer';
 import { AllUserDto } from 'src/user-login/user-login.dto';
 import { Pot } from 'src/pot/pot.entity';
 import { UserWithAlarmDto } from 'src/alarm/alarm-res.dto';
-import { UserLoginService } from 'src/user-login/user-login.service';
 import * as fs from 'fs';
 import { join } from 'path';
 
@@ -17,7 +16,6 @@ export class UserService {
     constructor(
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
-        private readonly userLoginService: UserLoginService
     ){}
 
     async findByParent(user_id: number):Promise<UserListDto[]>{
@@ -38,31 +36,27 @@ export class UserService {
         return user;
     }
 
-    async save(data: UserWithUserLoginDto, file?: Express.Multer.File): Promise<number>{
-        const user = await this.userRepository.create(data);   
-        const userLogin = await this.userLoginService.create(data);
+    async save(data: CreateUserDto, file?: Express.Multer.File): Promise<number>{
+        await this.userRepository.save(data);
+        const [user] = await this.userRepository.find({where:{...data},take:1})
+        const filePath = join(process.cwd(), '/upload/profile/')
+        if (!fs.existsSync(filePath)) fs.mkdir(filePath, (e)=>{if (e) throw e})
+        await this.userRepository.save(user)
         try{
-            if (user.parent_id == 0) user.parent_id = null // parent_id==null인 경우 사용자 본인
-            await this.userRepository.save(user)
-            await this.userLoginService.save(userLogin);
-            try{
-                const split = file.originalname.split('.')
-                const extension = split[split.length -1]
-                const filePath = join(process.cwd(), '/upload/profile/')
-                const fileName = user.user_id + '.' + extension
-                fs.writeFileSync(filePath+fileName, file.buffer);
-                data.profile_img_url = filePath+fileName
-            } catch (e){
-                data.profile_img_url = join(process.cwd(), '/upload/profile/noImg.png')
-            }
-            return 1;
-        }catch(e){
-            throw new HttpException('Bad_REQUEST', HttpStatus.BAD_REQUEST)
+            const split = file.originalname.split('.')
+            const extension = split[split.length -1]
+            const fileName = user.user_id + '.' + extension
+            fs.writeFileSync(filePath+fileName, file.buffer);
+            user.profile_img_url = filePath+fileName
+        } catch (e){
+            user.profile_img_url = join(process.cwd(), '/upload/profile/noImg.png')
         }
+        await this.userRepository.update(user.user_id,{...user})
+        return user.user_id;
     }
 
     async saveChild(data: ChildSaveDto, file?: Express.Multer.File): Promise<number>{   
-        const child = await this.userRepository.create(data);
+        const child = this.userRepository.create(data);
         try{            
             await this.userRepository.save(data)            
             try{
