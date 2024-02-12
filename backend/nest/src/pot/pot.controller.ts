@@ -1,8 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, ParseFilePipeBuilder, Post, Put, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { PotService } from './pot.service';
 import { Pot } from './pot.entity';
 import { CollectionDto, CreatePotDto, PotWithStatusDto, SelectPotDto, UpdatePotDto } from './pot.dto';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('pot')
 @ApiTags('Pot')
@@ -32,18 +33,40 @@ export class PotController {
     @Post()
     @ApiBody({type: CreatePotDto})
     @ApiOperation({ summary: '화분 등록'})
-    @ApiOkResponse({ type:'1', description:'1 for SUCCESS' })
-    async save( @Body() createPotDto: CreatePotDto): Promise<number>{
-        this.potService.save(createPotDto);
+    @ApiOkResponse({ type: String, description:'SUCCESS or FAIL' })
+    @UseInterceptors(FileInterceptor('pot_img'))
+    async save( @Body() createPotDto: CreatePotDto,
+        @UploadedFile(
+            new ParseFilePipeBuilder()
+                .addFileTypeValidator({
+                    fileType: 'image'
+                })
+                .build({
+                    fileIsRequired: false,
+                    errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+                })
+        ) file?: Express.Multer.File ): Promise<number>{
+        this.potService.save(createPotDto, file);
         return 1;
     }
 
     @Put(':pot_id')
     @ApiBody( { type: UpdatePotDto } )
     @ApiOperation({ summary: '화분 수정'})
-    @ApiOkResponse({ type:'1', description:'1 for SUCCESS' })
-    async update( @Param('pot_id') user_id: number, @Body() pot: UpdatePotDto): Promise<number>{
-        await this.potService.update(user_id, pot);
+    @ApiOkResponse({ type:String, description:'SUCCESS or FAIL' })
+    @UseInterceptors(FileInterceptor('pot_img'))
+    async update( @Param('pot_id') user_id: number, @Body() pot: UpdatePotDto,
+    @UploadedFile(
+        new ParseFilePipeBuilder()
+            .addFileTypeValidator({
+                fileType: 'image'
+            })
+            .build({
+                fileIsRequired: false,
+                errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+            })
+    ) file?: Express.Multer.File ): Promise<number>{
+        await this.potService.update(user_id, pot, file);
         return 1 
     }
 

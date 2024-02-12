@@ -5,14 +5,24 @@ import { Repository } from 'typeorm';
 import { LoginDto, UserLoginSaveDto } from './user-login.dto';
 import { plainToInstance } from 'class-transformer';
 import { UserWithUserLoginDto } from 'src/user/user-req.dto';
+import { LoginUserDto } from './user-login.req.dto';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class UserLoginService {
-    constructor(@InjectRepository(UserLogin) 
-    private readonly userLoginRepository: Repository<UserLogin>){}
+    constructor(
+        @InjectRepository(UserLogin) 
+        private readonly userLoginRepository: Repository<UserLogin>,
+        private readonly userService:UserService){}
 
-    async save(userLogin: UserLogin): Promise<UserLogin>{
-        return await this.userLoginRepository.save(userLogin);
+    /** 로그인 시 유저 저장하고 로그인 정보 저장 */
+    async save(userLogin: LoginUserDto, file?: Express.Multer.File): Promise<string>{
+        const {user, login} = userLogin
+        const user_id = await this.userService.save(user, file)
+        if (!user_id) return 'FAIL'
+        login.user_id = user_id
+        await this.userLoginRepository.save(userLogin)
+        return "SUCCESS"
     }
 
     async update(user_id: number, userLoginDto: UserLoginSaveDto): Promise<number>{

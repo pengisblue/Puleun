@@ -5,6 +5,8 @@ import { Repository } from 'typeorm';
 import { CollectionDto, CreatePotDto, PotWithStatusDto, SelectPotDto, UpdatePotDto } from './pot.dto';
 import { PotStateService } from 'src/pot-state/pot-state.service';
 import { CalenderService } from 'src/calender/calender.service';
+import * as fs from 'fs';
+import { join } from 'path';
 
 @Injectable()
 export class PotService {
@@ -137,11 +139,35 @@ export class PotService {
         return statusDto;
     }  
 
-    async save(createPotDto: CreatePotDto) {
+    async save(createPotDto: CreatePotDto, file?: Express.Multer.File) {
         await this.potRepository.save(createPotDto);
+        const [pot] = await this.potRepository.find({where:createPotDto, take:1})
+        const filePath = join(process.cwd(), '/upload/pot/')
+        if (!fs.existsSync(filePath)) fs.mkdir(filePath, (e)=>{if (e) throw e})
+        try{
+            const split = file.originalname.split('.')
+            const extension = split[split.length -1]
+            const fileName = pot.pot_id + '.' + extension
+            fs.writeFileSync(filePath+fileName, file.buffer);
+            pot.pot_img_url = filePath + fileName
+        } catch (e){
+            pot.pot_img_url = join(process.cwd(), '/upload/pot/noImg.png')
+        }
+        await this.potRepository.update(pot.pot_id,pot)
     }
 
-    async update(pot_id: number, data: UpdatePotDto){
+    async update(pot_id: number, data: UpdatePotDto, file?: Express.Multer.File){
+        try{
+            const split = file.originalname.split('.')
+            const extension = split[split.length -1]
+            const filePath = join(process.cwd(), '/upload/pot/')
+            if (!fs.existsSync(filePath)) fs.mkdir(filePath, (e)=>{if (e) throw e})
+            const fileName = pot_id + '.' + extension
+            fs.writeFileSync(filePath+fileName, file.buffer);
+            data.pot_img_url = filePath + fileName
+        } catch (e){
+            data.pot_img_url = join(process.cwd(), '/upload/pot/noImg.png')
+        }
         await this.potRepository.update(pot_id, {...data})
     }
 

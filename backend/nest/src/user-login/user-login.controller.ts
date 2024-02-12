@@ -1,12 +1,14 @@
-import { Body, Controller, Delete, Get, Inject, Param, Post, Put, forwardRef } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Inject, Param, ParseFilePipeBuilder, Post, Put, UploadedFile, UseInterceptors, forwardRef } from '@nestjs/common';
 import { UserLoginService } from './user-login.service';
-import { ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger';
-import { UserLogin } from './user-login.entity';
+import { ApiBody, ApiExtraModels, ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger';
 import { AllUserDto, LoginDto, UserLoginSaveDto } from './user-login.dto';
 import { UserService } from 'src/user/user.service';
+import { LoginUserDto } from './user-login.req.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('user-login')
 @ApiTags('user-login')
+@ApiExtraModels(LoginUserDto)
 export class UserLoginController {
     constructor(private readonly userLoginService: UserLoginService,
                 @Inject(forwardRef(() => UserService))
@@ -14,15 +16,26 @@ export class UserLoginController {
 
     @Post('/save')
     @ApiOperation({summary:'유저 저장'})
-    @ApiProperty({type: UserLoginSaveDto})
-    async userSave(@Body() userLogin: UserLogin){
-        await this.userLoginService.save(userLogin);
+    @ApiBody({type: LoginUserDto})
+    @UseInterceptors(FileInterceptor('profile_img'))
+    async userSave(@Body() userLogin: LoginUserDto,
+    @UploadedFile(
+        new ParseFilePipeBuilder()
+            .addFileTypeValidator({
+                fileType: 'image'
+            })
+            .build({
+                fileIsRequired: false,
+                errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+            })
+    ) file?: Express.Multer.File){
+        await this.userLoginService.save(userLogin, file);
         return 1;
     }
 
     @Put(':user_id')
     @ApiOperation({summary:'이름 & 이메일 & 비밀번호 수정'})
-    @ApiProperty({type: UserLoginSaveDto})
+    @ApiBody({type: UserLoginSaveDto})
     async userUpdate(@Param('user_id') user_id: number, userLoginDto: UserLoginSaveDto): Promise<number>{
         return await this.userLoginService.update(user_id, userLoginDto);
     }
