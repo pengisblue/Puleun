@@ -34,14 +34,14 @@ export default function Login() {
       }
       )
       .then(res => {
-          console.log(res.data)
-          localStorage.clear()
-          localStorage.setItem('id', res.data.id)
-          localStorage.setItem('token', res.data.token)
-          window.location.replace('https://i10e101.p.ssafy.io')
+          console.log(res.data);
+          localStorage.clear();
+          localStorage.setItem('id', res.data.id);
+          localStorage.setItem('token', res.data.token);
+          window.location.replace('https://i10e101.p.ssafy.io/');
       })
       .catch((err) => {
-          console.log(err)
+          console.log(err);
           // setErrorMessage(false)
       })
   }
@@ -116,7 +116,7 @@ export default function Login() {
 
           <p className="mt-10 text-center text-m text-gray-500">
             서비스를 이용하고 싶으신가요?{' '}
-            <a href="#" className="font-semibold leading-6 text-green-400 hover:text-green-500">
+            <a href="/signup" className="font-semibold leading-6 text-green-400 hover:text-green-500">
               회원가입 바로가기
             </a>
           </p>

@@ -1,7 +1,14 @@
 import Button from "../components/UI/Button";
 import log from "../asset/log_icon.svg";
+// import { useNavigate } from "react-router-dom";
 
 export default function LandingPage() {
+  // const navigate = useNavigate();
+
+  // const goSignUp = () => {
+  //   navigate("/signup");
+  // };
+
   return (
     <div className="bg-green-50">
       <div className="flex min-h-screen items-center justify-center bg-amber-200 bg-opacity-15">
