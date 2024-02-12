@@ -1,9 +1,12 @@
 import { Fragment, useState } from "react";
-import { useNavigate } from "react-router";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { Disclosure, Menu, Switch, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+
 import Session from "react-session-api";
 import navImg from "../asset/log.svg";
+import { authActions } from "../store/auth-slice";
 
 // 하드코딩용
 import kidImg from "../test/kid3.png";
@@ -19,19 +22,31 @@ function classNames(...classes) {
 }
 
 export default function Navigation() {
-  const [enabled, setEnabled] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const isKidsMode = useSelector((state) => state.auth.isKidsMode);
+
+  const logoutHandler = () => {
+    dispatch(authActions.logout());
+  };
+
+  const [enabled, setEnabled] = useState(false);
 
   const switchKidsMode = () => {
     const ch = Session.get("kidsmode");
 
     if (!!ch) {
       setEnabled(false);
+      // 임시
+      // 키즈모드 해제 페이지로 이동해야됨
+      navigate("/");
       Session.remove("kidsmode");
+      dispatch(authActions.deactivateKidsMode());
     } else {
       setEnabled(true);
       Session.set("kidsmode", true);
-      navigate("/kids/select");
+      navigate("/kid/select");
+      dispatch(authActions.activateKidsMode());
     }
   };
 
@@ -42,26 +57,31 @@ export default function Navigation() {
     >
       {({ open }) => (
         <>
-          <div className="mx-auto max-w-7xl px-2">
+          <div className="mx-auto max-w-7xl px-4">
             <div className="relative flex h-16 items-center justify-between">
-              <div className="absolute inset-y-0 left-0 flex items-center">
-                {/* Mobile menu button*/}
-                <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-500 hover:bg-green-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
-                  <span className="absolute -inset-0.5" />
-                  <span className="sr-only">Open main menu</span>
-                  {open ? (
-                    <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
-                  ) : (
-                    <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
-                  )}
-                </Disclosure.Button>
-              </div>
-              <div className="flex flex-1 items-center justify-center">
-                <div className="flex flex-shrink-0 items-center">
-                  <a href="/">
-                    <img className="h-9 w-auto" src={navImg} alt="푸른" />
-                  </a>
+              {/* Mobile menu button*/}
+              {/* 키즈모드에서는 메뉴 버튼 안보이게 설정 */}
+              {!isKidsMode && (
+                <div className="flex items-center">
+                  <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-500 hover:bg-green-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                    <span className="absolute -inset-0.5" />
+                    <span className="sr-only">Open main menu</span>
+                    {open ? (
+                      <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
+                    ) : (
+                      <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
+                    )}
+                  </Disclosure.Button>
                 </div>
+              )}
+
+              <div className="flex items-center justify-center">
+                <div className="flex flex-shrink-0 items-center">
+                  <Link to={!isKidsMode ? "/" : "/kid/select"}>
+                    <img className="h-9 w-auto" src={navImg} alt="푸른" />
+                  </Link>
+                </div>
+                {/* 웹 화면 메뉴 */}
                 {/* <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
                     {navigation.map((item) => (
@@ -82,22 +102,15 @@ export default function Navigation() {
                   </div>
                 </div> */}
               </div>
-              <div className="absolute inset-y-0 right-0 flex items-center pr-2">
-                {/* <button
-                  type="button"
-                  className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                >
-                  <span className="absolute -inset-1.5" />
-                  <span className="sr-only">View notifications</span>
-                  <BellIcon className="h-6 w-6" aria-hidden="true" />
-                </button> */}
 
-                {/* Profile dropdown */}
-                <Menu as="div" className="relative ml-3">
+              {/* Profile dropdown */}
+              <div className="flex items-center px-1">
+                <Menu as="div" className="">
                   <div>
                     <Menu.Button className="relative flex rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-400">
                       <span className="absolute -inset-1.5" />
                       <span className="sr-only">Open user menu</span>
+                      {/* 프로필 이미지 */}
                       <img
                         className="h-8 w-8 rounded-full"
                         src={kidImg}
@@ -166,6 +179,7 @@ export default function Navigation() {
                       <Menu.Item>
                         {({ active }) => (
                           <a
+                            onClick={logoutHandler}
                             href="#!"
                             className={classNames(
                               active ? "bg-gray-100" : "",
@@ -184,24 +198,26 @@ export default function Navigation() {
           </div>
 
           <Disclosure.Panel className="">
-            <div className="space-y-1 px-2 pb-3 pt-2">
-              {navigation.map((item) => (
-                <Disclosure.Button
-                  key={item.name}
-                  as="a"
-                  href={item.href}
-                  className={classNames(
-                    item.current
-                      ? "bg-green-600 text-white"
-                      : "text-black hover:bg-green-400 hover:text-white",
-                    "block rounded-md px-3 py-2 text-base font-medium",
-                  )}
-                  aria-current={item.current ? "page" : undefined}
-                >
-                  {item.name}
-                </Disclosure.Button>
-              ))}
-            </div>
+            {({ close }) => (
+              <div className="space-y-1 px-2 pb-3 pt-2">
+                {navigation.map((item) => (
+                  <NavLink
+                    key={item.name}
+                    to={item.href}
+                    className={
+                      (item.current
+                        ? "bg-green-600 text-white"
+                        : "text-black hover:bg-green-400 hover:text-white",
+                      "block rounded-md px-3 py-2 text-base font-medium")
+                    }
+                    aria-current={item.current ? "page" : undefined}
+                    onClick={() => close()}
+                  >
+                    {item.name}
+                  </NavLink>
+                ))}
+              </div>
+            )}
           </Disclosure.Panel>
         </>
       )}
