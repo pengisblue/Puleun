@@ -1,97 +1,58 @@
 import { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Form, NavLink, redirect, useNavigate } from "react-router-dom";
+import { RadioGroup } from "@headlessui/react";
 import axios from "axios";
 import Button from "../components/UI/Button";
 import Input from "../components/UI/Input";
 import logImg from "../asset/log.svg";
 
-export default function SignUp() {
+export default function SignUpPage() {
   const navigate = useNavigate();
 
   const goLanding = () => {
     navigate("/hello");
   };
 
-  // 실제 이름
-  const [userName, setName] = useState(null);
-  const handleName = (event) => {
-    setName(event.target.value);
-    console.log(userName);
-  };
-
   // 이메일
-  const [userEmail, setEmail] = useState(null);
+  const [email, setEmail] = useState("");
   const handleEmail = (event) => {
     setEmail(event.target.value);
-    console.log(userEmail);
   };
 
   // 비밀번호
-  const [userPassword, setPassword] = useState(null);
+  const [userPassword, setUserPassword] = useState(null);
   const handlePassword = (event) => {
-    setPassword(event.target.value);
-    console.log(userPassword);
+    setUserPassword(event.target.value);
   };
 
   // 비밀번호 확인
   const [confirmPassword, setConfirmPassword] = useState(null);
   const handleConfirmPassword = (event) => {
     setConfirmPassword(event.target.value);
-    console.log(confirmPassword);
   };
 
-  // 애칭
-  const [nickname, setNickname] = useState(null);
+  // 닉네임
+  const [nickname, setNickname] = useState("");
   const handleNickname = (event) => {
     setNickname(event.target.value);
-    console.log(nickname);
   };
 
   // 생년월일
-  const today = new Date().toISOString().split("T")[0];
-  const [birthDate, setBirthDate] = useState(today);
+  const [birthDate, setBirthDate] = useState("1990-01-01");
   const handleBirthDate = (event) => {
     setBirthDate(event.target.value);
   };
 
   // 성별
-  const [gender, setGender] = useState(null);
-  const handleGender = (event) => {
-    setGender(event.target.value);
-    console.log(event.target.value);
-  };
+  const [selectedGender, setSelectedGender] = useState("M");
 
-  // 회원가입 버튼
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    if (userPassword !== confirmPassword) {
-      return alert("비밀번호와 비밀번호 확인이 같지 않습니다.");
-    }
-
-    let postValue = {
-      nickname: nickname,
-      birth_DT: birthDate,
-      gender: gender,
-      parent_id: 0,
-      user_name: userName,
-      user_email: userEmail,
-      user_password: userPassword,
-    };
-
-    // post 요청
-    axios
-      .post("https://i10e101.p.ssafy.io/v1/user-login/save", postValue)
-      .then((res) => {
-        console.log(postValue);
-        console.log(res.data);
-        window.location.replace("https://i10e101.p.ssafy.io/");
-      })
-      .catch((err) => {
-        console.log(err);
-        // setErrorMessage(false)
-      });
-  };
+  // 버튼 활성화
+  const isFormValid =
+    email &&
+    userPassword &&
+    confirmPassword &&
+    nickname &&
+    userPassword === confirmPassword;
 
   return (
     <div className="px-8 py-12">
@@ -105,97 +66,158 @@ export default function SignUp() {
         <h1 className="mx-2 my-4 text-title">회원가입</h1>
       </div>
 
-      <div className="mb-12 mt-6 flex flex-col gap-2">
+      <Form method="post" className="my-6 flex flex-col gap-2">
         <section className="mb-3">
           <label htmlFor="">이메일</label>
-          <br></br>
           <Input
             type="email"
+            name="email"
             onChange={handleEmail}
             className="w-full focus:ring-green-400"
             required
           />
         </section>
+
         <section className="mb-3">
           <label htmlFor="">비밀번호</label>
-          <br></br>
           <Input
             type="password"
+            name="password"
             onChange={handlePassword}
             className="w-full focus:ring-green-400"
             required
           />
         </section>
+
         <section className="mb-3">
           <label htmlFor="">비밀번호확인</label>
-          <br></br>
           <Input
             type="password"
+            name="confirmPassword"
             onChange={handleConfirmPassword}
             className="w-full focus:ring-green-400"
             required
           />
+          {confirmPassword && userPassword !== confirmPassword && (
+            <p className="mt-1 text-sm text-red-700">
+              비밀번호가 일치하지 않습니다!
+            </p>
+          )}
         </section>
+
         <section className="mb-3">
           <label htmlFor="">닉네임</label>
-          <br></br>
           <Input
             type="text"
+            name="nickname"
             onChange={handleNickname}
             className="w-full focus:ring-green-400"
             required
           />
         </section>
-        <section className="mb-3">
-          <span>생년월일</span>
-          <br></br>
-          <Input
-            type="date"
-            value={birthDate}
-            onChange={handleBirthDate}
-            className="block focus:ring-green-400"
-            required
-          />
-        </section>
-        <section className="mb-3">
-          <span>성별</span>
-          <br></br>
-          <button
-            className="mt-2 rounded bg-blue-200 px-2 py-1 font-semibold text-slate-800 focus:bg-blue-300"
-            value="M"
-            onClick={handleGender}
-          >
-            남자
-          </button>
-          &nbsp;
-          <button
-            className="mt-2 rounded bg-red-200 px-2 py-1 font-semibold text-slate-800 focus:bg-red-300"
-            value="F"
-            onClick={handleGender}
-          >
-            여자
-          </button>
-        </section>
-        <div className="mt-10 grid place-content-center">
+
+        <div className="flex flex-wrap gap-4">
+          <section className="mb-3">
+            <span>생년월일</span>
+            <Input
+              type="date"
+              name="birthDate"
+              value={birthDate}
+              onChange={handleBirthDate}
+              className="block focus:ring-green-400"
+              required
+            />
+          </section>
+
+          <section className="mb-3">
+            <RadioGroup
+              value={selectedGender}
+              onChange={setSelectedGender}
+              name="gender"
+            >
+              <RadioGroup.Label>성별</RadioGroup.Label>
+              <div className="flex gap-3">
+                <RadioGroup.Option
+                  value="M"
+                  className={({ checked }) =>
+                    `${
+                      checked
+                        ? "bg-blue-400 text-white ring ring-blue-400 ring-opacity-50 ring-offset-1"
+                        : "bg-blue-200 text-slate-800"
+                    } mt-2 rounded-lg px-3 py-1.5 font-semibold`
+                  }
+                >
+                  남자
+                </RadioGroup.Option>
+                <RadioGroup.Option
+                  value="F"
+                  className={({ checked }) =>
+                    `${
+                      checked
+                        ? "bg-red-400 text-white ring ring-red-400 ring-opacity-50 ring-offset-1"
+                        : "bg-red-200 text-slate-800"
+                    } mt-2 rounded-lg px-3 py-1.5 font-semibold`
+                  }
+                >
+                  여자
+                </RadioGroup.Option>
+              </div>
+            </RadioGroup>
+          </section>
+        </div>
+
+        <div className="mt-8 grid place-content-center">
           <Button
-            isDisabled={false}
-            className="w-40 bg-green-300 text-white hover:bg-green-400"
-            onClick={handleSubmit}
+            isDisabled={!isFormValid}
+            className="w-40 cursor-pointer bg-green-300 text-white hover:bg-green-400"
           >
             회원가입하기
           </Button>
         </div>
-        <p className="text-m mt-6 text-center text-gray-500">
-          이미 계정이 있으신가요?{" "}
-          <NavLink
-            to="/login"
-            className="font-semibold leading-6 text-green-400 hover:text-green-500
+      </Form>
+
+      <p className="text-md text-center text-gray-500">
+        이미 계정이 있으신가요?{" "}
+        <NavLink
+          to="/login"
+          className="font-semibold leading-6 text-green-400 hover:text-green-500
               focus-visible:outline-offset-2 focus-visible:outline-gray-300"
-          >
-            로그인 바로가기
-          </NavLink>
-        </p>
-      </div>
+        >
+          로그인 바로가기
+        </NavLink>
+      </p>
     </div>
   );
+}
+
+// signUp action
+export async function action({ request }) {
+  const data = await request.formData();
+
+  const signUpData = {
+    user: {
+      nickname: data.get("nickname"),
+      birth_DT: data.get("birthDate"),
+      gender: data.get("gender"),
+      parent_id: 0,
+    },
+    login: {
+      user_email: data.get("email"),
+      user_password: data.get("password"),
+    },
+  };
+
+  try {
+    const res = await axios({
+      method: request.method,
+      url: "https://i10e101.p.ssafy.io/v1/user-login/save",
+      data: signUpData,
+    });
+
+    console.log(res.data);
+    return redirect("/");
+  } catch (err) {
+    console.log(err);
+  }
+  return Response;
 }

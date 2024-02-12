@@ -14,7 +14,7 @@ import TalkDetailPage from "./pages/TalkDetailPage";
 import LandingPage from "./pages/LandingPage";
 import CollectionPage from "./pages/CollectionPage";
 import LoginPage, { action as loginAction } from "./pages/LoginPage";
-import SignUpPage from "./pages/SignUpPage";
+import SignUpPage, { action as signUpAction } from "./pages/SignUpPage";
 
 // import Example from "./test/Example";
 
@@ -48,6 +48,7 @@ const router = createBrowserRouter([
   {
     path: "/signup",
     element: <SignUpPage />,
+    action: signUpAction,
   },
 
   // 테스트용

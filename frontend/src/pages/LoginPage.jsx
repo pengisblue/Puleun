@@ -4,7 +4,7 @@ import Button from "../components/UI/Button";
 import logImg from "../asset/log.svg";
 import Input from "../components/UI/Input";
 
-export default function Login() {
+export default function LoginPage() {
   const navigate = useNavigate();
 
   const goLanding = () => {
@@ -105,7 +105,7 @@ export async function action({ request }) {
 
   try {
     const res = await axios({
-      method: "post",
+      method: request.method,
       url: "https://i10e101.p.ssafy.io/v1/user-login",
       data: loginData,
     });
