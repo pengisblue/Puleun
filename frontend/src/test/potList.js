@@ -100,3 +100,18 @@ export const potDetailInfo = {
   plantDate: "2024-01-12",
   daysSincePlanting: 14,
 };
+
+export const potList = [
+  {
+    potId: 1,
+    potName: "방토방토토",
+  },
+  {
+    potId: 2,
+    potName: "방토방토토2",
+  },
+  {
+    potId: 3,
+    potName: "방토방토토3",
+  },
+];

@@ -13,6 +13,10 @@ import TalkListPage from "./pages/TalkListPage";
 import TalkDetailPage from "./pages/TalkDetailPage";
 import LandingPage from "./pages/LandingPage";
 import CollectionPage from "./pages/CollectionPage";
+import KidsModeRootLayout from "./pages/KidsModeRoot";
+import KidsModeDetailLayout from "./pages/KidsModeDetail";
+import KidsModePot from "./pages/KidsModePot";
+import KidsModeCollection from "./pages/KidsModeCollection";
 
 // import Example from "./test/Example";
 
@@ -31,7 +35,28 @@ const router = createBrowserRouter([
       { path: "/kid/:userId", element: <KidDetailPage></KidDetailPage> },
       { path: "/talk/:talkId", element: <TalkDetailPage /> },
       { path: "/collection/:userId", element: <CollectionPage /> },
-      { path: "/kid/select", element: <KidSelectPage></KidSelectPage> },
+      { path: "/kids/select", element: <KidSelectPage></KidSelectPage> },
+    ],
+  },
+  {
+    path: "/kidsmode",
+    element: <KidsModeRootLayout />,
+    children: [
+      {
+        path: "/kidsmode",
+        element: <KidSelectPage />,
+      },
+      {
+        path: "/kidsmode/:userId",
+        element: <KidsModeDetailLayout />,
+        children: [
+          { path: "/kidsmode/:userId/", element: <KidsModePot /> },
+          {
+            path: "/kidsmode/:userId/collection",
+            element: <KidsModeCollection />,
+          },
+        ],
+      },
     ],
   },
   {
