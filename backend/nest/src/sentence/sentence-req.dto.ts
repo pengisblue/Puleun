@@ -6,8 +6,7 @@ export class SentenceCreateDto{
     @Type(()=>Date)
     sentence_DTN: Date;
 
-    @Type(()=>Boolean)
-    talker_FG: boolean;
+    talker: string;
 
     @Type(()=>Number)
     talk_id: number;

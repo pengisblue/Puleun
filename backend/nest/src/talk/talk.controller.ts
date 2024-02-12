@@ -1,8 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Controller, Get, Param, } from '@nestjs/common';
 import { TalkService } from './talk.service';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Talk } from './talk.entity';
-import { User } from 'src/user/user.entity';
 import { TalkListDto } from './talk-res.dto';
 
 @Controller('talk')
@@ -12,8 +10,8 @@ export class TalkController {
 
     @Get('/:talk_id')
     @ApiOperation({description: 'get talk detail (all sentence)'})
-    @ApiOkResponse({type:Talk})
-    async findByTalkId(@Param('talk_id') talk_id: number): Promise<Talk>{
+    @ApiOkResponse({type:TalkListDto})
+    async find(@Param('talk_id') talk_id: number): Promise<TalkListDto>{
         return await this.talkService.find(talk_id);
     }
 
@@ -23,11 +21,4 @@ export class TalkController {
         return await this.talkService.findByUserId(user_id);
     }
 
-
-    @Put()
-    @ApiOperation({summary: 'talk save redis to database'})
-    async titleUpdate(talk_id: number): Promise<number>{
-        await this.talkService.updateTalk(talk_id);
-        return 1;
-    }
 }

@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Device } from './device.entity';
 import { Repository } from 'typeorm';
 import { DeviceCreateDto, SelectDeviceDto } from './device-req.dto';
-import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class DeviceService {
@@ -33,6 +32,16 @@ export class DeviceService {
       where: {user_id, empty_FG: true},
       select: {device_id: true, serial_number: true}
     })
+  }
+
+  async connectDevice(serial_number: string, client_id: string): Promise<string>{
+    await this.deviceRepository.update(serial_number, {empty_FG:false, client_id})
+    return "success"
+  }
+
+  async disconnectDevice(client_id: string): Promise<string>{
+    await this.deviceRepository.update(client_id, {empty_FG:true, client_id:null})
+    return "success"
   }
 
   async mappingDevice(device_id: number){

@@ -5,6 +5,8 @@ import { Repository } from 'typeorm';
 import { CollectionDto, CreatePotDto, PotWithStatusDto, SelectPotDto, UpdatePotDto } from './pot.dto';
 import { PotStateService } from 'src/pot-state/pot-state.service';
 import { CalenderService } from 'src/calender/calender.service';
+import * as fs from 'fs';
+import { join } from 'path';
 
 @Injectable()
 export class PotService {
@@ -38,10 +40,10 @@ export class PotService {
             .andWhere('pot.collection_FG= :flag', {flag: false})
             .andWhere('user.user_id= :parent_id', {parent_id})
             .orWhere('user.parent_id= :parent_id', {parent_id})
-            .select(['pot.pot_id', 'pot.pot_name', 'pot.pot_species','pot.createdAt', 
+            .select(['pot.pot_id', 'pot.pot_name', 'pot.pot_species','pot.planting_day', 
                         'user.parent_id', 'pot.temperature','pot.min_temperature', 'pot.max_temperature',
                         'pot.min_moisture', 'pot.max_moisture',
-                        'pot.moisture', 'pot_img_url', 'user.user_id', 'user.nickname',
+                        'pot.moisture', 'pot.pot_img_url', 'user.user_id', 'user.nickname',
                         'user.profile_img_url', 'calender.code', 'calender.createdAt'])                         
             .getMany();
     
@@ -60,7 +62,7 @@ export class PotService {
                 else lastTalkDay = Math.floor((now.getTime() - arr.createdAt.getTime())/(1000 * 24 * 24 * 60));
             })
 
-            const together_day = await this.potStateService.theDayWeWereTogether(element.createdAt);
+            const together_day = await this.potStateService.theDayWeWereTogether(element.planting_day);
             const moisState = await this.potStateService.moisState(element.min_moisture, element.max_moisture, element.moisture);
             const tempState = await this.potStateService.tempState(element.min_temperature, element.max_temperature, element.temperature);
 
@@ -76,7 +78,7 @@ export class PotService {
             statusDto.temp_state = tempState;
             statusDto.mois_state = moisState
             statusDto.last_water = lastWaterDay;
-            statusDto.planting_day = element.createdAt;
+            statusDto.planting_day = element.planting_day;
             statusDto.together_day = together_day;
             statusDto.last_talk = lastTalkDay;
             statusDto.parent_id = element.user.parent_id;
@@ -85,20 +87,87 @@ export class PotService {
         return statusDtos;
     }
 
-    async potDetail(pot_id: number): Promise<Pot>{
-        return await this.potRepository.createQueryBuilder('pot')
-            .where({pot_id: pot_id, collection_FG: false})
-            // pot.user AS user라는 뜻
+    async potDetail(pot_id: number): Promise<PotWithStatusDto>{
+        const now = new Date();
+        const pot = await this.potRepository.createQueryBuilder('pot')
             .leftJoinAndSelect('pot.user', 'user', 'user.user_id = pot.user_id')
-            .select(['pot.pot_id', 'pot.pot_name', 'pot.pot_species', 'user.user_id', 'user.nickname'])
+            .leftJoinAndSelect('pot.calender', 'calender','calender.pot_id = pot.pot_id')
+            .where('(calender.pot_id IS NULL) OR (calender.pot_id, calender.code, calender.createdAt) IN ' +
+                '(SELECT pot_id, code, MAX(createdAt) ' +
+                'FROM calender ' +
+                'GROUP BY pot_id, code)'
+            )
+            .andWhere('pot.collection_FG= :flag', {flag: false})
+            .andWhere('pot.pot_id= :pot_id', {pot_id})
+            .select(['pot.pot_id', 'pot.pot_name', 'pot.pot_species','pot.planting_day', 
+                        'user.parent_id', 'pot.temperature','pot.min_temperature', 'pot.max_temperature',
+                        'pot.min_moisture', 'pot.max_moisture',
+                        'pot.moisture', 'pot.pot_img_url', 'user.user_id', 'user.nickname',
+                        'user.profile_img_url', 'calender.code', 'calender.createdAt'])                         
             .getOne();
+
+        const statusDto = new PotWithStatusDto();
+
+        let lastWaterDay = 0;
+        let lastTalkDay = 0;
+
+        pot.calender.forEach(arr => {
+            if(arr.code == 'W') lastWaterDay = Math.floor((now.getTime() - arr.createdAt.getTime())/(1000 * 24 * 24 * 60));
+            else lastTalkDay = Math.floor((now.getTime() - arr.createdAt.getTime())/(1000 * 24 * 24 * 60));
+        })
+
+        const together_day = await this.potStateService.theDayWeWereTogether(pot.planting_day);
+        const moisState = await this.potStateService.moisState(pot.min_moisture, pot.max_moisture, pot.moisture);
+        const tempState = await this.potStateService.tempState(pot.min_temperature, pot.max_temperature, pot.temperature);
+
+        statusDto.pot_id = pot.pot_id;
+        statusDto.pot_name = pot.pot_name;
+        statusDto.pot_img_url = pot.pot_img_url;
+        statusDto.pot_species = pot.pot_species;
+        statusDto.temperature = pot.temperature;
+        statusDto.moisture = pot.moisture;            
+        statusDto.user_id = pot.user.user_id;
+        statusDto.profile_img_url = pot.user.profile_img_url;
+        statusDto.nickname = pot.user.nickname;
+        statusDto.temp_state = tempState;
+        statusDto.mois_state = moisState
+        statusDto.last_water = lastWaterDay;
+        statusDto.planting_day = pot.planting_day;
+        statusDto.together_day = together_day;
+        statusDto.last_talk = lastTalkDay;
+        statusDto.parent_id = pot.user.parent_id;
+        return statusDto;
     }  
 
-    async save(createPotDto: CreatePotDto) {
+    async save(createPotDto: CreatePotDto, file?: Express.Multer.File) {
         await this.potRepository.save(createPotDto);
+        const [pot] = await this.potRepository.find({where:createPotDto, take:1})
+        const filePath = join(process.cwd(), '/upload/pot/')
+        if (!fs.existsSync(filePath)) fs.mkdir(filePath, (e)=>{if (e) throw e})
+        try{
+            const split = file.originalname.split('.')
+            const extension = split[split.length -1]
+            const fileName = pot.pot_id + '.' + extension
+            fs.writeFileSync(filePath+fileName, file.buffer);
+            pot.pot_img_url = filePath + fileName
+        } catch (e){
+            pot.pot_img_url = join(process.cwd(), '/upload/pot/noImg.png')
+        }
+        await this.potRepository.update(pot.pot_id,pot)
     }
 
-    async update(pot_id: number, data: UpdatePotDto){
+    async update(pot_id: number, data: UpdatePotDto, file?: Express.Multer.File){
+        try{
+            const split = file.originalname.split('.')
+            const extension = split[split.length -1]
+            const filePath = join(process.cwd(), '/upload/pot/')
+            if (!fs.existsSync(filePath)) fs.mkdir(filePath, (e)=>{if (e) throw e})
+            const fileName = pot_id + '.' + extension
+            fs.writeFileSync(filePath+fileName, file.buffer);
+            data.pot_img_url = filePath + fileName
+        } catch (e){
+            data.pot_img_url = join(process.cwd(), '/upload/pot/noImg.png')
+        }
         await this.potRepository.update(pot_id, {...data})
     }
 

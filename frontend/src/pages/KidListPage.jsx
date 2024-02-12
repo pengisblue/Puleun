@@ -3,8 +3,10 @@ import { useEffect, useState } from "react";
 import plus from "../asset/plus_slate.svg";
 import KidCard from "../components/Kids/KidCard";
 import { useNavigate } from "react-router-dom";
-import kidImg from "../test/kid3.png";
 import AddDetailCard from "../components/UI/AddDetailCard";
+
+// 하드코딩용
+import kidImg from "../test/kid3.png";
 
 export default function KidListPage() {
   const [kidList, setKidList] = useState([]);
@@ -56,7 +58,7 @@ export default function KidListPage() {
   }, []);
 
   return (
-    <div className="">
+    <div className="px-6">
       <header className="m-2 flex items-center justify-between">
         <h1 className="text-title">아이 목록</h1>
         <div className="flex gap-2">
