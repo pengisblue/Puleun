@@ -1,13 +1,19 @@
 import Button from "../components/UI/Button";
 import log from "../asset/log_icon.svg";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function LandingPage() {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  // const goSignUp = () => {
-  //   navigate("/signup");
-  // };
+  const goSignUp = () => {
+    navigate("/signup");
+    // window.location.replace('/signup');
+  };
+
+  const goLogIn = () => {
+    navigate("/login");
+    // window.location.replace('/login');
+  };
 
   return (
     <div className="bg-green-50">
@@ -21,10 +27,10 @@ export default function LandingPage() {
             아이와 함께 성장하는 화분
           </p>
           <div className="flex flex-wrap justify-center gap-6 mt-8">
-            <Button className="w-36 bg-green-300 text-lg font-semibold text-slate-50 hover:bg-green-400">
+            <Button className="w-36 bg-green-300 text-lg font-semibold text-slate-50 hover:bg-green-400" onClick={goLogIn}>
               로그인
             </Button>
-            <Button className="w-36 bg-green-300 text-lg font-semibold text-slate-50 hover:bg-green-400">
+            <Button className="w-36 bg-green-300 text-lg font-semibold text-slate-50 hover:bg-green-400" onClick={goSignUp}>
               회원가입
             </Button>
           </div>
