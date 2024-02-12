@@ -13,7 +13,7 @@ import TalkListPage from "./pages/TalkListPage";
 import TalkDetailPage from "./pages/TalkDetailPage";
 import LandingPage from "./pages/LandingPage";
 import CollectionPage from "./pages/CollectionPage";
-import LoginPage from "./pages/LoginPage";
+import LoginPage, { action as loginAction } from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 
 // import Example from "./test/Example";
@@ -43,6 +43,7 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <LoginPage />,
+    action: loginAction,
   },
   {
     path: "/signup",
