@@ -4,18 +4,19 @@ import { Pot } from './pot.entity';
 import { Repository } from 'typeorm';
 import { CollectionDto, CreatePotDto, PotWithStatusDto, SelectPotDto, UpdatePotDto } from './pot.dto';
 import { PotStateService } from 'src/pot-state/pot-state.service';
-import { CalenderService } from 'src/calender/calender.service';
 import * as fs from 'fs';
 import { join } from 'path';
+import { Device } from 'src/device/device.entity';
+import { DeviceService } from 'src/device/device.service';
 
 @Injectable()
 export class PotService {
     constructor(
         @InjectRepository(Pot)
         private readonly potRepository: Repository<Pot>,
+        private readonly deviceService: DeviceService,
         @Inject(forwardRef(() => PotStateService))
-        private readonly potStateService: PotStateService,
-        private readonly calenderService: CalenderService
+        private readonly potStateService: PotStateService,        
     ){}
 
     async findAllPot(): Promise<SelectPotDto[]>{
@@ -140,8 +141,10 @@ export class PotService {
     }  
 
     async save(createPotDto: CreatePotDto, file?: Express.Multer.File) {
-        await this.potRepository.save(createPotDto);
-        const pot: Pot = createPotDto as Pot;
+
+        const savePot = await this.potRepository.save(createPotDto);
+        const pot: Pot = await this.potRepository.create(createPotDto);
+        await this.deviceService.mappingPot(createPotDto.device_id, savePot.pot_id);
 
         const filePath = join(process.cwd(), '/upload/pot/')
         if (!fs.existsSync(filePath)) fs.mkdir(filePath, (e)=>{if (e) throw e})
