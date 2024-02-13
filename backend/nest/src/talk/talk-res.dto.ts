@@ -24,7 +24,7 @@ export class TalkListDto{
     user_id: number
 
     @ApiProperty()
-    user_profile_img: string
+    user_profile_img_url: string
 
     @ApiProperty()
     @Type(() => Number)
