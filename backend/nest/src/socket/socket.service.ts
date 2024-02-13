@@ -152,15 +152,19 @@ export class SocketService {
     situationDto.name_voice =  status.nickname + await this.selectPostposition(status.nickname);
 
     const nameVoicePath = "./upload/name_voice/" + situationDto.name_voice + '.wav'
+    await this.ttsService.tts(situationDto.name_voice, nameVoicePath);
 
     const content = await new Promise<Buffer>((resolve, reject) => {
-      fs.readFile(situationDto.basic_voice, (err, data) => {
-        if (err) reject(err)
-         else resolve(data)        
+      fs.readFile(nameVoicePath, (err, data) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(data)
+        }
       })
     })
-    situationDto.buffer = Buffer.from(content).toString('base64');
-    await this.ttsService.tts(nameVoicePath, situationDto.name_voice);
+    situationDto.buffer = Buffer.from(content).toString('base64')
+    console.log(situationDto);
 
     return situationDto;
   }
