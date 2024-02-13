@@ -6,6 +6,7 @@
 #define DHTPIN A0
 #define DHTTYPE DHT11
 DHT dht(DHTPIN, DHTTYPE);
+float temperature;
 
 // 토양 수분 센서 설정
 const int MOISTURE_SENSOR_PIN = A5;
@@ -13,6 +14,8 @@ const int MOISTURE_THRESHOLD = 50; // 급격한 변화를 감지할 임계값
 int lastMoistureLevel = 0; // 마지막으로 측정된 수분 수준
 bool rapidChangeDetected = false; // 급변 감지 플래그
 bool childClose = false; // '아이가 가까이 있는지' 여부를 추적
+float moisturePercent;
+
 
 // 초음파 센서 설정
 long distance = 0;
@@ -42,17 +45,8 @@ task - 1초마다
 
 // 온습도 센서 데이터 읽기
 void readTempSensor() {
-  float temperature = dht.readTemperature();
+  temperature = dht.readTemperature();
   float humidity = dht.readHumidity();
-
-  // 에러 메시지 출력
-  if (isnan(humidity) || isnan(temperature)) {
-    Serial.println("Failed to read from DHT sensor!");
-    return;
-  }
-
-  Serial.print("T");
-  Serial.println(temperature);
 }
 
 // 토양 수분 센서 데이터 읽기 및 급변 감지
@@ -69,12 +63,8 @@ void readMoistureSensor() {
   lastMoistureLevel = moistureLevel;
 
   // 값 변환
-  float moisturePercent = map(moistureLevel, 200, 1023, 100, 0);
+  moisturePercent = map(moistureLevel, 200, 1023, 100, 0);
   moisturePercent = constrain(moisturePercent, 0, 100);
-
-  // 출력
-  Serial.print("M");
-  Serial.println(moisturePercent);
 }
 
 
@@ -87,8 +77,8 @@ void readDistance () {
   digitalWrite(trigPin, LOW);
   long duration = pulseIn(echoPin, HIGH);
   distance = duration * 0.034 / 2;
-  Serial.print("Distance: ");
-  Serial.println(distance);
+  // Serial.print("Distance: ");
+  // Serial.println(distance);
 }
 
 // 양쪽 팔 동시에 흔들기
@@ -185,6 +175,14 @@ void loop() {
     else if (input.equals("talk start")) { // 말 시작할때
       Serial.println("talk start");
       arm_single(servo2);
+    }
+    else if (input.equals("get value")) {
+      // Serial.println("get value");
+      // 습도
+      Serial.print("M");
+      Serial.println(moisturePercent);
+      Serial.print("T");
+      Serial.println(temperature);
     }
   }
 }
