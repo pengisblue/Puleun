@@ -26,7 +26,7 @@ export class CalenderService {
     async save(calenderCreateDto: CalenderCreateDto): Promise<string>{
         const res = await this.getLastDay(calenderCreateDto.pot_id, calenderCreateDto.code)
         const today: Date = new Date(this.fileService.getToday())
-        if (!res || (res.getFullYear() == today.getFullYear()
+        if (res == null || (res.getFullYear() == today.getFullYear()
                 && res.getMonth() == today.getMonth()
                 && res.getDate() == today.getDate())) await this.calenderRepository.save(calenderCreateDto)
         return "success";
@@ -43,7 +43,7 @@ export class CalenderService {
             order: {createdAt: 'DESC'},
             take: 1
         })
-        if (temp == null) return ("9999-99-99" as unknown as Date)
+        if (temp == null) return (null)
         return temp.createdAt;
     }
 }
