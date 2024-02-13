@@ -30,7 +30,7 @@ export class SocketService {
     
     // 처음온 연결인 경우
     if (device == null){
-      const device = new DeviceCreateDto
+      const device = new DeviceCreateDto()
       device.serial_number = serial_number
       device.empty_FG = false
       device.client_id = clientId
@@ -42,7 +42,8 @@ export class SocketService {
     result.is_owner = true
     if (device.pot_id != null) {
       result.pot_id = device.pot_id
-      result.is_owner = false
+      if (result.pot_id) result.is_owner = true
+      else result.is_owner = false
       
       // 소켓 id 저장
       await this.deviceService.connectDevice(serial_number, clientId)

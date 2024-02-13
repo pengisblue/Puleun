@@ -35,7 +35,8 @@ export class DeviceService {
   }
 
   async connectDevice(serial_number: string, client_id: string): Promise<string>{
-    await this.deviceRepository.update(serial_number, {empty_FG:false, client_id})
+    const [deviece] = await this.deviceRepository.find({where:{serial_number}, take:1})
+    await this.deviceRepository.update(deviece.device_id, {empty_FG:false, client_id})
     return "success"
   }
 
