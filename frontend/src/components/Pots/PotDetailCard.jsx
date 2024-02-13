@@ -16,7 +16,7 @@ export default function PotDetailCard({
   plantDate,
   daysSincePlanting,
   // css 정보
-  size,
+  className,
   nameDisplay,
 }) {
   // 이름이 받침으로 끝나는지 확인
@@ -47,7 +47,7 @@ export default function PotDetailCard({
   }
 
   return (
-    <BaseDetailCard size={size}>
+    <BaseDetailCard className={className}>
       <div className="grid grid-cols-12 place-content-center gap-1">
         <h1 className={`col-span-12 flex flex-wrap font-bold ${textSize(userName, potName)} ${nameDisplay}`}>
           <span className="me-2">

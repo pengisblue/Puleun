@@ -1,6 +1,6 @@
+import { useNavigate } from "react-router-dom";
 import Button from "../components/UI/Button";
 import log from "../asset/log_icon.svg";
-import { useNavigate } from "react-router-dom";
 
 export default function LandingPage() {
   const navigate = useNavigate();
@@ -39,6 +39,7 @@ export default function LandingPage() {
               회원가입
             </Button>
           </div>
+          <p>로그인 버튼 누르세요</p>
         </div>
       </div>
     </div>

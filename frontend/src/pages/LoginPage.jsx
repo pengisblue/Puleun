@@ -120,6 +120,7 @@ export async function action({ request }) {
 
     localStorage.clear();
     localStorage.setItem("userInfo", JSON.stringify(userInfo));
+
     return redirect("/");
   } catch (err) {
     console.log(err);
