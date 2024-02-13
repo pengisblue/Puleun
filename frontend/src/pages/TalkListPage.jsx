@@ -1,6 +1,7 @@
 import TalkTitleCard from "../components/Talk/TalkTitleCard";
 import cog from "../asset/cog-8-tooth.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 // 테스트 데이터
 import { TALK_LIST } from "../test/talkList";
@@ -13,6 +14,23 @@ export default function TalkListPage() {
   const handleClickFavorite = () => {
     setIsStar(true);
   };
+
+  const [talkList, setTalkList] = useState([]);
+
+  useEffect(() => {
+    const getTalkList = async () => {
+      try {
+        const response = await axios.get(
+          `https://i10e101.p.ssafy.io/v1/talk/all/1`,
+        );
+        setTalkList(response.data);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    getTalkList();
+  }, []);
 
   return (
     <div className="">
@@ -42,9 +60,11 @@ export default function TalkListPage() {
 
       {/* 대화 목록 */}
       <div className="mx-2 flex flex-wrap gap-1 px-6 pt-28">
-        {TALK_LIST.filter((talk) => !isStar || talk.isFavorite).map((talk) => (
-          <TalkTitleCard key={talk.talkID} {...talk} />
-        ))}
+        {talkList
+          .filter((talk) => !isStar || talk.isFavorite)
+          .map((talk) => (
+            <TalkTitleCard key={talk.talk_id} {...talk} />
+          ))}
       </div>
     </div>
   );
