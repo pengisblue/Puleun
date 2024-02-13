@@ -4,12 +4,15 @@ import { Disclosure, Menu, Switch, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Session from "react-session-api";
 import navImg from "../asset/log.svg";
+
+// 하드코딩용
 import kidImg from "../test/kid3.png";
 
 const navigation = [
   { name: "화분 관리", href: "/pot", current: false },
   { name: "아이 관리", href: "/kids", current: false },
   { name: "대화 관리", href: "/talk", current: false },
+  { name: "알람 관리", href: "/message", current: false }
 ];
 
 function classNames(...classes) {

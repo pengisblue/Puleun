@@ -7,11 +7,11 @@ import { useLocation, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 
 export default function TalkTitleCard({
-  talkID,
+  talk_id,
   created_DT,
-  talkTitle,
-  userImg,
-  potImg,
+  talk_title,
+  profile_img_url,
+  pot_img_url,
   isRead,
   isFavorite,
 }) {
@@ -31,10 +31,10 @@ export default function TalkTitleCard({
     }
   };
 
-  const goTalkDetail = function (talkID) {
+  const goTalkDetail = function (talk_id) {
     return () => {
       handleRead();
-      navigate(`/talk/${talkID}`, { state: { from: location } });
+      navigate(`/talk/${talk_id}`, { state: { from: location } });
     };
   };
 
@@ -56,22 +56,22 @@ export default function TalkTitleCard({
 
       {/* 대화 내용 */}
       <div
-        onClick={goTalkDetail(talkID)}
+        onClick={goTalkDetail(talk_id)}
         className={`h-full w-full cursor-pointer p-3 ${isReadState ? "bg-amber-50" : "bg-amber-200"}`}
       >
-        <div className="flex justify-between flex-wrap">
+        <div className="flex flex-wrap justify-between">
           <div className="flex items-center gap-1">
             <div className="w-7 overflow-hidden rounded-full border border-amber-500 outline outline-1 outline-amber-500">
-              <UserProfileImage imgUrl={userImg} />
+              <UserProfileImage imgUrl={profile_img_url} />
             </div>
             <img src={wateringCan} alt="wateringCan" className="w-6" />
             <div className="w-7 overflow-hidden rounded-full border border-green-500 outline outline-1 outline-green-500">
-              <PotProfileImage imgUrl={potImg} />
+              <PotProfileImage imgUrl={pot_img_url} />
             </div>
           </div>
           <p className="text-xs">{createdAt}</p>
         </div>
-        <p className="mt-2 text-xl font-bold truncate w-11/12">{talkTitle}</p>
+        <p className="mt-2 w-11/12 truncate text-xl font-bold">{talk_title}</p>
       </div>
     </div>
   );

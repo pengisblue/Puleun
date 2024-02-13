@@ -2,6 +2,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BaseSimpleCard from "../components/UI/BaseSimpleCard";
+
+// 하드코딩용
 import kidImg from "../test/kid1.png";
 
 export default function KidSelectPage() {

@@ -4,13 +4,13 @@ import PotProfileImage from "../components/Pots/PotProfileImage";
 import Filter from "../components/UI/Filter";
 import Input from "../components/UI/Input";
 import Button from "../components/UI/Button";
+import defaultImg from "../asset/no_pot_img.png"
 import { useState } from "react";
 
 // 하드코딩 테스트용 데이터
 import { userList } from "../test/userList";
 import { plantList } from "../test/plantList";
 import { deviceList } from "../test/deviceList";
-import potImg from "../test/pot1.jpg";
 
 // 기본 화분 이미지
 
@@ -40,7 +40,7 @@ export default function PotCreatePage() {
   };
 
   // 이미지
-  const [preview, setPreview] = useState(potImg);
+  const [preview, setPreview] = useState(defaultImg);
   const [inputImg, setInputImg] = useState(null);
   const handleInputImg = (event) => {
     const files = event.target.files;

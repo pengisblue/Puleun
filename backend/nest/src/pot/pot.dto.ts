@@ -47,9 +47,7 @@ export class CreatePotDto {
     max_moisture: number;
 
     @IsString()
-    @Length(1, 200)
     @IsOptional()
-    @ApiProperty({example: 'noimage.jpg'})
     pot_img_url: string;
 
     @IsNumber()
@@ -60,7 +58,13 @@ export class CreatePotDto {
     @IsOptional()
     @IsNumber()
     @ApiProperty({example: 10.5, description: '현재 화분의 습도'})
-    moisuture: number;
+    moisture: number;
+
+    @IsOptional()
+    @IsDate()
+    @ApiProperty({example: '2023-02-13', description: '심은 날'})
+    @Type(() => Date)
+    planting_day: Date;
 }
 
 export class UpdatePotDto{
@@ -95,9 +99,7 @@ export class UpdatePotDto{
     max_moisture: number;
 
     @IsString()
-    @Length(1, 200)
     @IsOptional()
-    @ApiProperty({example: 'noimage.jpg', required:false})
     pot_img_url: string;
 }
 
@@ -248,7 +250,7 @@ export class PotWithStatusDto{
     @IsNumber()
     last_water: number;
 
-    @IsDate()
+    @IsString()
     planting_day: Date;
 
     @IsNumber()
