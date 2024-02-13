@@ -93,7 +93,7 @@ export default function PotDetailPage() {
       </h1>
       {/* 화분 상태 정보 */}
       <div className="flex justify-center">
-        <PotDetailCard {...pot} size="w-80 h-44" nameDisplay="hidden" />
+        <PotDetailCard {...pot} className="w-80 h-44" nameDisplay="hidden" />
       </div>
 
       {/* 캘린더 */}

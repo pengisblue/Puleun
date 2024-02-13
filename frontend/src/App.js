@@ -43,14 +43,14 @@ const router = createBrowserRouter([
     element: <KidsModeRootLayout />,
     children: [
       {
-        path: "/kidsmode",
+        index: true,
         element: <KidSelectPage />,
       },
       {
         path: "/kidsmode/:userId",
         element: <KidsModeDetailLayout />,
         children: [
-          { path: "/kidsmode/:userId/", element: <KidsModePot /> },
+          { index: true, element: <KidsModePot /> },
           {
             path: "/kidsmode/:userId/collection",
             element: <KidsModeCollection />,
