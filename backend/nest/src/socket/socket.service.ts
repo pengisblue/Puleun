@@ -7,7 +7,6 @@ import { SentenceService } from 'src/sentence/sentence.service';
 import { TtsService } from 'src/tts/tts.service';
 import { FileService } from './../file/file.service';
 import { SentenceCreateDto } from 'src/sentence/sentence-req.dto';
-import { File } from 'buffer';
 import { PotService } from 'src/pot/pot.service';
 
 @Injectable()
@@ -113,49 +112,65 @@ export class SocketService {
   async situation(pot_id: number): Promise<SituationDto>{
     const situationDto = new SituationDto();
     const status = await this.potService.potDetail(pot_id);
-    const filePath = "./basic_ment/";
+    let filePath = "./basic_ment/";
     // 대화 부족
     if(status.last_talk > 3){
       situationDto.situation_id = 1;
-      situationDto.basic_voice = filePath + 'boring/' + this.getRandomIntegerWav(1, 5);
+      filePath += 'boring/' + this.getRandomIntegerWav(1, 5);
     }
     // 물 그만줘
     else if (status.mois_state == '초과'){
       situationDto.situation_id = 2;
-      situationDto.basic_voice = filePath + 'water_stop/' + this.getRandomIntegerWav(1, 3);
+      filePath += 'water_stop/' + this.getRandomIntegerWav(1, 3);
     }
     
     // 물 적절해
     else if(status.mois_state == '적정') {
       situationDto.situation_id = 3;
-      situationDto.basic_voice = filePath + 'water_good/' + this.getRandomIntegerWav(1, 4);
+      filePath += 'water_good/' + this.getRandomIntegerWav(1, 4);
     }
     // 물 부족해
     else if(status.mois_state == '부족') {
       situationDto.situation_id = 4;
-      situationDto.basic_voice = filePath + 'water_more/' + this.getRandomIntegerWav(1, 3);
+      filePath += 'water_more/' + this.getRandomIntegerWav(1, 3);
      }
     // 알람 도착: 동적 알람 매핑문제가 해결되면 추가할 예정
 
     else if(status.temp_state == '낮음') {
       situationDto.situation_id = 6;
-      situationDto.basic_voice = filePath + 'cold/' + this.getRandomIntegerWav(1, 3);
+      filePath += 'cold/' + this.getRandomIntegerWav(1, 3);
      }
     else if(status.temp_state == '높음') {
       situationDto.situation_id = 7;
-      situationDto.basic_voice = filePath + 'hot/' + this.getRandomIntegerWav(1, 3);
+      filePath += 'hot/' + this.getRandomIntegerWav(1, 3);
     } 
     else {
       situationDto.situation_id = 8;
-      situationDto.basic_voice = filePath + 'happy/' + this.getRandomIntegerWav(1, 6);
+      filePath += 'happy/' + this.getRandomIntegerWav(1, 6);
     }
     
-    situationDto.name_voice =  status.nickname + await this.selectPostposition(status.nickname);
-
-    const nameVoicePath = "./upload/name_voice/" + situationDto.name_voice + '.wav'
-    await this.ttsService.tts(situationDto.name_voice, nameVoicePath);
-
     const content = await new Promise<Buffer>((resolve, reject) => {
+      fs.readFile(filePath, (err, data) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(data)
+        }
+      })
+    })
+    situationDto.basic_voice = Buffer.from(content).toString('base64')
+
+    return situationDto;
+  }
+
+  async makeUserNameFile(pot_id): Promise<string>{    
+    const status = await this.potService.potDetail(pot_id);
+    const name_voice =  status.nickname + await this.selectPostposition(status.nickname);
+
+    const nameVoicePath = "./upload/name_voice/" + name_voice + '.wav'
+    await this.ttsService.tts(name_voice, nameVoicePath);
+
+    const buffer:Buffer = await new Promise<Buffer>((resolve, reject) => {
       fs.readFile(nameVoicePath, (err, data) => {
         if (err) {
           reject(err)
@@ -164,11 +179,9 @@ export class SocketService {
         }
       })
     })
-    situationDto.buffer = Buffer.from(content).toString('base64')
-    console.log(situationDto);
 
-    return situationDto;
-  }
+    return Buffer.from(buffer).toString('base64')
+}
 
   // 이름 뒤의 조사 선택
   async selectPostposition(name) {
