@@ -4,6 +4,7 @@ import { Talk } from './talk.entity';
 import { Repository } from 'typeorm';
 import { TalkListDto } from './talk-res.dto';
 import { FileService } from './../file/file.service';
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class TalkService {
@@ -27,27 +28,40 @@ export class TalkService {
     
     /** find all sentence by talk_id */
     async find(talk_id: number): Promise<TalkListDto>{
-        const [res] = await this.talkRepository.find({
-            select: ['talk_id', 'talk_title', 'talk_DT'],
-            relations: ['sentences'],
-            where: {talk_id},
-            take: 1
-        })
+        const res = await this.talkRepository.createQueryBuilder('talk')
+        .select(['talk.talk_id',
+        'talk.talk_title',
+        'talk.talk_DT',
+        'talk.read_FG',
+        'user.user_id', 'user.profile_img_url',
+        'pot.pot_id', 'pot.pot_img_url'])
+        .leftJoin('talk.pot','pot','talk.pot_id = pot.pot_id')
+        .leftJoin('pot.user', 'user','pot.user_id = user.user_id')
+        .where('user.talk_id = :talk_id',{talk_id})
+        .getOne()
+        .then((v)=> plainToClass(TalkListDto, v))
         await this.talkRepository.update(talk_id, {read_FG: true});
+
         return res
     }
     
     /** find all talk list by user_id */
     async findByUserId(user_id: number): Promise<TalkListDto[]>{
-        return await this.talkRepository.createQueryBuilder('talk')
+        const res = await this.talkRepository.createQueryBuilder('talk')
         .select(['talk.talk_id',
         'talk.talk_title',
         'talk.talk_DT',
-        'talk.read_FG'])
+        'talk.read_FG',
+        'user.user_id', 'user.profile_img_url',
+        'pot.pot_id', 'pot.pot_img_url'])
         .leftJoin('talk.pot','pot','talk.pot_id = pot.pot_id')
         .leftJoin('pot.user', 'user','pot.user_id = user.user_id')
         .where('user.user_id = :user_id',{user_id})
         .getMany()
+        .then((v)=> {
+            return v.map(o=>plainToClass(TalkListDto, o))
+        })
+        return res;
     }
 }
 
