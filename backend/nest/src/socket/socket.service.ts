@@ -163,7 +163,8 @@ export class SocketService {
     return situationDto;
   }
 
-  async makeUserNameFile(pot_id): Promise<string>{    
+  /** 유저 이름 부르는 파일 만들고 디코딩해서 return */
+  async makeUserNameFile(pot_id: number): Promise<string>{    
     const status = await this.potService.potDetail(pot_id);
     const name_voice =  status.nickname + await this.selectPostposition(status.nickname);
 
