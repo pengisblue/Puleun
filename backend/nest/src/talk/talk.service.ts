@@ -37,7 +37,7 @@ export class TalkService {
         'pot.pot_id', 'pot.pot_img_url'])
         .leftJoin('talk.pot','pot','talk.pot_id = pot.pot_id')
         .leftJoin('pot.user', 'user','pot.user_id = user.user_id')
-        .where('user.talk_id = :talk_id',{talk_id})
+        .where('talk.talk_id = :talk_id',{talk_id})
         .getOne()
         .then((v)=> plainToClass(TalkListDto, v))
         await this.talkRepository.update(talk_id, {read_FG: true});
