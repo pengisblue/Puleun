@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Device } from './device.entity';
 import { Repository } from 'typeorm';
-import { DeviceCreateDto, SelectDeviceDto } from './device-req.dto';
+import { DeviceCreateDto, DeviceUpdateDto, SelectDeviceDto } from './device-req.dto';
 
 @Injectable()
 export class DeviceService {
@@ -36,15 +36,16 @@ export class DeviceService {
   }
 
   async connectDevice(serial_number: string, client_id: string): Promise<string>{
-    const [device] = await this.deviceRepository.find({where:{serial_number}, take:1})
-    device.serial_number = serial_number; device.client_id = client_id
-    device.empty_FG = false
-    await this.deviceRepository.update(device.device_id, device)
+    const [res] = await this.deviceRepository.find({where:{serial_number}, take:1})
+    res.client_id = client_id
+    await this.deviceRepository.update(res.device_id, res)
     return "success"
   }
 
   async disconnectDevice(client_id: string): Promise<string>{
-    await this.deviceRepository.update(client_id, {empty_FG:true, client_id:null})
+    const [res] = await this.deviceRepository.find({where:{client_id}, take:1})
+    res.client_id = null
+    await this.deviceRepository.update(res.device_id, res)
     return "success"
   }
 

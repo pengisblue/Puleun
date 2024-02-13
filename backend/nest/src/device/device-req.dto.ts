@@ -22,6 +22,19 @@ export class DeviceCreateDto{
     client_id?: string=null;
 }
 
+
+export class DeviceUpdateDto{
+    @IsString()
+    @Type(()=> String)
+    serial_number: string;
+
+    @Type( () => Boolean )
+    empty_FG?: boolean=false;
+
+    @IsOptional()
+    client_id?: string=null;
+}
+
 @Exclude()
 export class SelectDeviceDto{
 
