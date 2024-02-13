@@ -46,7 +46,7 @@ export default function Navigation() {
     } else {
       setEnabled(true);
       Session.set("kidsmode", true);
-      navigate("/kid/select");
+      navigate("/kids/select");
       dispatch(authActions.activateKidsMode());
     }
   };
@@ -78,7 +78,7 @@ export default function Navigation() {
 
               <div className="flex items-center justify-center">
                 <div className="flex flex-shrink-0 items-center">
-                  <Link to={!isKidsMode ? "/" : "/kid/select"}>
+                  <Link to={!isKidsMode ? "/" : "/kids/select"}>
                     <img className="h-9 w-auto" src={navImg} alt="푸른" />
                   </Link>
                 </div>
