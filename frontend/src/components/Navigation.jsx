@@ -7,6 +7,7 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Session from "react-session-api";
 import navImg from "../asset/log.svg";
 import { authActions } from "../store/auth-slice";
+import { API_URL } from "../config/config";
 
 const navigation = [
   { name: "화분 관리", href: "/pot", current: false },
@@ -27,6 +28,11 @@ export default function Navigation() {
   const logoutHandler = () => {
     dispatch(authActions.logout());
   };
+
+  function getUserImage() {
+    const userInfo = localStorage.getItem("userInfo");
+    return userInfo ? JSON.parse(userInfo).userImgUrl : null;
+  }
 
   const [enabled, setEnabled] = useState(false);
 
@@ -109,14 +115,13 @@ export default function Navigation() {
                       <span className="absolute -inset-1.5" />
                       <span className="sr-only">Open user menu</span>
                       {/* 프로필 이미지 */}
-                      <img
-                        className="h-8 w-8 rounded-full"
-                        src={
-                          JSON.parse(localStorage.getItem("userInfo"))
-                            .userImgUrl
-                        }
-                        alt="kid"
-                      />
+                      {getUserImage() && (
+                        <img
+                          className="h-8 w-8 rounded-full"
+                          src={API_URL + getUserImage()}
+                          alt="kid"
+                        />
+                      )}
                     </Menu.Button>
                   </div>
                   <Transition
@@ -181,6 +186,7 @@ export default function Navigation() {
                         {({ active }) => (
                           <Form method="post" action="/logout">
                             <button
+                              onClick={logoutHandler}
                               className={classNames(
                                 active ? "bg-gray-100" : "",
                                 "block px-4 py-2 text-sm text-gray-700",
