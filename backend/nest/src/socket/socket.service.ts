@@ -27,15 +27,13 @@ export class SocketService {
     result.serial_number = serial_number
     // 파라미터 없음
     if (serial_number==null) throw new HttpException("plz serial_number", HttpStatus.BAD_REQUEST);
-
-    // 소켓 id 저장 해야함
-    await this.deviceService.connectDevice(serial_number, clientId)
-
+    
     // 처음온 연결인 경우
     if (device == null){
-      const device = new DeviceCreateDto
+      const device = new DeviceCreateDto()
       device.serial_number = serial_number
-      device.empty_FG = false
+      device.empty_FG = true
+      device.client_id = clientId
       await this.deviceService.save(device)
       result.is_owner = false
       return result
@@ -44,7 +42,11 @@ export class SocketService {
     result.is_owner = true
     if (device.pot_id != null) {
       result.pot_id = device.pot_id
-      result.is_owner = false
+      if (result.pot_id) result.is_owner = true
+      else result.is_owner = true
+      
+      // 소켓 id 저장
+      await this.deviceService.connectDevice(serial_number, clientId)
     }
     return result;
   }
@@ -152,15 +154,19 @@ export class SocketService {
     situationDto.name_voice =  status.nickname + await this.selectPostposition(status.nickname);
 
     const nameVoicePath = "./upload/name_voice/" + situationDto.name_voice + '.wav'
+    await this.ttsService.tts(situationDto.name_voice, nameVoicePath);
 
     const content = await new Promise<Buffer>((resolve, reject) => {
-      fs.readFile(situationDto.basic_voice, (err, data) => {
-        if (err) reject(err)
-         else resolve(data)        
+      fs.readFile(nameVoicePath, (err, data) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(data)
+        }
       })
     })
-    situationDto.buffer = Buffer.from(content).toString('base64');
-    await this.ttsService.tts(nameVoicePath, situationDto.name_voice);
+    situationDto.buffer = Buffer.from(content).toString('base64')
+    console.log(situationDto);
 
     return situationDto;
   }

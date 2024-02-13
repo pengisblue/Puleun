@@ -1,13 +1,20 @@
 import { useState } from "react";
+import axios from "axios";
 import Button from "../components/UI/Button";
 import Input from "../components/UI/Input";
 import KidProfileImage from "../components/Kids/KidProfileImage";
 import defaultImg from "../asset/no_profile_img.png";
+import { useNavigate } from "react-router-dom";
 
 export default function KidCreatePage() {
-  // 이미지
   const [preview, setPreview] = useState(defaultImg);
   const [inputImg, setInputImg] = useState(null);
+  const [nickname, setNickname] = useState(null);
+  const today = new Date().toISOString().split("T")[0];
+  const [birthDate, setBirthDate] = useState(today);
+  const [gender, setGender] = useState(null);
+  const navigate = useNavigate();
+
   const handleInputImg = (event) => {
     const files = event.target.files;
     if (files.length > 0) {
@@ -22,25 +29,38 @@ export default function KidCreatePage() {
     console.log(inputImg);
   };
 
-  // 애칭
-  const [nickname, setNickname] = useState(null);
   const handleNickname = (event) => {
     setNickname(event.target.value);
     console.log(nickname);
   };
 
-  // 생년월일
-  const today = new Date().toISOString().split("T")[0];
-  const [birthDate, setBirthDate] = useState(today);
   const handleBirthDate = (event) => {
     setBirthDate(event.target.value);
   };
 
-  // 성별
-  const [gender, setGender] = useState(null);
   const handleGender = (event) => {
     setGender(event.target.value);
     console.log(gender);
+  };
+
+  const handleCreate = async () => {
+    try {
+      const response = await axios.post(
+        "https://i10e101.p.ssafy.io/v1/user/child",
+        {
+          nickname: nickname,
+          birth_DT: birthDate,
+          gender: gender,
+          parent_id: 1,
+        },
+      );
+
+      console.log(response);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      navigate("/kids");
+    }
   };
 
   return (
@@ -105,6 +125,7 @@ export default function KidCreatePage() {
             <div className="mt-5 grid place-content-center">
               <Button
                 isDisabled={false}
+                onClick={handleCreate}
                 className="w-40 bg-amber-300 text-white hover:bg-amber-400"
               >
                 등록하기

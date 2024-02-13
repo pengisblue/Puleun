@@ -45,9 +45,9 @@ export class PotController {
                     fileIsRequired: false,
                     errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
                 })
-        ) file?: Express.Multer.File ): Promise<number>{
+        ) file?: Express.Multer.File ): Promise<String>{
         this.potService.save(createPotDto, file);
-        return 1;
+        return `SUCCESS`;
     }
 
     @Put(':pot_id')
