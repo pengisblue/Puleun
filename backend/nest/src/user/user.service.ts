@@ -49,9 +49,7 @@ export class UserService {
         } catch (e){
             user.profile_img_url = join(process.cwd(), '/upload/profile/noImg.png')
         }
-        console.log(1)
         await this.userRepository.update(user.user_id,{...user})
-        console.log(2)
         return user.user_id;
     }
 

@@ -4,7 +4,7 @@ import { Talk } from './talk.entity';
 import { Repository } from 'typeorm';
 import { TalkListDto } from './talk-res.dto';
 import { FileService } from './../file/file.service';
-import { plainToClass } from 'class-transformer';
+import { plainToClass, plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class TalkService {
@@ -39,7 +39,7 @@ export class TalkService {
         .leftJoin('pot.user', 'user','pot.user_id = user.user_id')
         .where('talk.talk_id = :talk_id',{talk_id})
         .getOne()
-        .then((v)=> plainToClass(TalkListDto, v))
+        .then((v)=> v as unknown as TalkListDto)
         await this.talkRepository.update(talk_id, {read_FG: true});
 
         return res
@@ -59,7 +59,7 @@ export class TalkService {
         .where('user.user_id = :user_id',{user_id})
         .getMany()
         .then((v)=> {
-            return v.map(o=>plainToClass(TalkListDto, o))
+            return v.map(o=>o as unknown as TalkListDto)
         })
         return res;
     }
