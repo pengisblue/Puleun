@@ -16,6 +16,16 @@ export class PotUserDto{
 }
 
 export class CreatePotDto {
+    @IsNumber()
+    @ApiProperty({example: 1})
+    @Type(() => Number)
+    device_id: number;
+
+    // @IsNumber()
+    // @ApiProperty({example: 1})
+    // @Type(() => Number)
+    // pot_id: number;
+
     @IsString()
     @Length(1,10)
     @ApiProperty({example: '푸른', required: true})

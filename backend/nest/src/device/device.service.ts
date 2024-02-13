@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Device } from './device.entity';
 import { IsNull, Not, Repository } from 'typeorm';
 import { DeviceCreateDto, PotInitDeviceDto, SelectDeviceDto, UserInitDeviceDto } from './device-req.dto';
-import { take } from 'rxjs';
 
 @Injectable()
 export class DeviceService {
@@ -71,5 +70,9 @@ export class DeviceService {
     const [device] = await this.deviceRepository.find({where: {serial_number}, take: 1})
     if(device == null) return false;
     else return true;
+  }
+
+  async mappingPot(device_id: number, pot_id: number){
+    return await this.deviceRepository.update(device_id, {pot_id: pot_id});
   }
 }
