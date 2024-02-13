@@ -13,6 +13,8 @@ import TalkListPage from "./pages/TalkListPage";
 import TalkDetailPage from "./pages/TalkDetailPage";
 import LandingPage from "./pages/LandingPage";
 import CollectionPage from "./pages/CollectionPage";
+import LoginPage, { action as loginAction } from "./pages/LoginPage";
+import SignUpPage, { action as signUpAction } from "./pages/SignUpPage";
 import MeassageListPage from "./pages/MessageListPage";
 import KidsmodePage from "./pages/KidsmodePage";
 import MessageCreatePage from "./pages/MessageCreatePage";
@@ -44,6 +46,17 @@ const router = createBrowserRouter([
     path: "/hello",
     element: <LandingPage />,
   },
+  {
+    path: "/login",
+    element: <LoginPage />,
+    action: loginAction,
+  },
+  {
+    path: "/signup",
+    element: <SignUpPage />,
+    action: signUpAction,
+  },
+
   // 테스트용
   // {
   //   path: "/test",

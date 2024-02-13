@@ -2,7 +2,11 @@ import { Fragment, useState } from "react";
 import { Combobox, Transition } from "@headlessui/react";
 import chevronUpDown from "../../asset/chevron-up-down.svg";
 
-export default function SpeciesSelector({ plantList, onSelect, selectedPlant }) {
+export default function SpeciesSelector({
+  plantList,
+  onSelect,
+  selectedPlant,
+}) {
   const [selected, setSelected] = useState(selectedPlant);
   const [query, setQuery] = useState("");
 
@@ -30,7 +34,8 @@ export default function SpeciesSelector({ plantList, onSelect, selectedPlant }) 
         <div className="relative w-full cursor-default rounded-lg bg-white text-left">
           {/* 입력창 */}
           <Combobox.Input
-            className="w-full rounded-lg border-gray-100 py-3 pl-3 pr-10 leading-5 text-gray-800 shadow-md focus:border-amber-100 focus:ring focus:ring-amber-200 focus:ring-opacity-50"
+            className="w-full rounded-lg border-gray-100 py-3 pl-3 pr-10 leading-5 text-gray-900 shadow-sm 
+              focus:border-amber-100 focus:shadow-md focus:ring focus:ring-amber-200 focus:ring-opacity-50"
             displayValue={(plant) => plant.name}
             onChange={(event) => setQuery(event.target.value)}
           />
@@ -56,7 +61,14 @@ export default function SpeciesSelector({ plantList, onSelect, selectedPlant }) 
             {/* 사용자 직접입력 */}
             {query.length > 0 && !existsPlant && (
               <Combobox.Option
-                value={{ id: null, name: query, maxTemperature: "", minTemperature: "", maxMoisture: "", minMoisture: ""}}
+                value={{
+                  id: null,
+                  name: query,
+                  maxTemperature: "",
+                  minTemperature: "",
+                  maxMoisture: "",
+                  minMoisture: "",
+                }}
                 className="relative cursor-default select-none px-4 py-2 text-gray-700"
               >
                 "{query}" 직접 입력
