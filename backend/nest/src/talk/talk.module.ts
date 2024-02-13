@@ -6,9 +6,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Talk } from './talk.entity';
 import { RedisModule } from 'src/redis/redis.module';
 import { SentenceModule } from 'src/sentence/sentence.module';
+import { FileModule } from 'src/file/file.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Talk]), UserModule, RedisModule, SentenceModule],
+  imports: [TypeOrmModule.forFeature([Talk]), UserModule, RedisModule, SentenceModule, FileModule],
   controllers: [TalkController],
   providers: [TalkService],
   exports: [TalkService]

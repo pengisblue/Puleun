@@ -25,7 +25,7 @@ export class CalenderService {
     /** save "W" day or "T" day*/
     async save(calenderCreateDto: CalenderCreateDto): Promise<string>{
         const res = await this.getLastDay(calenderCreateDto.pot_id, calenderCreateDto.code)
-        const today = this.fileService.getToday() as unknown as Date
+        const today: Date = new Date(this.fileService.getToday())
         if (!res || (res.getFullYear() == today.getFullYear()
                 && res.getMonth() == today.getMonth()
                 && res.getDate() == today.getDate())) await this.calenderRepository.save(calenderCreateDto)

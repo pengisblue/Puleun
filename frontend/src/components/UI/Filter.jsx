@@ -14,8 +14,8 @@ export default function Filter({
     <div>
       <select
         onChange={handleChange}
-        className="mt-2 block w-full rounded-lg border-gray-100 text-gray-800 shadow-md
-        focus:border-amber-100 focus:ring focus:ring-amber-200 focus:ring-opacity-50"
+        className="mt-2 block w-full rounded-lg border-gray-100 text-gray-900 shadow-sm
+        focus:border-amber-100 focus:shadow-md focus:ring focus:ring-amber-200 focus:ring-opacity-50"
       >
         <option value="" className={"hidden"}>
           선택

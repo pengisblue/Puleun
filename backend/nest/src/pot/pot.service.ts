@@ -141,7 +141,8 @@ export class PotService {
 
     async save(createPotDto: CreatePotDto, file?: Express.Multer.File) {
         await this.potRepository.save(createPotDto);
-        const [pot] = await this.potRepository.find({where:createPotDto, take:1})
+        const pot: Pot = createPotDto as Pot;
+
         const filePath = join(process.cwd(), '/upload/pot/')
         if (!fs.existsSync(filePath)) fs.mkdir(filePath, (e)=>{if (e) throw e})
         try{
@@ -191,6 +192,11 @@ export class PotService {
           .getMany();
       }
 
+    async find(pot_id:number): Promise<Pot>{
+        const [pot] = await this.potRepository.find({relations:{user:true}, where:{pot_id}, take:1})
+        return pot
+    }
+    
     async collectionDetail(pot_id: number): Promise<Pot>{
         const result = await this.potRepository.findOne({
             where: {pot_id: pot_id}

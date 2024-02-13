@@ -32,8 +32,8 @@ export default function KidListPage() {
         >
           <KidCard
             nickname={kidList[i].nickname}
-            profile_img_url={kidImg}
-            size="w-80 h-44"
+            profile_img_url={kidList[i].profile_img_url}
+            className="h-44 w-80"
             display="hidden"
           ></KidCard>
         </div>,
@@ -47,7 +47,7 @@ export default function KidListPage() {
     const getKids = async () => {
       try {
         const response = await axios.get(
-          "https://i10e101.p.ssafy.io/v1/user/child/1",
+          `https://i10e101.p.ssafy.io/v1/user/child/${JSON.parse(localStorage.getItem("userInfo")).userId}`,
         );
         setKidList(response.data);
       } catch (e) {
@@ -74,7 +74,7 @@ export default function KidListPage() {
       <div className="my-6 grid w-full grid-cols-1 place-items-center">
         {handledList()}
         <div onClick={goCreateKid} className="cursor-pointer">
-          <AddDetailCard text="아이 추가하기" size="w-80 h-44" />
+          <AddDetailCard text="아이 추가하기" className="h-44 w-80" />
         </div>
       </div>
     </div>

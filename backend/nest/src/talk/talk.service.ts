@@ -1,37 +1,28 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Talk } from './talk.entity';
-import { Repository, SelectQueryBuilder } from 'typeorm';
-import { UserService } from 'src/user/user.service';
-import { RedisService } from 'src/redis/redis.service';
-import { SentenceService } from 'src/sentence/sentence.service';
-import { TalkCreateDto } from './talk-req.dto';
+import { Repository } from 'typeorm';
 import { TalkListDto } from './talk-res.dto';
+import { FileService } from './../file/file.service';
 
 @Injectable()
 export class TalkService {
     constructor(
         @InjectRepository(Talk) 
         private readonly talkRepository: Repository<Talk>,
-        private readonly userService: UserService,
-        private readonly redisService: RedisService,
-        private readonly sentenceService: SentenceService,
+        private readonly fileService: FileService,
     ){}
 
     
     /** make talk by talk start */
-    async saveTalk(talk_title: string, talk_DT: string): Promise<number>{
-        const dto:TalkCreateDto = new TalkCreateDto()
-        const DT = talk_DT as unknown as Date
-        dto.talk_DT = DT
+    async saveTalk(pot_id: number, talk_title: string): Promise<number>{
+        const dto:Talk = new Talk()
+        const talk_DT = this.fileService.getToday()
+        dto.talk_DT = talk_DT
         dto.talk_title = talk_title
+        dto.pot_id = pot_id
         await this.talkRepository.save(dto)
-        const [res] = await this.talkRepository.find({
-            select:['talk_id'],
-            where: {talk_DT:DT, talk_title},
-            take: 1
-        })
-        return res.talk_id
+        return dto.talk_id
     }
     
     /** find all sentence by talk_id */
@@ -42,6 +33,7 @@ export class TalkService {
             where: {talk_id},
             take: 1
         })
+        await this.talkRepository.update(talk_id, {read_FG: true});
         return res
     }
     

@@ -39,6 +39,7 @@ export class UserService {
     async save(data: CreateUserDto, file?: Express.Multer.File): Promise<number>{
         await this.userRepository.save(data);
         const filePath = join(process.cwd(), '/upload/profile/')
+        if (!fs.existsSync(process.cwd()+'/upload/')) fs.mkdir(process.cwd()+'/upload/', (e)=>{if (e) throw e})
         if (!fs.existsSync(filePath)) fs.mkdir(filePath, (e)=>{if (e) throw e})
         const user: User = data as User
         try{

@@ -8,6 +8,9 @@ import { CalenderService } from 'src/calender/calender.service';
 import { CalenderCreateDto } from 'src/calender/calender-req.dto';
 import { TalkService } from 'src/talk/talk.service';
 import { DeviceService } from 'src/device/device.service';
+import { PotService } from 'src/pot/pot.service';
+import { Pot } from 'src/pot/pot.entity';
+import { join } from 'path';
 
 @WebSocketGateway(7080, {
   cors: { origin: "*",},
@@ -25,6 +28,7 @@ export class SocketGateway {
     private readonly calenderService: CalenderService,
     private readonly talkService: TalkService,
     private readonly deviceService: DeviceService,
+    private readonly potService: PotService,
   ){}
 
   handleConnection( client: Socket ){
@@ -74,11 +78,13 @@ export class SocketGateway {
 
   @SubscribeMessage('hot_word')
   async hotWord( @ConnectedSocket() client: Socket, @MessageBody('pot_id') pot_id: number ): Promise<void>{
-    const dto = new CalenderCreateDto;
+    const dto = new CalenderCreateDto()
     dto.pot_id = pot_id
     dto.code = 'T'
     this.calenderService.save(dto)
-    const talk_id = await this.talkService.saveTalk("푸른 푸르른", "2023-02-01")
+    const pot:Pot = await this.potService.find(pot_id)
+    const fileName = join(pot.pot_name, '과', pot.user.nickname)
+    const talk_id = await this.talkService.saveTalk(pot_id, fileName)
     client.emit('talk_id',{talk_id})
   }
 

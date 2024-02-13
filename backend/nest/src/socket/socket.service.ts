@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import * as fs from 'fs';
 import { DeviceService } from './../device/device.service';
 import { SituationDto, SocketLoginDto } from './socket.dto';
-import { DeviceCreateDto } from 'src/device/device-req.dto';
+import { DeviceCreateDto, DeviceUpdateDto } from 'src/device/device-req.dto';
 import { SentenceService } from 'src/sentence/sentence.service';
 import { TtsService } from 'src/tts/tts.service';
 import { FileService } from './../file/file.service';
@@ -22,31 +22,31 @@ export class SocketService {
 
   // device 정보 + socket id 저장
   async login(clientId:string, serial_number: string): Promise<SocketLoginDto>{
+    if (!serial_number) throw new HttpException('needed serial_number', HttpStatus.BAD_REQUEST)
     const device = await this.deviceService.findBySerialNumber(serial_number)
-    const result = new SocketLoginDto
-    result.serial_number = serial_number
-    // 파라미터 없음
-    if (serial_number==null) throw new HttpException("plz serial_number", HttpStatus.BAD_REQUEST);
-    
+    const result = new SocketLoginDto()
+
+    result.is_owner = false
+    result.pot_id = null
     // 처음온 연결인 경우
-    if (device == null){
-      const device = new DeviceCreateDto
-      device.serial_number = serial_number
-      device.empty_FG = false
-      device.client_id = clientId
-      await this.deviceService.save(device)
-      result.is_owner = false
-      return result
-    }
+    if (!device){
+      const deviceDto: DeviceCreateDto = new DeviceCreateDto()
+      deviceDto.client_id = clientId
+      deviceDto.empty_FG = true
+      deviceDto.pot_id = null
+      deviceDto.serial_number = serial_number
+      deviceDto.user_id = null
+      await this.deviceService.save(deviceDto)
+      result.serial_number = serial_number
     // 이전 연결이 있는 경우
-    result.is_owner = true
-    if (device.pot_id != null) {
-      result.pot_id = device.pot_id
-      result.is_owner = false
-      
-      // 소켓 id 저장
+    }else{
       await this.deviceService.connectDevice(serial_number, clientId)
+      if (device.user_id) result.is_owner = true
+      if (device.pot_id) result.pot_id = device.pot_id
     }
+    //for test
+    result.is_owner = true
+    result.pot_id = 1
     return result;
   }
 

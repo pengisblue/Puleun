@@ -11,12 +11,12 @@ import kidImg from "../test/kid1.png";
 export default function KidDetailPage() {
   const { userId } = useParams();
   const [user, setUser] = useState({
-    userId: userId,
-    userImgUrl: "",
+    user_id: userId,
+    profile_img_url: "",
     nickname: "",
-    birthDT: "",
+    birth_DT: "",
     gender: "",
-    parentId: 0,
+    parent_id: 0,
     pots: [],
   });
   const navigate = useNavigate();
@@ -25,9 +25,21 @@ export default function KidDetailPage() {
     return () => navigate(`/pot/${pot_id}`);
   };
 
-  const goCollection = (userId) => {
-    return () => navigate(`/collection/${userId}`)
-  }
+  const goCollection = (user_id) => {
+    return () => navigate(`/collection/${user_id}`);
+  };
+
+  const deleteKid = async () => {
+    try {
+      const response = await axios.delete(
+        `https://i10e101.p.ssafy.io/v1/user/${userId}`,
+      );
+    } catch (e) {
+      console.log(e);
+    } finally {
+      navigate("/kids");
+    }
+  };
 
   useEffect(() => {
     const getUser = async () => {
@@ -35,20 +47,14 @@ export default function KidDetailPage() {
         const response = await axios.get(
           `https://i10e101.p.ssafy.io/v1/user/${userId}`,
         );
-        // console.log(response.data)
-        setUser({
-          ...response.data,
-          userId: response.data.user_id,
-          userImgUrl: response.data.profile_img_url,
-          birthDT: response.data.birth_DT,
-          parentId: response.data.parent_id,
-        });
+        setUser(response.data);
       } catch (e) {
         console.log(e);
       }
     };
     getUser();
-  }, [userId]);
+    console.log(user);
+  }, [userId, user]);
 
   return (
     <div className="px-6">
@@ -64,15 +70,16 @@ export default function KidDetailPage() {
                 <span>이름: {user.nickname}</span>
               </li>
               <li className="py-2">
-                <span>생년월일: {user.birthDT}</span>
+                <span>생년월일: {user.birth_DT}</span>
               </li>
               <li className="py-2">
                 <span>성별: {user.gender}</span>
               </li>
               <li className="py-2">
-                <Button 
-                onClick={goCollection(userId)}
-                className="bg-amber-300 text-white hover:bg-amber-400">
+                <Button
+                  onClick={goCollection(userId)}
+                  className="bg-amber-300 text-white hover:bg-amber-400"
+                >
                   컬렉션 바로가기
                 </Button>
               </li>
@@ -94,7 +101,7 @@ export default function KidDetailPage() {
                 className="cursor-pointer"
               >
                 <PotSimpleCard
-                  userImgUrl={user.userImgUrl}
+                  userImgUrl={user.profile_img_url}
                   potName={pot.pot_name}
                   potImgUrl={pot.pot_img_url}
                   className="w-36"
@@ -103,6 +110,14 @@ export default function KidDetailPage() {
             ))}
           </div>
         </section>
+      </div>
+      <div className="mb-12 mt-6 flex flex-col gap-4">
+        <Button
+          onClick={deleteKid}
+          className="bg-red-500 text-white hover:bg-red-600"
+        >
+          아이 삭제
+        </Button>
       </div>
     </div>
   );

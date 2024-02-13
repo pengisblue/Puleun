@@ -10,10 +10,10 @@ export class Talk {
   @Column({ length: 30, nullable: false })
   talk_title: string;
   
-  @Column({ type: 'datetime', nullable: false })
+  @Column({ type: 'datetime', nullable: false, default: () => 'CURRENT_TIMESTAMP' })
   talk_DT: Date;
 
-  @Column({ type: 'tinyint', nullable: false })
+  @Column({ type: 'tinyint', nullable: false, default: 0 })
   read_FG: boolean
 
   @ManyToOne(() => Pot, (pot) => pot.talk )
