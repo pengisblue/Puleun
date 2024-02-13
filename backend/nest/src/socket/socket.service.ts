@@ -27,15 +27,13 @@ export class SocketService {
     result.serial_number = serial_number
     // 파라미터 없음
     if (serial_number==null) throw new HttpException("plz serial_number", HttpStatus.BAD_REQUEST);
-
-    // 소켓 id 저장 해야함
-    await this.deviceService.connectDevice(serial_number, clientId)
-
+    
     // 처음온 연결인 경우
     if (device == null){
-      const device = new DeviceCreateDto
+      const device = new DeviceCreateDto()
       device.serial_number = serial_number
       device.empty_FG = false
+      device.client_id = clientId
       await this.deviceService.save(device)
       result.is_owner = false
       return result
@@ -44,7 +42,11 @@ export class SocketService {
     result.is_owner = true
     if (device.pot_id != null) {
       result.pot_id = device.pot_id
-      result.is_owner = false
+      if (result.pot_id) result.is_owner = true
+      else result.is_owner = false
+      
+      // 소켓 id 저장
+      await this.deviceService.connectDevice(serial_number, clientId)
     }
     return result;
   }

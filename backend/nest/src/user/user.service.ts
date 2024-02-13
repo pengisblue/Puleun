@@ -38,10 +38,9 @@ export class UserService {
 
     async save(data: CreateUserDto, file?: Express.Multer.File): Promise<number>{
         await this.userRepository.save(data);
-        const [user] = await this.userRepository.find({where:{...data},take:1})
         const filePath = join(process.cwd(), '/upload/profile/')
         if (!fs.existsSync(filePath)) fs.mkdir(filePath, (e)=>{if (e) throw e})
-        await this.userRepository.save(user)
+        const user: User = data as User
         try{
             const split = file.originalname.split('.')
             const extension = split[split.length -1]
@@ -51,7 +50,9 @@ export class UserService {
         } catch (e){
             user.profile_img_url = join(process.cwd(), '/upload/profile/noImg.png')
         }
+        console.log(1)
         await this.userRepository.update(user.user_id,{...user})
+        console.log(2)
         return user.user_id;
     }
 
