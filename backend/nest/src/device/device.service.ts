@@ -12,7 +12,8 @@ export class DeviceService {
   ){}
 
   async findBySerialNumber(serial_number: string): Promise<Device>{
-    return this.deviceRepository.findOneBy({serial_number});
+    const [res] = await this.deviceRepository.find({where:{serial_number}, take:1})
+    return res
   }
   
   async save(device: DeviceCreateDto): Promise<number>{
@@ -35,8 +36,8 @@ export class DeviceService {
   }
 
   async connectDevice(serial_number: string, client_id: string): Promise<string>{
-    const [deviece] = await this.deviceRepository.find({where:{serial_number}, take:1})
-    await this.deviceRepository.update(deviece.device_id, {empty_FG:false, client_id})
+    const [device] = await this.deviceRepository.find({where:{serial_number}, take:1})
+    await this.deviceRepository.update(device.device_id, {empty_FG:false, client_id})
     return "success"
   }
 
