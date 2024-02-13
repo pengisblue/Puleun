@@ -4,6 +4,8 @@ import { Calender } from './calender.entity';
 import { Repository } from 'typeorm';
 import { CalenderCreateDto } from './calender-req.dto';
 import { FileService } from './../file/file.service';
+import { SelectCalenderDto, SimpleCalenderDto } from './calender.dto';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class CalenderService {
@@ -14,12 +16,8 @@ export class CalenderService {
     ){}
     
     /** 식물의 캘린더 찾기 */
-    async findCalenderByPotId(pot_id: number): Promise<Calender[]>{
-        const entity = await this.calenderRepository.createQueryBuilder('calender')
-            .where('calender.pot_id= :pot_id', {pot_id})
-            .leftJoinAndSelect('calender.pot', 'pot')
-            .select(['calender']).getMany();
-        return entity;
+    async findCalenderByPotId(pot_id: number): Promise<SimpleCalenderDto[]>{
+        return plainToInstance(SimpleCalenderDto, await this.calenderRepository.find({where:{pot_id}}), {excludeExtraneousValues: true});
     }
 
     /** save "W" day or "T" day*/
@@ -32,8 +30,8 @@ export class CalenderService {
         return "success";
     }
 
-    async findAllCalender(): Promise<Calender[]>{
-        return await this.calenderRepository.find();
+    async findAllCalender(): Promise<SimpleCalenderDto[]>{
+        return plainToInstance(SimpleCalenderDto, await this.calenderRepository.find(), {excludeExtraneousValues: true});
     }
 
     async getLastDay(pot_id: number, code:string):Promise<Date>{

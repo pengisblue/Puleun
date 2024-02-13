@@ -60,16 +60,6 @@ export class CreatePotDto {
     @IsOptional()
     pot_img_url: string;
 
-    @IsNumber()
-    @IsOptional()
-    @ApiProperty({example: 10.5, description: '현재 화분의 온도'})
-    temperature: number;
-
-    @IsOptional()
-    @IsNumber()
-    @ApiProperty({example: 10.5, description: '현재 화분의 습도'})
-    moisture: number;
-
     @IsOptional()
     @IsDate()
     @ApiProperty({example: '2023-02-13', description: '심은 날'})

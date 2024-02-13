@@ -12,9 +12,19 @@ export class calenderPotDto{
 export class SelectCalenderDto{
     @Expose()
     calender_id: number;
+
     @Expose()
     code: string;
 
     @Expose()
     pot: calenderPotDto;
+}
+
+@Exclude()
+export class SimpleCalenderDto{
+    @Expose()
+    code: string;
+
+    @Expose()
+    createdAt: Date;
 }
