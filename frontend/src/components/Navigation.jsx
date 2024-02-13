@@ -8,14 +8,11 @@ import Session from "react-session-api";
 import navImg from "../asset/log.svg";
 import { authActions } from "../store/auth-slice";
 
-// 하드코딩용
-import kidImg from "../test/kid3.png";
-
 const navigation = [
   { name: "화분 관리", href: "/pot", current: false },
   { name: "아이 관리", href: "/kids", current: false },
   { name: "대화 관리", href: "/talk", current: false },
-  { name: "알람 관리", href: "/message", current: false }
+  { name: "알람 관리", href: "/message", current: false },
 ];
 
 function classNames(...classes) {
@@ -114,7 +111,10 @@ export default function Navigation() {
                       {/* 프로필 이미지 */}
                       <img
                         className="h-8 w-8 rounded-full"
-                        src={kidImg}
+                        src={
+                          JSON.parse(localStorage.getItem("userInfo"))
+                            .userImgUrl
+                        }
                         alt="kid"
                       />
                     </Menu.Button>
@@ -161,19 +161,6 @@ export default function Navigation() {
                             )}
                           >
                             Your Profile
-                          </a>
-                        )}
-                      </Menu.Item>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            href="#!"
-                            className={classNames(
-                              active ? "bg-gray-100" : "",
-                              "block px-4 py-2 text-sm text-gray-700",
-                            )}
-                          >
-                            Settings
                           </a>
                         )}
                       </Menu.Item>

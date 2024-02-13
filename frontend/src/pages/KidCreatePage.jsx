@@ -44,6 +44,8 @@ export default function KidCreatePage() {
   };
 
   const handleCreate = async () => {
+    console.log(localStorage.getItem("userInfo").userId);
+
     try {
       const response = await axios.post(
         "https://i10e101.p.ssafy.io/v1/user/child",
@@ -51,7 +53,7 @@ export default function KidCreatePage() {
           nickname: nickname,
           birth_DT: birthDate,
           gender: gender,
-          parent_id: 1,
+          parent_id: JSON.parse(localStorage.getItem("userInfo")).userId,
         },
       );
 
