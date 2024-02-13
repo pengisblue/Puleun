@@ -27,7 +27,7 @@ export const potDetailList = [
     potImgUrl: potImg2,
     potSpecies: "방울토마토",
     nowTemprature: 22,
-    tempratureStatus: "적정",
+    tempratureStatus: "낮음",
     nowMoisture: 50,
     moistureStatus: "적정",
     daysSinceWatering: 3,
@@ -42,9 +42,9 @@ export const potDetailList = [
     potImgUrl: potImg1,
     potSpecies: "방울토마토",
     nowTemprature: 22,
-    tempratureStatus: "적정",
+    tempratureStatus: "높음",
     nowMoisture: 50,
-    moistureStatus: "적정",
+    moistureStatus: "부족",
     daysSinceWatering: 3,
     plantDate: "2024-01-12",
     daysSincePlanting: 14,
@@ -59,7 +59,7 @@ export const potDetailList = [
     nowTemprature: 22,
     tempratureStatus: "적정",
     nowMoisture: 50,
-    moistureStatus: "적정",
+    moistureStatus: "초과",
     daysSinceWatering: 3,
     plantDate: "2024-01-12",
     daysSincePlanting: 14,
@@ -100,3 +100,18 @@ export const potDetailInfo = {
   plantDate: "2024-01-12",
   daysSincePlanting: 14,
 };
+
+export const potList = [
+  {
+    potId: 1,
+    potName: "방토방토토",
+  },
+  {
+    potId: 2,
+    potName: "방토방토토2",
+  },
+  {
+    potId: 3,
+    potName: "방토방토토3",
+  },
+];

@@ -13,6 +13,10 @@ import TalkListPage from "./pages/TalkListPage";
 import TalkDetailPage from "./pages/TalkDetailPage";
 import LandingPage from "./pages/LandingPage";
 import CollectionPage from "./pages/CollectionPage";
+import KidsModeRootLayout from "./pages/KidsModeRoot";
+import KidsModeDetailLayout from "./pages/KidsModeDetail";
+import KidsModePot from "./pages/KidsModePot";
+import KidsModeCollection from "./pages/KidsModeCollection";
 import LoginPage, { action as loginAction } from "./pages/LoginPage";
 import SignUpPage, { action as signUpAction } from "./pages/SignUpPage";
 import MeassageListPage from "./pages/MessageListPage";
@@ -38,8 +42,28 @@ const router = createBrowserRouter([
       { path: "/talk/:talkId", element: <TalkDetailPage /> },
       { path: "/collection/:userId", element: <CollectionPage /> },
       { path: "/kids/select", element: <KidSelectPage></KidSelectPage> },
-      { path: "/kidsmode/:userId", element: <KidsmodePage></KidsmodePage> },
       { path: "/message/create", element: <MessageCreatePage></MessageCreatePage> },
+    ],
+  },
+  {
+    path: "/kidsmode",
+    element: <KidsModeRootLayout />,
+    children: [
+      {
+        index: true,
+        element: <KidSelectPage />,
+      },
+      {
+        path: "/kidsmode/:userId",
+        element: <KidsModeDetailLayout />,
+        children: [
+          { index: true, element: <KidsModePot /> },
+          {
+            path: "/kidsmode/:userId/collection",
+            element: <KidsModeCollection />,
+          },
+        ],
+      },
     ],
   },
   {
