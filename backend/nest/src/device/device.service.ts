@@ -56,11 +56,6 @@ export class DeviceService {
     await this.deviceRepository.update(res.device_id, {device_name: userInitDeviceDto.device_name, user_id: userInitDeviceDto.user_id})
   }
 
-  /** 기기를 화분에 매핑 */
-  async mappingPotDevice(potInitDeviceDto: PotInitDeviceDto){
-    await this.deviceRepository.update(potInitDeviceDto.device_id, {pot_id: potInitDeviceDto.pot_id})
-  }
-
   async deleteDevice(device_id: number){
     await this.deviceRepository.delete(device_id);
   }
@@ -73,6 +68,6 @@ export class DeviceService {
   }
 
   async mappingPot(device_id: number, pot_id: number){
-    return await this.deviceRepository.update(device_id, {pot_id: pot_id});
+    return await this.deviceRepository.update(device_id, {pot_id, empty_FG: true});
   }
 }
