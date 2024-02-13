@@ -15,7 +15,7 @@ const navigation = [
   { name: "화분 관리", href: "/pot", current: false },
   { name: "아이 관리", href: "/kids", current: false },
   { name: "대화 관리", href: "/talk", current: false },
-  { name: "알람 관리", href: "/message", current: false }
+  { name: "알람 관리", href: "/message", current: false },
 ];
 
 function classNames(...classes) {
@@ -40,14 +40,14 @@ export default function Navigation() {
       setEnabled(false);
       // 임시
       // 키즈모드 해제 페이지로 이동해야됨
-      navigate("/");
       Session.remove("kidsmode");
       dispatch(authActions.deactivateKidsMode());
+      navigate("/");
     } else {
       setEnabled(true);
       Session.set("kidsmode", true);
-      navigate("/kids/select");
       dispatch(authActions.activateKidsMode());
+      navigate("/kidsmode");
     }
   };
 
