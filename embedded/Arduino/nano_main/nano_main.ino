@@ -12,6 +12,7 @@ const int MOISTURE_SENSOR_PIN = A5;
 const int MOISTURE_THRESHOLD = 50; // 급격한 변화를 감지할 임계값
 int lastMoistureLevel = 0; // 마지막으로 측정된 수분 수준
 bool rapidChangeDetected = false; // 급변 감지 플래그
+bool childClose = false; // '아이가 가까이 있는지' 여부를 추적
 
 // 초음파 센서 설정
 long distance = 0;
@@ -156,8 +157,18 @@ void loop() {
   runner.execute();
   
   // 거리 가까우면 오른팔 흔들기
-  if ( distance == 100) {
+  // if ( distance == 100) {
+  //   arm_single(servo1);
+  // }
+
+  // 거리가 100cm 이하이고, 이전에 아이가 가까이 있지 않았다면 인사 동작 수행
+  if (distance <= 100 && !childClose) {
+    childClose = true; // 아이가 가까이 있었다는 상태로 변경
     arm_single(servo1);
+  }
+  // 거리가 100cm를 초과하면 아이가 멀어졌다고 가정하고 상태 초기화
+  else if (distance > 100) {
+    childClose = false;
   }
 
   // 왼쪽- 말 시작할때, 양쪽같이- 호출어, 양쪽 번갈아-알람
