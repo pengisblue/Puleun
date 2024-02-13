@@ -29,4 +29,7 @@ export class Device {
 
   @Column({type: 'int', nullable: true})
   pot_id: number;
+
+  @Column({type: 'varchar', nullable: true})
+  device_name: string;
 }
