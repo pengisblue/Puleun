@@ -2,11 +2,6 @@ import { Optional } from "@nestjs/common";
 import { Exclude, Expose, Type,  } from "class-transformer";
 import { IsNumber, IsString, IsDate } from 'class-validator';
 
-export class DateAndTempMoisDto{
-
-}
-
-
 @Exclude()
 export class StatusResultDto{
     @Expose()
@@ -74,6 +69,18 @@ export class CompareDataDto{
     yesterday_mois: number;
 }
 
-export class PotStateDto{
-    
+export class DataDto{
+    @Expose()
+    data: number;
+
+    @Expose()
+    measure_DT: Date;
+}
+
+export class MoisAndTemp{
+    @Expose()
+    temperature: DataDto[];
+
+    @Expose()
+    moisture: DataDto[];
 }
