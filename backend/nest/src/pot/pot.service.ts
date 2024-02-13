@@ -192,6 +192,11 @@ export class PotService {
           .getMany();
       }
 
+    async find(pot_id:number): Promise<Pot>{
+        const [pot] = await this.potRepository.find({relations:{user:true}, where:{pot_id}, take:1})
+        return pot
+    }
+    
     async collectionDetail(pot_id: number): Promise<Pot>{
         const result = await this.potRepository.findOne({
             where: {pot_id: pot_id}
