@@ -33,7 +33,7 @@ export class PotStateController {
     @ApiOperation({summary: '화분의 오늘 온습도 리스트'})
     @ApiOkResponse({type: MoisAndTemp})
     async getToday(@Param('pot_id') pot_id: number): Promise<MoisAndTemp>{
-        return await this.potStateService.yesterdayMoisAndTemp(pot_id);
+        return await this.potStateService.todayMoisAndTemp(pot_id);
     }
     
 }
