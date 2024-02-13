@@ -1,4 +1,4 @@
-import { Entity, PrimaryColumn, Column, ManyToOne, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, ManyToOne, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm';
 import { Pot } from '../pot/pot.entity';
 import { User } from 'src/user/user.entity';
 
@@ -21,11 +21,13 @@ export class Device {
   @Column({ nullable: true })
   user_id: number
 
+  @Column({ length:50 , nullable: true, default: null})
+  client_id: string
+
   @OneToOne(() => Pot)
   @JoinColumn({ name: 'pot_id' })
   pot: Pot;
 
   @Column({type: 'int', nullable: true})
   pot_id: number;
-  // Other columns and relationships can be added as needed.
 }

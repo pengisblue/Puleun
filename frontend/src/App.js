@@ -6,11 +6,20 @@ import RootLayout from "./pages/Root";
 import KidListPage from "./pages/KidListPage";
 import PotCreatePage from "./pages/PotCreatePage";
 import PotDetailPage from "./pages/PotDetailPage";
-
-// import Example from "./test/Example";
 import KidCreatePage from "./pages/KidCreatePage";
 import KidDetailPage from "./pages/KidDetailPage";
 import KidSelectPage from "./pages/KidSelectPage";
+import TalkListPage from "./pages/TalkListPage";
+import TalkDetailPage from "./pages/TalkDetailPage";
+import LandingPage from "./pages/LandingPage";
+import CollectionPage from "./pages/CollectionPage";
+import LoginPage, { action as loginAction } from "./pages/LoginPage";
+import SignUpPage, { action as signUpAction } from "./pages/SignUpPage";
+import MeassageListPage from "./pages/MessageListPage";
+import KidsmodePage from "./pages/KidsmodePage";
+import MessageCreatePage from "./pages/MessageCreatePage";
+
+// import Example from "./test/Example";
 
 const router = createBrowserRouter([
   {
@@ -20,23 +29,44 @@ const router = createBrowserRouter([
       { path: "/", element: <MainPage /> },
       { path: "/kids", element: <KidListPage /> },
       { path: "/pot", element: <PotListPage /> },
+      { path: "/talk", element: <TalkListPage /> },
+      { path: "/message", element: <MeassageListPage /> },
       { path: "/pot/create", element: <PotCreatePage /> },
       { path: "/kid/create", element: <KidCreatePage /> },
       { path: "/pot/:potId", element: <PotDetailPage /> },
       { path: "/kid/:userId", element: <KidDetailPage></KidDetailPage> },
-      { path: "/kid/select", element: <KidSelectPage></KidSelectPage> },
+      { path: "/talk/:talkId", element: <TalkDetailPage /> },
+      { path: "/collection/:userId", element: <CollectionPage /> },
+      { path: "/kids/select", element: <KidSelectPage></KidSelectPage> },
+      { path: "/kidsmode/:userId", element: <KidsmodePage></KidsmodePage> },
+      { path: "/message/create", element: <MessageCreatePage></MessageCreatePage> },
     ],
   },
-  // 테스트용
   {
-    // path: "/test",
-    // element: <Example />,
+    path: "/hello",
+    element: <LandingPage />,
   },
+  {
+    path: "/login",
+    element: <LoginPage />,
+    action: loginAction,
+  },
+  {
+    path: "/signup",
+    element: <SignUpPage />,
+    action: signUpAction,
+  },
+
+  // 테스트용
+  // {
+  //   path: "/test",
+  //   element: <Example />,
+  // },
 ]);
 
 function App() {
   return (
-    <div className="min-h-screen bg-amber-overlay">
+    <div className="mx-auto min-h-screen max-w-page bg-amber-overlay">
       <RouterProvider router={router} />
     </div>
   );

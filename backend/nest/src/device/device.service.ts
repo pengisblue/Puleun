@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Device } from './device.entity';
 import { Repository } from 'typeorm';
 import { DeviceCreateDto, SelectDeviceDto } from './device-req.dto';
-import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class DeviceService {
@@ -13,7 +12,8 @@ export class DeviceService {
   ){}
 
   async findBySerialNumber(serial_number: string): Promise<Device>{
-    return this.deviceRepository.findOneBy({serial_number});
+    const [res] = await this.deviceRepository.find({where:{serial_number}, take:1})
+    return res
   }
   
   async save(device: DeviceCreateDto): Promise<number>{
@@ -33,6 +33,19 @@ export class DeviceService {
       where: {user_id, empty_FG: true},
       select: {device_id: true, serial_number: true}
     })
+  }
+
+  async connectDevice(serial_number: string, client_id: string): Promise<string>{
+    const [device] = await this.deviceRepository.find({where:{serial_number}, take:1})
+    device.serial_number = serial_number; device.client_id = client_id
+    device.empty_FG = false
+    await this.deviceRepository.update(device.device_id, device)
+    return "success"
+  }
+
+  async disconnectDevice(client_id: string): Promise<string>{
+    await this.deviceRepository.update(client_id, {empty_FG:true, client_id:null})
+    return "success"
   }
 
   async mappingDevice(device_id: number){

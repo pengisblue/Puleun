@@ -4,6 +4,7 @@ import { Alarm } from "./alarm.entity";
 import { ApiProperty } from "@nestjs/swagger";
 import { Pot } from "src/pot/pot.entity";
 import { Optional } from "@nestjs/common";
+import { time } from "console";
 
 
 export class AlarmWithPotDto{
@@ -11,16 +12,16 @@ export class AlarmWithPotDto{
     pot_name: string;
 }
 
-@Exclude()
 export class CreateAlarmDto{
     @IsString()
-    @Length(1, 30)
+    @Length(1, 30)    
     @ApiProperty({
         example: 'example name',
         required: true,
         description: 'alarm_name'
     })
     @Expose()
+    @Type(() => String)
     alarm_name: string;
 
     @IsString()
@@ -42,17 +43,18 @@ export class CreateAlarmDto{
     @Expose()
     @IsOptional()
     @IsBoolean()
+    @Type(() => Boolean)
     active_FG: boolean;
 
-    @IsDate()
-    @Type(()=>Date)
+    @IsString()
+    @Type(()=>time)
     @ApiProperty({
         example: '07:30',
         required: true,
         description: 'alarm_date'
     })
     @Expose()
-    alarm_date: Date
+    alarm_date: string
 
     @IsInt()
     @ApiProperty({
@@ -108,15 +110,15 @@ export class AlarmDto{
     @IsOptional()
     active_FG ? : boolean;
 
-    @IsDate()
-    @Type(()=>Date)
+    @IsString()
+    @Type(()=>time)
     @ApiProperty({
         example: '07:30',
         required: true,
         description: 'alarm_date'
     })
     @Expose()
-    alarm_date: Date
+    alarm_date: string
 
     @IsInt()
     @ApiProperty({

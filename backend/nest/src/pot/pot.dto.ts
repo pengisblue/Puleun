@@ -1,6 +1,7 @@
 import { ApiOperation, ApiProperty } from "@nestjs/swagger";
 import { IsDate, IsInt, IsOptional, IsString, Length, IsNumber } from "class-validator";
 import { Exclude, Expose, Type } from "class-transformer";
+import { User } from "src/user/user.entity";
 
 
 export class PotUserDto{
@@ -46,9 +47,7 @@ export class CreatePotDto {
     max_moisture: number;
 
     @IsString()
-    @Length(1, 200)
     @IsOptional()
-    @ApiProperty({example: 'noimage.jpg'})
     pot_img_url: string;
 
     @IsNumber()
@@ -59,7 +58,13 @@ export class CreatePotDto {
     @IsOptional()
     @IsNumber()
     @ApiProperty({example: 10.5, description: '현재 화분의 습도'})
-    moisuture: number;
+    moisture: number;
+
+    @IsOptional()
+    @IsDate()
+    @ApiProperty({example: '2023-02-13', description: '심은 날'})
+    @Type(() => Date)
+    planting_day: Date;
 }
 
 export class UpdatePotDto{
@@ -94,9 +99,7 @@ export class UpdatePotDto{
     max_moisture: number;
 
     @IsString()
-    @Length(1, 200)
     @IsOptional()
-    @ApiProperty({example: 'noimage.jpg', required:false})
     pot_img_url: string;
 }
 
@@ -161,6 +164,11 @@ export class SelectPotDto{
     @Expose()
     pot_img_url: string;
 
+    @IsNumber()
+    @ApiProperty()
+    @Expose()
+    user: User;
+
     // user_id가 0 이라면 이 화분은 부모가 키우고 있다는 것!
     // user_id가 존재한다면 아이가 키우고 있다는 것
     // @IsInt()
@@ -216,6 +224,9 @@ export class PotWithStatusDto{
     pot_species: string;
 
     @IsNumber()
+    parent_id: number;
+
+    @IsNumber()
     user_id: number;
 
     @IsString()
@@ -231,21 +242,22 @@ export class PotWithStatusDto{
     moisture: number;
 
     @IsString()
-    tempState: string;
+    temp_state: string;
 
     @IsString()
-    moisState: string;
+    mois_state: string;
 
-    @IsDate()
-    last_water: Date;
+    @IsNumber()
+    last_water: number;
 
-    @IsDate()
+    @IsString()
     planting_day: Date;
 
     @IsNumber()
     together_day: number;
 
-    @IsDate()
-    last_talk: Date;
+    @IsNumber()
+    last_talk: number;
 }
+
 

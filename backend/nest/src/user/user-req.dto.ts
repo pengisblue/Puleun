@@ -1,9 +1,9 @@
-import { IsDate, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsDate, IsNumber, IsOptional, IsString, Length } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
-import { Exclude, Type } from "class-transformer";
+import { Expose, Type } from "class-transformer";
 
 export class CreateUserDto{
-    @ApiProperty({example:'박지예'})
+    @ApiProperty({example:'박지예', description: '유저의 별칭'})
     @IsString()
     nickname: string;
 
@@ -15,12 +15,14 @@ export class CreateUserDto{
     @ApiProperty({example:'F', description:'M for male'})
     gender: string;
 
-    @ApiProperty({example:0, description:'if user is parent'})
+    @ApiProperty({example:1, description:'0 if user is parent'})
     @IsNumber()
     @Type(()=>Number)
     parent_id: number;
 
-    profile_img_url?: string="";
+    @IsString()
+    @IsOptional()
+    profile_img_url?: string=null;
 }
 
 export class UpdateUserDto{
@@ -39,5 +41,51 @@ export class UpdateUserDto{
     @Type(()=>String)
     gender: string;
 
+    profile_img_url?: string="";
+}
+
+export class UserWithUserLoginDto extends CreateUserDto{
+    @ApiProperty({example: '실제 이름'})
+    @IsString()
+    @Length(1, 10)
+    @Expose()
+    @IsOptional()
+    user_name: string;
+
+    @ApiProperty({example: 'email@purun.com'})
+    @IsString()
+    @Length(1, 30)
+    @Expose()
+    @IsOptional()
+    user_email: string;
+
+    @ApiProperty({example: 1234})
+    @IsString()
+    @Length(1, 30)
+    @Expose()
+    @IsOptional()
+    user_password: string;
+}
+
+export class ChildSaveDto{
+    @ApiProperty({example:'박지예', description: '유저의 별칭'})
+    @IsString()
+    nickname: string;
+
+    @ApiProperty({example:'1997-02-04'})
+    @IsDate()
+    @Type(() => Date)
+    birth_DT: Date;
+
+    @ApiProperty({example:'F', description:'M for male'})
+    gender: string;
+
+    @ApiProperty({example:0, description:'if user is parent'})
+    @IsNumber()
+    @Type(()=>Number)
+    parent_id: number;
+
+    @IsString()
+    @IsOptional()
     profile_img_url?: string="";
 }

@@ -3,8 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Alarm } from './alarm.entity';
 import { Repository } from 'typeorm';
 import { AlarmDto, CreateAlarmDto } from './alarm.dto';
-import { Pot } from 'src/pot/pot.entity';
-import { plainToClass } from 'class-transformer';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class AlarmService {
@@ -26,18 +25,5 @@ export class AlarmService {
         return await this.alarmRepository.findOne({
             where: {alarm_id}
         });
-    }
-
-    async userAlarm(pot_id: number): Promise<Alarm[]>{
-        const alarm = await this.alarmRepository.createQueryBuilder('alarm')
-            .where('alarm.pot_id= :pot_id', {pot_id})
-            .leftJoinAndSelect('alarm.pot', 'pot')
-            .select([
-                'alarm.alarm_id', 'alarm.alarm_name', 'alarm.alarm_content',
-                 'alarm.active_FG', 'alarm.alarm_date', 'alarm.routine',
-                 'pot.pot_id', 'pot.pot_name'
-            ])
-            .getMany();
-        return alarm;
     }
 }
