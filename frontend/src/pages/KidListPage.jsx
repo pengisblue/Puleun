@@ -32,8 +32,8 @@ export default function KidListPage() {
         >
           <KidCard
             nickname={kidList[i].nickname}
-            profile_img_url={kidImg}
-            className="w-80 h-44"
+            profile_img_url={kidList[i].profile_img_url}
+            className="h-44 w-80"
             display="hidden"
           ></KidCard>
         </div>,
@@ -74,7 +74,7 @@ export default function KidListPage() {
       <div className="my-6 grid w-full grid-cols-1 place-items-center">
         {handledList()}
         <div onClick={goCreateKid} className="cursor-pointer">
-          <AddDetailCard text="아이 추가하기" className="w-80 h-44" />
+          <AddDetailCard text="아이 추가하기" className="h-44 w-80" />
         </div>
       </div>
     </div>
