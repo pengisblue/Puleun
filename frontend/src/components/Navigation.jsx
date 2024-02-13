@@ -1,5 +1,5 @@
 import { Fragment, useState } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate, Form } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Disclosure, Menu, Switch, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
@@ -7,15 +7,13 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Session from "react-session-api";
 import navImg from "../asset/log.svg";
 import { authActions } from "../store/auth-slice";
-
-// 하드코딩용
-import kidImg from "../test/kid3.png";
+import { API_URL } from "../config/config";
 
 const navigation = [
   { name: "화분 관리", href: "/pot", current: false },
   { name: "아이 관리", href: "/kids", current: false },
   { name: "대화 관리", href: "/talk", current: false },
-  { name: "알람 관리", href: "/message", current: false }
+  { name: "알람 관리", href: "/message", current: false },
 ];
 
 function classNames(...classes) {
@@ -30,6 +28,11 @@ export default function Navigation() {
   const logoutHandler = () => {
     dispatch(authActions.logout());
   };
+
+  function getUserImage() {
+    const userInfo = localStorage.getItem("userInfo");
+    return userInfo ? JSON.parse(userInfo).userImgUrl : null;
+  }
 
   const [enabled, setEnabled] = useState(false);
 
@@ -112,11 +115,13 @@ export default function Navigation() {
                       <span className="absolute -inset-1.5" />
                       <span className="sr-only">Open user menu</span>
                       {/* 프로필 이미지 */}
-                      <img
-                        className="h-8 w-8 rounded-full"
-                        src={kidImg}
-                        alt="kid"
-                      />
+                      {getUserImage() && (
+                        <img
+                          className="h-8 w-8 rounded-full"
+                          src={API_URL + getUserImage()}
+                          alt="kid"
+                        />
+                      )}
                     </Menu.Button>
                   </div>
                   <Transition
@@ -179,16 +184,17 @@ export default function Navigation() {
                       </Menu.Item>
                       <Menu.Item>
                         {({ active }) => (
-                          <a
-                            onClick={logoutHandler}
-                            href="#!"
-                            className={classNames(
-                              active ? "bg-gray-100" : "",
-                              "block px-4 py-2 text-sm text-gray-700",
-                            )}
-                          >
-                            Sign out
-                          </a>
+                          <Form method="post" action="/logout">
+                            <button
+                              onClick={logoutHandler}
+                              className={classNames(
+                                active ? "bg-gray-100" : "",
+                                "block px-4 py-2 text-sm text-gray-700",
+                              )}
+                            >
+                              로그아웃
+                            </button>
+                          </Form>
                         )}
                       </Menu.Item>
                     </Menu.Items>

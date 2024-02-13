@@ -21,9 +21,10 @@ export class UserLoginService {
         const user_id = await this.userService.save(user, file)
         const {user_name, user_email, user_password} = userLogin
         const login: LoginSaveDto = {user_name, user_email, user_password}
+        
         if (!user_id) return 'FAIL'
         login.user_id = user_id
-        await this.userLoginRepository.save(userLogin)
+        await this.userLoginRepository.save(login)
         return "SUCCESS"
     }
 
@@ -48,7 +49,10 @@ export class UserLoginService {
     }
 
     async myInfo(user_id: number): Promise<UserLoginSaveDto>{
-        const dto = await this.userLoginRepository.findOne({where: {user_id}});
+        const [dto] = await this.userLoginRepository.find({
+            where: {user_id: user_id},
+            take: 1
+        });
         return plainToInstance(UserLoginSaveDto, dto);
     }
 

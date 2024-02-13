@@ -42,7 +42,9 @@ export default function PotListPage() {
     // 전체 화분 리스트
     // 16번 사용자로 로그인한 경우 (로그인 로직 구현 후 수정해야함)
     axios
-      .get(`${API_URL}/pot/16`)
+      .get(
+        `${API_URL}/pot/${JSON.parse(localStorage.getItem("userInfo")).userId}`,
+      )
       .then((res) => {
         const potList = res.data.map((item) => ({
           potId: item.pot_id,
@@ -60,7 +62,9 @@ export default function PotListPage() {
     // 유저 리스트 (필터목록)
     // 16번 사용자로 로그인한 경우 (로그인 로직 구현 후 수정해야함)
     axios
-      .get(`${API_URL}/user/child/16`)
+      .get(
+        `${API_URL}/user/child/${JSON.parse(localStorage.getItem("userInfo")).userId}`,
+      )
       .then((res) => {
         const userList = res.data.map((item) => ({
           userId: item.user_id,

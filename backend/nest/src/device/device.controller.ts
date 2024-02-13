@@ -1,7 +1,8 @@
-import { Controller, Delete, Get, Param, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Put } from '@nestjs/common';
 import { DeviceService } from './device.service';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { SelectDeviceDto } from './device-req.dto';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { PotInitDeviceDto, SelectDeviceDto, UserInitDeviceDto } from './device-req.dto';
+import { BlockList } from 'net';
 
 
 @Controller('device')
@@ -21,11 +22,25 @@ export class DeviceController {
         return await this.deviceService.unEmptyDevice(user_id);
     }
 
-    @Put(':user_id')
-    @ApiOperation({summary: '디바이스 화분에 매핑 또는 Un매핑'})
-    async updateDevice(@Param('user_id') user_id: number): Promise<number>{
-        await this.deviceService.mappingDevice(user_id);
-        return 1;
+    @Put('user')
+    @ApiOperation({summary: '디바이스의 주인과 이름을 지정'})
+    async updateUserDevice(@Body() userInitDeviceDto: UserInitDeviceDto): Promise<string>{
+        await this.deviceService.mappingUserDevice(userInitDeviceDto);
+        return 'SUCCESS';
+    }
+
+    @Put('pot')
+    @ApiOperation({summary: '디바이스에 화분을 지정'})
+    async updatePotDevice(@Body() potInitDeviceDto: PotInitDeviceDto): Promise<string>{
+        await this.deviceService.mappingPotDevice(potInitDeviceDto);
+        return 'SUCCESS';
+    }
+
+    @Get('check/:serial_number')
+    @ApiOperation({summary: '시리얼 넘버가 DB에 있는지 확인'})
+    @ApiOkResponse({type: Boolean})
+    async checkDevice(@Param('serial_number') serial_number: string,): Promise<Boolean>{
+        return await this.deviceService.checkDevice(serial_number);
     }
 
     @Delete(':device_id')

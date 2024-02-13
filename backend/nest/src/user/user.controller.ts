@@ -21,12 +21,6 @@ export class UserController {
         return await this.userService.findAllUser();
     }
 
-    @Get()
-    @ApiOperation({summary: '모든 유저 조회'})
-    async findAllUser(): Promise<User[]>{
-        return await this.userService.findAllUser();
-    }
-
     @Get('child/:user_id')
     @ApiOperation({ summary: '아이 전체 조회'})
     @ApiOkResponse({ type:UserListDto, description: 'user_id를 부모로하는 아이들 조회' })
