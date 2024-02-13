@@ -1,8 +1,7 @@
-import { Body, Controller, Get, HttpStatus, Inject, Param, ParseFilePipeBuilder, Post, Put, UploadedFile, UseInterceptors, forwardRef } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Param, ParseFilePipeBuilder, Post, Put, UploadedFile, UseInterceptors, forwardRef } from '@nestjs/common';
 import { UserLoginService } from './user-login.service';
 import { ApiBody, ApiExtraModels, ApiOkResponse, ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger';
-import { AllUserDto, LoginDto, LoginReturnDto, UserLoginSaveDto } from './user-login.dto';
-import { UserService } from 'src/user/user.service';
+import { LoginDto, LoginReturnDto, UserLoginSaveDto } from './user-login.dto';
 import { LoginUserDto } from './user-login.req.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 
@@ -10,12 +9,12 @@ import { FileInterceptor } from '@nestjs/platform-express';
 @ApiTags('user-login')
 @ApiExtraModels(LoginUserDto)
 export class UserLoginController {
-    constructor(private readonly userLoginService: UserLoginService,
-                @Inject(forwardRef(() => UserService))
-                private readonly userService: UserService){}
+    constructor(
+        private readonly userLoginService: UserLoginService,
+    ){}
 
     @Post('/save')
-    @ApiOperation({summary:'유저 저장'})
+    @ApiOperation({summary:'유저 및 로그인 정보 저장'})
     @ApiBody({type: LoginUserDto})
     @UseInterceptors(FileInterceptor('profile_img'))
     async userSave(@Body() userLogin: LoginUserDto,
@@ -56,9 +55,4 @@ export class UserLoginController {
         return await this.userLoginService.myInfo(user_id);
     }
 
-    @Get()
-    @ApiOperation({summary: '모든 유저 정보 조회'})
-    async allUserInfo(): Promise<AllUserDto[]>{
-        return await this.userService.findUserWithInfo();
-    }
 }

@@ -4,8 +4,8 @@ import { UserLogin } from './user-login.entity';
 import { Repository } from 'typeorm';
 import { LoginDto, LoginReturnDto, UserLoginSaveDto } from './user-login.dto';
 import { plainToInstance } from 'class-transformer';
-import { UserWithUserLoginDto } from 'src/user/user-req.dto';
-import { LoginUserDto } from './user-login.req.dto';
+import { CreateUserDto, UserWithUserLoginDto } from 'src/user/user-req.dto';
+import { LoginSaveDto, LoginUserDto } from './user-login.req.dto';
 import { UserService } from 'src/user/user.service';
 @Injectable()
 export class UserLoginService {
@@ -16,8 +16,11 @@ export class UserLoginService {
 
     /** 로그인 시 유저 저장하고 로그인 정보 저장 */
     async save(userLogin: LoginUserDto, file?: Express.Multer.File): Promise<string>{
-        const {user, login} = userLogin
+        const {nickname, birth_DT, gender} = userLogin
+        const user: CreateUserDto = {nickname, birth_DT, gender, parent_id:null}
         const user_id = await this.userService.save(user, file)
+        const {user_name, user_email, user_password} = userLogin
+        const login: LoginSaveDto = {user_name, user_email, user_password}
         if (!user_id) return 'FAIL'
         login.user_id = user_id
         await this.userLoginRepository.save(userLogin)
