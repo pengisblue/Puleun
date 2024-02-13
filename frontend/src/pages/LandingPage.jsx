@@ -3,20 +3,17 @@ import { useDispatch } from "react-redux";
 
 import Button from "../components/UI/Button";
 import log from "../asset/log_icon.svg";
-import { authActions } from "../store/auth-slice";
+import { useNavigate } from "react-router-dom";
 
 export default function LandingPage() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
-  const loginHandler = () => {
-    dispatch(
-      authActions.login({
-        userId: 16,
-        userEmail: "test@test.com",
-      }),
-    );
-    navigate("/");
+  const goSignUp = () => {
+    navigate("/signup");
+  };
+
+  const goLogIn = () => {
+    navigate("/login");
   };
 
   return (
@@ -30,14 +27,18 @@ export default function LandingPage() {
           <p className="font-KCCMurukmuruk text-xl text-green-800 ">
             아이와 함께 성장하는 화분
           </p>
+
           <div className="mt-8 flex flex-wrap justify-center gap-6">
             <Button
-              onClick={loginHandler}
               className="w-36 bg-green-300 text-lg font-semibold text-slate-50 hover:bg-green-400"
+              onClick={goLogIn}
             >
               로그인
             </Button>
-            <Button className="w-36 bg-green-300 text-lg font-semibold text-slate-50 hover:bg-green-400">
+            <Button
+              className="w-36 bg-green-300 text-lg font-semibold text-slate-50 hover:bg-green-400"
+              onClick={goSignUp}
+            >
               회원가입
             </Button>
           </div>

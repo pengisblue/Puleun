@@ -7,7 +7,7 @@ export class FileService {
     }
 
     /** get today date */
-    getToday(): string{
+    getToday(): Date{
         const currentDate = new Date();
 
         const year = currentDate.getFullYear();
@@ -15,6 +15,6 @@ export class FileService {
         const day = String(currentDate.getDate()).padStart(2, '0');
 
         const formattedDate = `${year}-${month}-${day}`;
-        return formattedDate;
+        return formattedDate as unknown as Date;
     }
 }

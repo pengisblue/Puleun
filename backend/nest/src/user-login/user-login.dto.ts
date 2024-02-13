@@ -62,3 +62,14 @@ export class AllUserDto{
     // @Type(()=> UserLoginDto)
     // userLoginDto: UserLoginDto[];
 }
+
+export class LoginReturnDto{
+    @Expose()    
+    user_id: number;
+
+    @Expose()
+    user_email: string;
+
+    @Expose()
+    profile_img_url: string;
+}

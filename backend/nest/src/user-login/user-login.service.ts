@@ -2,12 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserLogin } from './user-login.entity';
 import { Repository } from 'typeorm';
-import { LoginDto, UserLoginSaveDto } from './user-login.dto';
+import { LoginDto, LoginReturnDto, UserLoginSaveDto } from './user-login.dto';
 import { plainToInstance } from 'class-transformer';
-import { UserWithUserLoginDto } from 'src/user/user-req.dto';
-import { LoginUserDto } from './user-login.req.dto';
+import { CreateUserDto, UserWithUserLoginDto } from 'src/user/user-req.dto';
+import { LoginSaveDto, LoginUserDto } from './user-login.req.dto';
 import { UserService } from 'src/user/user.service';
-
 @Injectable()
 export class UserLoginService {
     constructor(
@@ -17,8 +16,11 @@ export class UserLoginService {
 
     /** 로그인 시 유저 저장하고 로그인 정보 저장 */
     async save(userLogin: LoginUserDto, file?: Express.Multer.File): Promise<string>{
-        const {user, login} = userLogin
+        const {nickname, birth_DT, gender} = userLogin
+        const user: CreateUserDto = {nickname, birth_DT, gender, parent_id:null}
         const user_id = await this.userService.save(user, file)
+        const {user_name, user_email, user_password} = userLogin
+        const login: LoginSaveDto = {user_name, user_email, user_password}
         if (!user_id) return 'FAIL'
         login.user_id = user_id
         await this.userLoginRepository.save(userLogin)
@@ -30,12 +32,19 @@ export class UserLoginService {
         return 1;
     }
 
-    async login(loginDto: LoginDto): Promise<boolean>{
-        const dto = await this.userLoginRepository.findOne({
+    async login(loginDto: LoginDto): Promise<LoginReturnDto>{
+        const dto = new LoginReturnDto();
+        const user = await this.userLoginRepository.findOne({
+            relations: {user: true},
             where: {user_email: loginDto.user_email, user_password: loginDto.user_password},       
         })
-        if(dto == null) return false;
-        return true;
+        
+        if(user == null) return null;
+        dto.user_id = user.user.user_id;
+        dto.user_email = user.user_email;
+        dto.profile_img_url = user.user.profile_img_url;
+
+        return dto;
     }
 
     async myInfo(user_id: number): Promise<UserLoginSaveDto>{

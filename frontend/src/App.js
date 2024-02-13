@@ -13,6 +13,11 @@ import TalkListPage from "./pages/TalkListPage";
 import TalkDetailPage from "./pages/TalkDetailPage";
 import LandingPage from "./pages/LandingPage";
 import CollectionPage from "./pages/CollectionPage";
+import LoginPage, { action as loginAction } from "./pages/LoginPage";
+import SignUpPage, { action as signUpAction } from "./pages/SignUpPage";
+import MeassageListPage from "./pages/MessageListPage";
+import KidsmodePage from "./pages/KidsmodePage";
+import MessageCreatePage from "./pages/MessageCreatePage";
 
 // import Example from "./test/Example";
 
@@ -25,19 +30,33 @@ const router = createBrowserRouter([
       { path: "/kids", element: <KidListPage /> },
       { path: "/pot", element: <PotListPage /> },
       { path: "/talk", element: <TalkListPage /> },
+      { path: "/message", element: <MeassageListPage /> },
       { path: "/pot/create", element: <PotCreatePage /> },
       { path: "/kid/create", element: <KidCreatePage /> },
       { path: "/pot/:potId", element: <PotDetailPage /> },
       { path: "/kid/:userId", element: <KidDetailPage></KidDetailPage> },
       { path: "/talk/:talkId", element: <TalkDetailPage /> },
       { path: "/collection/:userId", element: <CollectionPage /> },
-      { path: "/kid/select", element: <KidSelectPage /> },
+      { path: "/kids/select", element: <KidSelectPage></KidSelectPage> },
+      { path: "/kidsmode/:userId", element: <KidsmodePage></KidsmodePage> },
+      { path: "/message/create", element: <MessageCreatePage></MessageCreatePage> },
     ],
   },
   {
     path: "/hello",
     element: <LandingPage />,
   },
+  {
+    path: "/login",
+    element: <LoginPage />,
+    action: loginAction,
+  },
+  {
+    path: "/signup",
+    element: <SignUpPage />,
+    action: signUpAction,
+  },
+
   // 테스트용
   // {
   //   path: "/test",

@@ -17,6 +17,9 @@ export class DeviceCreateDto{
     @Type( () => Number )
     @IsOptional()
     pot_id?: number=null;
+
+    @IsOptional()
+    client_id?: string=null;
 }
 
 @Exclude()
