@@ -1,9 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-
 import Button from "../components/UI/Button";
 import log from "../asset/log_icon.svg";
-import { useNavigate } from "react-router-dom";
 
 export default function LandingPage() {
   const navigate = useNavigate();
