@@ -4,7 +4,7 @@ import Navigation from "../components/Navigation";
 
 export default function RootLayout() {
   return (
-    <>
+    <div className="max-w-md">
       <header>
         <Navigation />
       </header>
@@ -12,6 +12,6 @@ export default function RootLayout() {
       <main className="py-20">
         <Outlet />
       </main>
-    </>
+    </div>
   );
 }
