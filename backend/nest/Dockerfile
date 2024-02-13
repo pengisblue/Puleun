@@ -61,7 +61,7 @@ ENV DB_HOST i10e101.p.ssafy.io
 ENV DB_PORT 3306
 ENV DB_USERNAME pjt1
 ENV DB_PASSWORD dlxldpdl101
-ENV DB_DATABASE test
+ENV DB_DATABASE test2
 ENV REDIS_PORT = 6379
 
 # Start the server using the production build
