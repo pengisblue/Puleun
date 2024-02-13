@@ -44,25 +44,31 @@ export default function KidCreatePage() {
   };
 
   const handleCreate = async () => {
-    console.log(localStorage.getItem("userInfo").userId);
+    const formData = new FormData();
+    formData.append("nickname", nickname);
+    formData.append("birth_DT", birthDate);
+    formData.append("gender", gender);
+    formData.append(
+      "parent_id",
+      JSON.parse(localStorage.getItem("userInfo")).userId,
+    );
+    formData.append("profile_img", inputImg);
 
-    try {
-      const response = await axios.post(
-        "https://i10e101.p.ssafy.io/v1/user/child",
-        {
-          nickname: nickname,
-          birth_DT: birthDate,
-          gender: gender,
-          parent_id: JSON.parse(localStorage.getItem("userInfo")).userId,
-        },
-      );
-
-      console.log(response);
-    } catch (e) {
-      console.log(e);
-    } finally {
-      navigate("/kids");
-    }
+    axios({
+      method: "post",
+      url: `https://i10e101.p.ssafy.io/v1/user/child/`,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      data: formData,
+    })
+      .then((res) => {
+        console.log(res);
+        navigate("/kids");
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
 
   return (

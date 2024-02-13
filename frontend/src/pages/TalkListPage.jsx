@@ -3,9 +3,6 @@ import cog from "../asset/cog-8-tooth.svg";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-// 테스트 데이터
-import { TALK_LIST } from "../test/talkList";
-
 export default function TalkListPage() {
   const [isStar, setIsStar] = useState(false);
   const handleClickAll = () => {
