@@ -1,7 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Exclude, Type } from "class-transformer";
 import { Sentence } from "src/sentence/sentence.entity";
-import { JoinColumn } from "typeorm";
 
 @Exclude()
 export class TalkListDto{
@@ -19,6 +18,20 @@ export class TalkListDto{
     @ApiProperty()
     @Type(()=>Boolean)
     read_FG: boolean
+
+    @ApiProperty()
+    @Type(() => Number)
+    user_id: number
+
+    @ApiProperty()
+    user_profile_img: string
+
+    @ApiProperty()
+    @Type(() => Number)
+    pot_id: number
+
+    @ApiProperty()
+    pot_img_url: string
 }
 
 @Exclude()
