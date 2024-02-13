@@ -15,13 +15,13 @@ export default function SpeciesSelector({
     query === ""
       ? plantList
       : plantList.filter((plant) =>
-          plant.name
+          plant.speciesName
             .toLowerCase()
             .replace(/\s+/g, "")
             .includes(query.toLowerCase().replace(/\s+/g, "")),
         );
 
-  const existsPlant = plantList.some((plant) => plant.name === query);
+  const existsPlant = plantList.some((plant) => plant.speciesName === query);
 
   const handleSelectChange = (value) => {
     setSelected(value);
@@ -36,7 +36,7 @@ export default function SpeciesSelector({
           <Combobox.Input
             className="w-full rounded-lg border-gray-100 py-3 pl-3 pr-10 leading-5 text-gray-900 shadow-sm 
               focus:border-amber-100 focus:shadow-md focus:ring focus:ring-amber-200 focus:ring-opacity-50"
-            displayValue={(plant) => plant.name}
+            displayValue={(plant) => plant.speciesName}
             onChange={(event) => setQuery(event.target.value)}
           />
           <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
@@ -62,12 +62,12 @@ export default function SpeciesSelector({
             {query.length > 0 && !existsPlant && (
               <Combobox.Option
                 value={{
-                  id: null,
-                  name: query,
-                  maxTemperature: "",
+                  speciesId: null,
+                  speciesName: query,
                   minTemperature: "",
-                  maxMoisture: "",
+                  maxTemperature: "",
                   minMoisture: "",
+                  maxMoisture: "",
                 }}
                 className="relative cursor-default select-none px-4 py-2 text-gray-700"
               >
@@ -78,7 +78,7 @@ export default function SpeciesSelector({
             {/* 저장된 품종 목록 옵션 */}
             {filteredPlant.map((plant) => (
               <Combobox.Option
-                key={plant.id}
+                key={plant.speciesId}
                 className={({ active }) =>
                   `relative cursor-default select-none px-4 py-2 ${
                     active ? "bg-amber-50 text-slate-800" : "text-slate-800"
@@ -93,7 +93,7 @@ export default function SpeciesSelector({
                         selected ? "font-semibold" : "font-normal"
                       }`}
                     >
-                      {plant.name}
+                      {plant.speciesName}
                     </span>
                   </>
                 )}

@@ -2,6 +2,8 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 import Input from "../UI/Input";
 import Button from "../UI/Button";
+import axios from "axios";
+import { API_URL } from "../../config/config";
 
 export default function DeviceAddModal({ isOpen, closeModal }) {
   const [serialNum, setSerialNum] = useState(null);
@@ -11,11 +13,16 @@ export default function DeviceAddModal({ isOpen, closeModal }) {
 
   // 유효한 시리얼 넘버인지 확인
   const [isValidDevice, setIsValidDevice] = useState(null);
-  const isValid = (serialNum) => {
-    if (serialNum === "1234") {
-      setIsValidDevice(true);
-    } else {
-      setIsValidDevice(false);
+  const isValid = async (serialNum) => {
+    try {
+      const res = await axios({
+        method: "get",
+        url: `${API_URL}/device/check/${serialNum}`
+      });
+
+      setIsValidDevice(res.data)
+    } catch (err) {
+      console.log(err);
     }
   };
 

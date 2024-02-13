@@ -20,10 +20,10 @@ export default function DeviceChoice({ deviceList, onSelect, selectedDevice }) {
   // 기기 등록 모달
   const [isOpen, setIsOpen] = useState(false);
   const openDeviceAddModal = () => {
-    setIsOpen(true)
+    setIsOpen(true);
   };
   const closeDeviceAddModal = () => {
-    setIsOpen(false)
+    setIsOpen(false);
   };
 
   return (
@@ -32,7 +32,11 @@ export default function DeviceChoice({ deviceList, onSelect, selectedDevice }) {
         {/* 기기 목록 */}
         {deviceList.map((device) => (
           <SwiperSlide key={device.diviceId} className="me-4 w-auto-important">
-            <RadioGroup.Option value={device} className="outline-none">
+            <RadioGroup.Option
+              key={device.diviceId}
+              value={device}
+              className="outline-none"
+            >
               {({ active, checked }) => (
                 <DeviceBaseCard>
                   <div className="flex items-center gap-2">
