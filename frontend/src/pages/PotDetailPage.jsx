@@ -2,6 +2,7 @@ import PotDetailCard from "../components/Pots/PotDetailCard";
 import PotCalander from "../components/Pots/PotCalander";
 import PotChart from "../components/Pots/PotChart";
 import Button from "../components/UI/Button";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
@@ -43,6 +44,7 @@ import { potStatus as potStatusInfo } from "../test/potData";
 // }
 
 export default function PotDetailPage() {
+  const [potInfo, setPotInfo] = useState({});
   const { potId } = useParams();
   const navigate = useNavigate();
 
@@ -51,6 +53,19 @@ export default function PotDetailPage() {
     if (isNaN(potId)) {
       navigate("/error");
     }
+
+    const getPotInfo = async (potId) => {
+      try {
+        const response = await axios.get(
+          `https://i10e101.p.ssafy.io/v1/pot/detail/${potId}`,
+        );
+        setPotInfo(response.data);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    getPotInfo(potId);
   }, [potId, navigate]);
 
   // 하드코딩용

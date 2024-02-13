@@ -12,6 +12,7 @@ const navigation = [
   { name: "화분 관리", href: "/pot", current: false },
   { name: "아이 관리", href: "/kids", current: false },
   { name: "대화 관리", href: "/talk", current: false },
+  { name: "알람 관리", href: "/message", current: false }
 ];
 
 function classNames(...classes) {
