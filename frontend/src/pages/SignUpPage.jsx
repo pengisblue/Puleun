@@ -13,6 +13,12 @@ export default function SignUpPage() {
     navigate("/hello");
   };
 
+  // 유저 이름
+  const [userName, setUserName] = useState("");
+  const handleUserName = (event) => {
+    setUserName(event.target.value);
+  };
+
   // 이메일
   const [email, setEmail] = useState("");
   const handleEmail = (event) => {
@@ -48,6 +54,7 @@ export default function SignUpPage() {
 
   // 버튼 활성화
   const isFormValid =
+    userName &&
     email &&
     userPassword &&
     confirmPassword &&
@@ -67,6 +74,17 @@ export default function SignUpPage() {
       </div>
 
       <Form method="post" className="my-6 flex flex-col gap-2">
+        <section className="mb-3">
+          <label htmlFor="">이름</label>
+          <Input
+            type="text"
+            name="userName"
+            onChange={handleUserName}
+            className="w-full focus:ring-green-400"
+            required
+          />
+        </section>
+
         <section className="mb-3">
           <label htmlFor="">이메일</label>
           <Input
@@ -195,16 +213,12 @@ export async function action({ request }) {
   const data = await request.formData();
 
   const signUpData = {
-    user: {
-      nickname: data.get("nickname"),
-      birth_DT: data.get("birthDate"),
-      gender: data.get("gender"),
-      parent_id: 0,
-    },
-    login: {
-      user_email: data.get("email"),
-      user_password: data.get("password"),
-    },
+    nickname: data.get("nickname"),
+    birth_DT: data.get("birthDate"),
+    gender: data.get("gender"),
+    user_name: data.get("userName"),
+    user_email: data.get("email"),
+    user_password: data.get("password"),
   };
 
   try {
@@ -215,7 +229,7 @@ export async function action({ request }) {
     });
 
     console.log(res.data);
-    return redirect("/");
+    return redirect("/login");
   } catch (err) {
     console.log(err);
   }
