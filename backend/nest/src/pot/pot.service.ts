@@ -90,21 +90,21 @@ export class PotService {
     async potDetail(pot_id: number): Promise<PotWithStatusDto>{
         const now = new Date();
         const pot = await this.potRepository.createQueryBuilder('pot')
-            .leftJoinAndSelect('pot.user', 'user', 'user.user_id = pot.user_id')
-            .leftJoinAndSelect('pot.calender', 'calender','calender.pot_id = pot.pot_id')
-            .where('(calender.pot_id IS NULL) OR (calender.pot_id, calender.code, calender.createdAt) IN ' +
-                '(SELECT pot_id, code, MAX(createdAt) ' +
-                'FROM calender ' +
-                'GROUP BY pot_id, code)'
-            )
-            .andWhere('pot.collection_FG= :flag', {flag: false})
-            .andWhere('pot.pot_id= :pot_id', {pot_id})
-            .select(['pot.pot_id', 'pot.pot_name', 'pot.pot_species','pot.planting_day', 
+        .select(['pot.pot_id', 'pot.pot_name', 'pot.pot_species','pot.planting_day', 
                         'user.parent_id', 'pot.temperature','pot.min_temperature', 'pot.max_temperature',
                         'pot.min_moisture', 'pot.max_moisture',
                         'pot.moisture', 'pot.pot_img_url', 'user.user_id', 'user.nickname',
                         'user.profile_img_url', 'calender.code', 'calender.createdAt'])                         
-            .getOne();
+        .leftJoinAndSelect('pot.user', 'user', 'user.user_id = pot.user_id')
+        .leftJoinAndSelect('pot.calender', 'calender','calender.pot_id = pot.pot_id')
+        .where('(pot.pot_id= :pot_id) AND (calender.pot_id IS NULL) OR (calender.pot_id, calender.code, calender.createdAt) IN ' +
+            '(SELECT pot_id, code, MAX(createdAt) ' +
+            'FROM calender ' +
+            'GROUP BY pot_id, code)', {pot_id}
+        )
+        .andWhere('pot.collection_FG= :flag', {flag: false})
+        .andWhere('pot.pot_id= :pot_id', {pot_id})
+        .getOne();
 
         const statusDto = new PotWithStatusDto();
 
