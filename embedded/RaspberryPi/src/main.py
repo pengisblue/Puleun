@@ -104,7 +104,7 @@ def owner_change(data):
 @sio.on('talk_id')
 def get_talk_id(talk_id):
     global is_talking
-    talk_id = talk_id  
+    talk_id = talk_id
     is_talking = True
     print('talk_id:', talk_id) 
 
@@ -281,7 +281,7 @@ def send_sig_to_arduino(ser, msg):
 
 # Threading - Process로 만듦
 def arduino_work():
-    global is_water
+    global is_water, status_flag
     print('arduino start')
     while True:
         is_owner_event.wait()
