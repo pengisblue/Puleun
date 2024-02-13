@@ -19,8 +19,8 @@ import KidsModePot from "./pages/KidsModePot";
 import KidsModeCollection from "./pages/KidsModeCollection";
 import LoginPage, { action as loginAction } from "./pages/LoginPage";
 import SignUpPage, { action as signUpAction } from "./pages/SignUpPage";
+import { action as logoutAction } from "./pages/LogoutPage";
 import MeassageListPage from "./pages/MessageListPage";
-import KidsmodePage from "./pages/KidsmodePage";
 import MessageCreatePage from "./pages/MessageCreatePage";
 
 // import Example from "./test/Example";
@@ -42,7 +42,10 @@ const router = createBrowserRouter([
       { path: "/talk/:talkId", element: <TalkDetailPage /> },
       { path: "/collection/:userId", element: <CollectionPage /> },
       { path: "/kids/select", element: <KidSelectPage></KidSelectPage> },
-      { path: "/message/create", element: <MessageCreatePage></MessageCreatePage> },
+      {
+        path: "/message/create",
+        element: <MessageCreatePage></MessageCreatePage>,
+      },
     ],
   },
   {
@@ -79,6 +82,10 @@ const router = createBrowserRouter([
     path: "/signup",
     element: <SignUpPage />,
     action: signUpAction,
+  },
+  {
+    path: "/logout",
+    action: logoutAction,
   },
 
   // 테스트용
