@@ -47,7 +47,7 @@ export default function KidListPage() {
     const getKids = async () => {
       try {
         const response = await axios.get(
-          "https://i10e101.p.ssafy.io/v1/user/child/1",
+          `https://i10e101.p.ssafy.io/v1/user/child/${JSON.parse(localStorage.getItem("userInfo")).userId}`,
         );
         setKidList(response.data);
       } catch (e) {

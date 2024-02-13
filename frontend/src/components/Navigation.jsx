@@ -8,9 +8,6 @@ import Session from "react-session-api";
 import navImg from "../asset/log.svg";
 import { authActions } from "../store/auth-slice";
 
-// 하드코딩용
-import kidImg from "../test/kid3.png";
-
 const navigation = [
   { name: "화분 관리", href: "/pot", current: false },
   { name: "아이 관리", href: "/kids", current: false },
@@ -114,7 +111,10 @@ export default function Navigation() {
                       {/* 프로필 이미지 */}
                       <img
                         className="h-8 w-8 rounded-full"
-                        src={kidImg}
+                        src={
+                          JSON.parse(localStorage.getItem("userInfo"))
+                            .userImgUrl
+                        }
                         alt="kid"
                       />
                     </Menu.Button>

@@ -9,4 +9,7 @@ export class TalkCreateDto{
 
     @Type(()=>Boolean)
     read_FG?: boolean=false
+
+    @Type(()=>Number)
+    pot_id: number
 }
