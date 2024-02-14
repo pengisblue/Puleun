@@ -15,7 +15,6 @@ import { FileModule } from './file/file.module';
 import { SocketModule } from './socket/socket.module';
 import { ConfigModule } from '@nestjs/config';
 import { TtsModule } from './tts/tts.module';
-import { RedisModule } from './redis/redis.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { S3Module } from './s3/s3.module';
 
@@ -40,7 +39,6 @@ import { S3Module } from './s3/s3.module';
       subscribers: ['src/subscribers/*.ts'],
     }),
     TtsModule,
-    RedisModule,
     S3Module,
   ],
   controllers: [AppController],
