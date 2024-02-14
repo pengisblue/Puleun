@@ -7,7 +7,6 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Session from "react-session-api";
 import navImg from "../asset/log.svg";
 import { authActions } from "../store/auth-slice";
-import { API_URL } from "../config/config";
 
 const navigation = [
   { name: "화분 관리", href: "/pot", current: false },

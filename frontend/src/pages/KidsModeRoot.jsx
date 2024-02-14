@@ -17,8 +17,8 @@ export default function KidsModeRootLayout() {
     } else if (!isKidsMode) {
       navigate("/");
     }
-  }, [isAuth, navigate]);
-  
+  }, [isAuth, isKidsMode, navigate]);
+
   return (
     <>
       <header>
