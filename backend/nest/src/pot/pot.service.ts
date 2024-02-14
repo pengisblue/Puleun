@@ -153,7 +153,7 @@ export class PotService {
             const fileName = pot.pot_id + '.' + extension
             pot.pot_img_url = await this.s3Service.upload(file, filePath + fileName)
         } catch (e){
-            pot.pot_img_url = 'upload/pot/noImg.png'
+            pot.pot_img_url = 'https://puroon.s3.ap-northeast-2.amazonaws.com/upload/pot/noImg.png'
         }
         await this.potRepository.update(pot.pot_id,pot)
     }
@@ -166,7 +166,7 @@ export class PotService {
             const fileName = pot_id + '.' + extension
             data.pot_img_url = await this.s3Service.upload(file, filePath + fileName)
         } catch (e){
-            data.pot_img_url = 'upload/pot/noImg.png'
+            data.pot_img_url = 'https://puroon.s3.ap-northeast-2.amazonaws.com/upload/pot/noImg.png'
         }
         await this.potRepository.update(pot_id, {...data})
     }
