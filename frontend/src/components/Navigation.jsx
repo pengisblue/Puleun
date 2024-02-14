@@ -7,7 +7,6 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Session from "react-session-api";
 import navImg from "../asset/log.svg";
 import { authActions } from "../store/auth-slice";
-import { API_URL } from "../config/config";
 
 const navigation = [
   { name: "화분 관리", href: "/pot", current: false },
@@ -24,15 +23,12 @@ export default function Navigation() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isKidsMode = useSelector((state) => state.auth.isKidsMode);
+  const userInfo = useSelector((state) => state.auth.userInfo);
 
   const logoutHandler = () => {
     dispatch(authActions.logout());
+    navigate('/hello')
   };
-
-  function getUserImage() {
-    const userInfo = localStorage.getItem("userInfo");
-    return userInfo ? JSON.parse(userInfo).userImgUrl : null;
-  }
 
   const [enabled, setEnabled] = useState(false);
 
@@ -81,7 +77,7 @@ export default function Navigation() {
 
               <div className="flex items-center justify-center">
                 <div className="flex flex-shrink-0 items-center">
-                  <Link to={!isKidsMode ? "/" : "/kids/select"}>
+                  <Link to={!isKidsMode ? "/" : "/kidsmode"}>
                     <img className="h-9 w-auto" src={navImg} alt="푸른" />
                   </Link>
                 </div>
@@ -115,11 +111,11 @@ export default function Navigation() {
                       <span className="absolute -inset-1.5" />
                       <span className="sr-only">Open user menu</span>
                       {/* 프로필 이미지 */}
-                      {getUserImage() && (
+                      {userInfo && (
                         <img
-                          className="h-8 w-8 rounded-full"
-                          src={API_URL + getUserImage()}
-                          alt="kid"
+                          className="h-8 w-8 rounded-full ring-2 ring-amber-300"
+                          src={userInfo.userImgUrl}
+                          alt="profile"
                         />
                       )}
                     </Menu.Button>
@@ -156,7 +152,7 @@ export default function Navigation() {
                           </div>
                         </Switch.Group>
                       </Menu.Item>
-                      <Menu.Item>
+                      {/* <Menu.Item>
                         {({ active }) => (
                           <a
                             href="#!"
@@ -168,8 +164,8 @@ export default function Navigation() {
                             Your Profile
                           </a>
                         )}
-                      </Menu.Item>
-                      <Menu.Item>
+                      </Menu.Item> */}
+                      {/* <Menu.Item>
                         {({ active }) => (
                           <a
                             href="#!"
@@ -181,20 +177,18 @@ export default function Navigation() {
                             Settings
                           </a>
                         )}
-                      </Menu.Item>
+                      </Menu.Item> */}
                       <Menu.Item>
                         {({ active }) => (
-                          <Form method="post" action="/logout">
-                            <button
-                              onClick={logoutHandler}
-                              className={classNames(
-                                active ? "bg-gray-100" : "",
-                                "block px-4 py-2 text-sm text-gray-700",
-                              )}
-                            >
-                              로그아웃
-                            </button>
-                          </Form>
+                          <button
+                            onClick={logoutHandler}
+                            className={classNames(
+                              active ? "bg-gray-100" : "",
+                              "w-full px-4 py-2 text-start text-sm text-gray-700",
+                            )}
+                          >
+                            로그아웃
+                          </button>
                         )}
                       </Menu.Item>
                     </Menu.Items>

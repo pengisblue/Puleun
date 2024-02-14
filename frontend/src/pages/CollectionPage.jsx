@@ -2,10 +2,9 @@ import PotProfileImage from "../components/Pots/PotProfileImage";
 import BaseSimpleCard from "../components/UI/BaseSimpleCard";
 import chevron from "../asset/chevron-left.svg";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
-// 하드코딩용
-import { COLLECTION_INFO } from "../test/collectionInfo";
 
 export default function CollectionPage() {
   const navigate = useNavigate();
@@ -20,8 +19,16 @@ export default function CollectionPage() {
     }
   };
 
-  const [collectionInfo, setCollectionInfo] = useState(COLLECTION_INFO);
-  const { userName, potList } = collectionInfo;
+  const [collectionInfo, setCollectionInfo] = useState({
+    pot_name: "",
+    pot_img_url: "",
+    happy_cnt: 0,
+    // together_day: 0, // 아직 안됨
+    user: {}
+  });
+
+  const userId = params.userId
+  const [userName, setUserName] = useState('')
 
   // 이름이 받침으로 끝나는지 확인
   function hasCoda(name) {
@@ -39,6 +46,24 @@ export default function CollectionPage() {
     return hasCoda(name) ? "의" : "이의";
   }
 
+  // axios
+  useEffect(() => {
+    const getCollectionInfo = async () => {
+      try {
+        const response = await axios.get(
+          `https://i10e101.p.ssafy.io/v1/pot/collection/${userId}`,
+        );
+        setCollectionInfo(response.data);
+        if (response.data.length > 0) {
+          setUserName(response.data[0].user.nickname);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getCollectionInfo();
+  }, [userId]);
+
   return (
     <div className="px-6">
       <div className="flex gap-2">
@@ -50,37 +75,39 @@ export default function CollectionPage() {
           className="w-8 cursor-pointer"
         />
         <div>
-          <span className="font-semibold">
-            {userName}
-            {selectPostposition(userName)}
-          </span>
+          {userName && 
+            <span className="font-semibold">
+              {userName}
+              {selectPostposition(userName)}
+            </span>
+          }
           <h1 className="text-title">컬렉션</h1>
         </div>
       </div>
 
       {/* 컬렉션 리스트 */}
-      {potList.length > 0 ? (
+      {collectionInfo.length > 0 ? (
         <div className="grid grid-cols-2">
-          {potList.map((pot) => (
-            <BaseSimpleCard key={pot.potId} className="w-[9.5rem]">
+          {collectionInfo.map((pot) => (
+            <BaseSimpleCard key={pot.pot_name} className="w-[9.5rem]">
               <div className="overflow-hidden rounded-lg">
-                <PotProfileImage imgUrl={pot.potImg} />
+                <PotProfileImage imgUrl={pot.pot_img_url} />
               </div>
               <ul className="mt-2">
                 <li>
-                  <p className="font-semibold">{pot.potName}</p>
+                  <p className="font-semibold">{pot.pot_name}</p>
                 </li>
                 <li>
                   <span className="me-2">함께한 날:</span>
                   <span className="me-0.5 text-xl font-bold text-emerald-600">
-                    {pot.togetherDay}
+                    {pot.together_day}
                   </span>
                   <span>일</span>
                 </li>
                 <li>
                   <span className="me-2">행복한 날:</span>
                   <span className="me-0.5 text-xl font-bold text-emerald-600">
-                    {pot.happyCnt}
+                    {pot.happy_cnt}
                   </span>
                   <span>일</span>
                 </li>
@@ -96,8 +123,6 @@ export default function CollectionPage() {
           </p>
         </div>
       )}
-
-      <button onClick={() => setCollectionInfo(COLLECTION_INFO)}>지울거</button>
     </div>
   );
 }
