@@ -9,6 +9,7 @@ import { DeviceService } from 'src/device/device.service';
 import { S3Service } from 'src/s3/s3.service';
 import { CalenderService } from 'src/calender/calender.service';
 import { plainToInstance } from 'class-transformer';
+import { SelectCollectionDto } from './pot-res.dto';
 
 @Injectable()
 export class PotService {
@@ -183,19 +184,24 @@ export class PotService {
         return result;
     }
 
-    async findCollection(pot_id: number): Promise<CollectionDto[]> {
+    async findCollection(user_id: number): Promise<SelectCollectionDto[]> {
         return await this.potRepository.createQueryBuilder('pot')
-            .where({pot_id: pot_id})
-            .andWhere('pot.collection_FG= :flag', {flag: 1})
-            .leftJoinAndSelect('pot.user', 'user')
-            .select(['pot.pot_id', 'pot.pot_name', 'pot.pot_species'
-                ,'user.user_id', 'user.nickname'
-            ])
-            .getMany();
+        .select(['pot.pot_id', 'pot.pot_name', 'pot.pot_species', 'pot.pot_img_url',
+                    'pot.planting_day', 'pot.happy_cnt', 'user.user_id', 'user.nickname',
+                    'user.profile_img_url'])
+        .where('pot.user_id= :user_id', {user_id})
+        .andWhere('pot.collection_FG= :flag', {flag: true})
+        .leftJoinAndSelect('pot.user', 'user', 'user.user_id = pot.user_id')
+        .getMany()
+        .then(o => plainToInstance(SelectCollectionDto, o));
     }
 
     async toCollection(pot_id: number){
         await this.potRepository.update(pot_id, {collection_FG: true});
+    }
+
+    async increaseHappyCnt(pot_id: number){
+        await this.potRepository.update(pot_id, {happy_cnt: () => 'happy_cnt + 1'})
     }
 
     async calenderWithCurrentMoisAndTemp(pot_id: number): Promise<Pot>{
