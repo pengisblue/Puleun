@@ -20,11 +20,11 @@ export default function PotChart({ potData, id, scheme }) {
       margin={{ top: 20, right: 30, bottom: 50, left: 50 }}
       xScale={{
         type: "time",
-        format: "%H시%M분",
+        format: "%H:%M",
         precision: "minute",
         useUTC: false,
       }}
-      xFormat="time: %H시%M분"
+      xFormat="time: %H:%M"
       yScale={{
         type: "linear",
         min: minY,
@@ -51,7 +51,7 @@ export default function PotChart({ potData, id, scheme }) {
         legendOffset: -40,
         legendPosition: "middle",
       }}
-      gridXValues="every 2 hour"
+      gridXValues={2}
       colors={{ scheme: scheme }}
       enableArea={false}
       pointColor={{ theme: "background" }}
@@ -59,32 +59,6 @@ export default function PotChart({ potData, id, scheme }) {
       pointBorderColor={{ from: "serieColor" }}
       pointLabelYOffset={-12}
       useMesh={true}
-      // legends={[
-      //   {
-      //     anchor: "bottom-right",
-      //     direction: "column",
-      //     justify: false,
-      //     translateX: 100,
-      //     translateY: 0,
-      //     itemsSpacing: 0,
-      //     itemDirection: "left-to-right",
-      //     itemWidth: 80,
-      //     itemHeight: 20,
-      //     itemOpacity: 0.75,
-      //     symbolSize: 12,
-      //     symbolShape: "circle",
-      //     symbolBorderColor: "rgba(0, 0, 0, .5)",
-      //     effects: [
-      //       {
-      //         on: "hover",
-      //         style: {
-      //           itemBackground: "rgba(0, 0, 0, .03)",
-      //           itemOpacity: 1,
-      //         },
-      //       },
-      //     ],
-      //   },
-      // ]}
     />
   );
 }
