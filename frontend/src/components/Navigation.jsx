@@ -77,7 +77,7 @@ export default function Navigation() {
 
               <div className="flex items-center justify-center">
                 <div className="flex flex-shrink-0 items-center">
-                  <Link to={!isKidsMode ? "/" : "/kids/select"}>
+                  <Link to={!isKidsMode ? "/" : "/kidsmode"}>
                     <img className="h-9 w-auto" src={navImg} alt="푸른" />
                   </Link>
                 </div>
