@@ -82,7 +82,7 @@ export class PotController {
 
     @Get('collection/:user_id')
     @ApiOperation({summary: '해당 유저의 모든 컬렉션 조회'})
-    @ApiOkResponse({ type: CollectionDto, description:'유저의 컬렉션 정보 조회' })
+    @ApiOkResponse({ type: SelectCollectionDto, description:'유저의 컬렉션 정보 조회' })
     async getCollection(@Param('user_id') user_id: number): Promise<SelectCollectionDto>{
         return await this.potService.findCollection(user_id);
     }

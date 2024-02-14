@@ -8,7 +8,7 @@ export class UserListDto{
     @Expose()
     user_id: number;
 
-    @ApiProperty()
+    @ApiProperty({example: '룰루랄라'})
     @Expose()
     nickname: string;
 

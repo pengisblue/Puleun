@@ -1,7 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Exclude, Expose, Type } from "class-transformer";
+import { Expose, Type } from "class-transformer";
 import { UserListDto } from "src/user/user-res.dto";
-import { User } from "src/user/user.entity";
 
 export class CollectionPotDto{
     @Expose()
@@ -38,8 +37,8 @@ export class CollectionPotDto{
 }
 
 export class SelectCollectionDto extends UserListDto {
-
     @Expose()
     @Type(() => CollectionPotDto)
+    @ApiProperty()
     pots: CollectionPotDto[]
 }
