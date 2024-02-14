@@ -19,6 +19,7 @@ export default function PotDetailPage() {
       navigate("/error");
     }
 
+    // 화분 정보 받아오기
     const getPotInfo = async (potId) => {
       try {
         const res = await axios({
@@ -143,7 +144,7 @@ export default function PotDetailPage() {
       <section>
         <h2 className="mb-2 text-section">함께 한 기록</h2>
         <div className="max-w-[30rem] overflow-hidden rounded-xl border bg-white shadow-md">
-          <PotCalander />
+          <PotCalander potId={potId}  />
         </div>
       </section>
 

@@ -15,7 +15,7 @@ import LandingPage from "./pages/LandingPage";
 import CollectionPage from "./pages/CollectionPage";
 import KidsModeRootLayout from "./pages/KidsModeRoot";
 import KidsModeDetailLayout from "./pages/KidsModeDetail";
-import KidsModePot from "./pages/KidsModePot";
+import KidsModePotPage from "./pages/KidsModePotPage";
 import KidsModeCollection from "./pages/KidsModeCollection";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage, { action as signUpAction } from "./pages/SignUpPage";
@@ -40,7 +40,10 @@ const router = createBrowserRouter([
       { path: "/kid/:userId", element: <KidDetailPage></KidDetailPage> },
       { path: "/talk/:talkId", element: <TalkDetailPage /> },
       { path: "/collection/:userId", element: <CollectionPage /> },
-      { path: "/message/create", element: <MessageCreatePage></MessageCreatePage> },
+      {
+        path: "/message/create",
+        element: <MessageCreatePage></MessageCreatePage>,
+      },
     ],
   },
   {
@@ -55,7 +58,7 @@ const router = createBrowserRouter([
         path: "/kidsmode/:userId",
         element: <KidsModeDetailLayout />,
         children: [
-          { index: true, element: <KidsModePot /> },
+          { index: true, element: <KidsModePotPage /> },
           {
             path: "/kidsmode/:userId/collection",
             element: <KidsModeCollection />,
