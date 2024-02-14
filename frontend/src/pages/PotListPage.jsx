@@ -1,31 +1,23 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import axios from "axios";
+
 import PotSimpleCard from "../components/Pots/PotSimpleCard";
 import PotAddSimpleCard from "../components/Pots/PotAddSimpleCard";
 import Filter from "../components/UI/Filter";
 import plus from "../asset/plus_slate.svg";
 import cog from "../asset/cog-8-tooth.svg";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { API_URL } from "../config/config";
 
-// api1 = {
-//   화분 아이디,
-//   화분 이름,
-//   화분 사진,
-//   주인 아이디,
-//   주인 사진
-// },
-// api2 = {
-//   유저 아이디,
-//   유저 이름
-// }
-
 export default function PotListPage() {
+  const navigate = useNavigate();
+  const userInfo = useSelector((state) => state.auth.userInfo);
+
   const [potList, setPotList] = useState([]);
   const [userList, setUserList] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [filteredPots, setFilteredPots] = useState([]);
-  const navigate = useNavigate();
 
   // 화분 상세정보로 이동
   const goPotDetail = function (potId) {
@@ -42,9 +34,7 @@ export default function PotListPage() {
     // 전체 화분 리스트
     // 16번 사용자로 로그인한 경우 (로그인 로직 구현 후 수정해야함)
     axios
-      .get(
-        `${API_URL}/pot/${JSON.parse(localStorage.getItem("userInfo")).userId}`,
-      )
+      .get(`${API_URL}/pot/${userInfo.userId}`)
       .then((res) => {
         const potList = res.data.map((item) => ({
           potId: item.pot_id,
@@ -62,9 +52,7 @@ export default function PotListPage() {
     // 유저 리스트 (필터목록)
     // 16번 사용자로 로그인한 경우 (로그인 로직 구현 후 수정해야함)
     axios
-      .get(
-        `${API_URL}/user/child/${JSON.parse(localStorage.getItem("userInfo")).userId}`,
-      )
+      .get(`${API_URL}/user/child/${userInfo.userId}`)
       .then((res) => {
         const userList = res.data.map((item) => ({
           userId: item.user_id,
@@ -75,7 +63,7 @@ export default function PotListPage() {
       .catch((err) => {
         console.log(err);
       });
-  }, [potList]);
+  }, [potList, userInfo.userId]);
 
   // 주인 필터링 확인
   useEffect(() => {

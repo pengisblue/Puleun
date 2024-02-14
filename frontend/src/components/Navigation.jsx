@@ -1,13 +1,14 @@
-import { Fragment, useState } from "react";
-import { Link, NavLink, useNavigate, Form } from "react-router-dom";
+import { Fragment } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Disclosure, Menu, Switch, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
-import Session from "react-session-api";
+import KidsmodeDeactivate from "./Kids/KidsmodeDeactivatemodal";
+import UserProfileImage from "../components/Users/UserProfileImage";
 import navImg from "../asset/log.svg";
 import { authActions } from "../store/auth-slice";
-import { API_URL } from "../config/config";
+import { uiActions } from "../store/ui-slice";
 
 const navigation = [
   { name: "화분 관리", href: "/pot", current: false },
@@ -23,32 +24,20 @@ function classNames(...classes) {
 export default function Navigation() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const userInfo = useSelector((state) => state.auth.userInfo);
   const isKidsMode = useSelector((state) => state.auth.isKidsMode);
 
   const logoutHandler = () => {
     dispatch(authActions.logout());
+    navigate("/hello");
   };
 
-  function getUserImage() {
-    const userInfo = localStorage.getItem("userInfo");
-    return userInfo ? JSON.parse(userInfo).userImgUrl : null;
-  }
-
-  const [enabled, setEnabled] = useState(false);
-
+  // 키즈모드 dispatch
   const switchKidsMode = () => {
-    const ch = Session.get("kidsmode");
-
-    if (!!ch) {
-      setEnabled(false);
-      // 임시
-      // 키즈모드 해제 페이지로 이동해야됨
-      Session.remove("kidsmode");
-      dispatch(authActions.deactivateKidsMode());
-      navigate("/");
+    if (isKidsMode) {
+      // 키즈모드 해제 모달
+      dispatch(uiActions.kidsmodeModalOpen());
     } else {
-      setEnabled(true);
-      Session.set("kidsmode", true);
       dispatch(authActions.activateKidsMode());
       navigate("/kidsmode");
     }
@@ -81,7 +70,7 @@ export default function Navigation() {
 
               <div className="flex items-center justify-center">
                 <div className="flex flex-shrink-0 items-center">
-                  <Link to={!isKidsMode ? "/" : "/kids/select"}>
+                  <Link to={!isKidsMode ? "/" : "/kidsmode"}>
                     <img className="h-9 w-auto" src={navImg} alt="푸른" />
                   </Link>
                 </div>
@@ -115,12 +104,10 @@ export default function Navigation() {
                       <span className="absolute -inset-1.5" />
                       <span className="sr-only">Open user menu</span>
                       {/* 프로필 이미지 */}
-                      {getUserImage() && (
-                        <img
-                          className="h-8 w-8 rounded-full"
-                          src={API_URL + getUserImage()}
-                          alt="kid"
-                        />
+                      {userInfo && (
+                        <div className="h-8 w-8 overflow-hidden rounded-full ring-2 ring-amber-300">
+                          <UserProfileImage imgUrl={userInfo.userImgUrl} />
+                        </div>
                       )}
                     </Menu.Button>
                   </div>
@@ -141,22 +128,22 @@ export default function Navigation() {
                               키즈 모드
                             </Switch.Label>
                             <Switch
-                              checked={enabled}
+                              checked={isKidsMode}
                               onChange={switchKidsMode}
                               className={`${
-                                enabled ? "bg-green-600" : "bg-gray-200"
+                                isKidsMode ? "bg-green-600" : "bg-gray-200"
                               } relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2`}
                             >
                               <span
                                 className={`${
-                                  enabled ? "translate-x-6" : "translate-x-1"
+                                  isKidsMode ? "translate-x-6" : "translate-x-1"
                                 } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
                               />
                             </Switch>
                           </div>
                         </Switch.Group>
                       </Menu.Item>
-                      <Menu.Item>
+                      {/* <Menu.Item>
                         {({ active }) => (
                           <a
                             href="#!"
@@ -168,8 +155,8 @@ export default function Navigation() {
                             Your Profile
                           </a>
                         )}
-                      </Menu.Item>
-                      <Menu.Item>
+                      </Menu.Item> */}
+                      {/* <Menu.Item>
                         {({ active }) => (
                           <a
                             href="#!"
@@ -181,20 +168,18 @@ export default function Navigation() {
                             Settings
                           </a>
                         )}
-                      </Menu.Item>
+                      </Menu.Item> */}
                       <Menu.Item>
                         {({ active }) => (
-                          <Form method="post" action="/logout">
-                            <button
-                              onClick={logoutHandler}
-                              className={classNames(
-                                active ? "bg-gray-100" : "",
-                                "block px-4 py-2 text-sm text-gray-700",
-                              )}
-                            >
-                              로그아웃
-                            </button>
-                          </Form>
+                          <button
+                            onClick={logoutHandler}
+                            className={classNames(
+                              active ? "bg-gray-100" : "",
+                              "w-full px-4 py-2 text-start text-sm text-gray-700",
+                            )}
+                          >
+                            로그아웃
+                          </button>
                         )}
                       </Menu.Item>
                     </Menu.Items>
@@ -203,6 +188,8 @@ export default function Navigation() {
               </div>
             </div>
           </div>
+          {/* 키즈모드 해제 모달 */}
+          <KidsmodeDeactivate />
 
           <Disclosure.Panel className="">
             {({ close }) => (

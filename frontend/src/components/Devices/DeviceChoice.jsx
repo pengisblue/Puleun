@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { RadioGroup } from "@headlessui/react";
-import { deviceActions } from "../../store/device-slice";
+import { uiActions } from "../../store/ui-slice";
 import "swiper/css";
 
 export default function DeviceChoice({ deviceList, onSelect }) {
@@ -30,7 +30,7 @@ export default function DeviceChoice({ deviceList, onSelect }) {
 
   // 기기 등록 모달열기
   const openDeviceAddModal = () => {
-    dispatch(deviceActions.modalOpen());
+    dispatch(uiActions.deviceModalOpen());
   };
 
   return (

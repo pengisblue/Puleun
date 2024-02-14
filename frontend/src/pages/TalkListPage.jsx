@@ -1,9 +1,13 @@
-import TalkTitleCard from "../components/Talk/TalkTitleCard";
-import cog from "../asset/cog-8-tooth.svg";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import axios from "axios";
 
+import TalkTitleCard from "../components/Talk/TalkTitleCard";
+import cog from "../asset/cog-8-tooth.svg";
+
 export default function TalkListPage() {
+  const userInfo = useSelector((state) => state.auth.userInfo);
+
   const [isStar, setIsStar] = useState(false);
   const handleClickAll = () => {
     setIsStar(false);
@@ -16,7 +20,7 @@ export default function TalkListPage() {
   useEffect(() => {
     axios
       .get(
-        `https://i10e101.p.ssafy.io/v1/talk/all/${JSON.parse(localStorage.getItem("userInfo")).userId}`,
+        `https://i10e101.p.ssafy.io/v1/talk/all/${userInfo.userId}`,
       )
       .then((res) => {
         setTalkList(res.data);
@@ -24,7 +28,7 @@ export default function TalkListPage() {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [userInfo.userId]);
 
   return (
     <div className="">

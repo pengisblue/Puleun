@@ -1,19 +1,42 @@
-import { useState } from "react";
-import PotProfileImage from "../components/Pots/PotProfileImage";
-import BaseSimpleCard from "../components/UI/BaseSimpleCard";
+import { useEffect, useState } from "react";
+import BaseSimpleCard from "../UI/BaseSimpleCard";
+import PotProfileImage from "./PotProfileImage";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import { API_URL } from "../../config/config";
 
-// 하드코딩용
-import { COLLECTION_INFO } from "../test/collectionInfo";
+export default function PotCollection() {
+  const { userId } = useParams();
 
-export default function KidsModeCollection() {
-  const [collectionInfo, setCollectionInfo] = useState(COLLECTION_INFO);
-  const { potList } = collectionInfo;
+  const [collectionList, setCollectionList] = useState([]);
+  useEffect(() => {
+    const getCollectionList = async () => {
+      try {
+        const res = await axios({
+          method: "get",
+          url: `${API_URL}/pot/collection/${userId}`,
+        });
+
+        const collectionList = res.data.pots.map((item) => ({
+          potId: item.pot_id,
+          potName: item.pot_name,
+          potImg: item.pot_img_url,
+          togetherDay: item.together_day,
+          happyCnt: item.happy_cnt,
+        }));
+        setCollectionList(collectionList);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getCollectionList();
+  }, [userId]);
 
   return (
     <div>
-      {potList.length > 0 ? (
+      {collectionList.length > 0 ? (
         <div className="grid grid-cols-2">
-          {potList.map((pot) => (
+          {collectionList.map((pot) => (
             <BaseSimpleCard key={pot.potId} className="w-[9.5rem]">
               <div className="overflow-hidden rounded-lg">
                 <PotProfileImage imgUrl={pot.potImg} />
@@ -46,8 +69,6 @@ export default function KidsModeCollection() {
           <p className="font-semibold">식물을 키우고 컬렉션을 모아보세요!</p>
         </div>
       )}
-
-      <button onClick={() => setCollectionInfo(COLLECTION_INFO)}>지울거</button>
     </div>
   );
 }

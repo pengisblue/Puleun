@@ -1,3 +1,4 @@
+import { useSelector } from "react-redux";
 import PotSwiper from "../components/Pots/PotSwiper";
 import TalkTitleCard from "../components/Talk/TalkTitleCard";
 import chevron from "../asset/chevron-right.svg";
@@ -6,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import dayjs from "dayjs";
 
+import { API_URL } from "../config/config";
 
 // 하드코딩 테스트용 데이터
 // import { potDetailList } from "../test/potList";
@@ -24,8 +26,21 @@ import dayjs from "dayjs";
 //   심은 날
 // }
 
+import _ from 'lodash';
+
+export const changeKeysToCamelCase = (obj) => {
+  if (_.isArray(obj)) {
+    return obj.map(value => changeKeysToCamelCase(value));
+  }
+  else if (_.isObjectLike(obj)) {
+    return _.mapValues(_.mapKeys(obj, (value, key) => _.camelCase(key)), changeKeysToCamelCase);
+  }
+  return obj;
+};
+
 export default function MainPage() {
   const navigate = useNavigate();
+  const userInfo = useSelector((state) => state.auth.userInfo);
 
   const goPotList = function () {
     navigate("/pot");
@@ -38,8 +53,6 @@ export default function MainPage() {
   // parentId 로컬
   // const [parentId, setParentId] = useState("");
 
-  const [talkList, setTalkList] = useState([]);
-  const [potDetailList, setPotDetailList] = useState({
     // pot_id: 0,
     // pot_name: "",
     // pot_species: "",
@@ -49,7 +62,9 @@ export default function MainPage() {
     // planting_day: "",
     // user: {},
     // statusDto: {}
-  });
+
+  const [talkList, setTalkList] = useState([]);
+  const [potDetailList, setPotDetailList] = useState([]);
   
 
 
@@ -58,25 +73,10 @@ export default function MainPage() {
     const getPotDetailList = async () => {
       try {
         const res = await axios.get(
-          `https://i10e101.p.ssafy.io/v1/pot/${JSON.parse(localStorage.getItem("userInfo")).userId}`,
+          `${API_URL}/pot/${userInfo.userId}`,
         );
-        console.log(res.data)
-        const potDetail = {
-          potId: res.data.pot_id,
-          potName: res.data.pot_name,
-          // userName: res.data.user.nickname,
-          // userImgUrl: res.data.user.profile_img_url, // test
-          potImgUrl: res.data.pot_img_url,
-          potSpecies: res.data.pot_species,
-          nowTemprature: res.data.temperature,
-          // tempratureStatus: res.data.statusDto.temp_state,
-          nowMoisture: res.data.moisture,
-          // moistureStatus: res.data.statusDto.mois_state,
-          // daysSinceWatering: res.data.statusDto.lastWaterDay,
-          plantDate: dayjs(res.data.planting_day).format("YY/MM/DD"),
-          // daysSincePlanting: res.data.statusDto.together_day,
-        }
-        setPotDetailList(potDetail);
+        const result = changeKeysToCamelCase(res.data);
+        setPotDetailList(result);
       } catch (e) {
         console.log(e);
       }
@@ -90,7 +90,7 @@ export default function MainPage() {
   useEffect(() => {
     axios
       .get(
-        `https://i10e101.p.ssafy.io/v1/talk/all/${JSON.parse(localStorage.getItem("userInfo")).userId}`,
+        `${API_URL}/talk/all/${userInfo.userId}`,
       )
       .then((res) => {
         setTalkList(res.data);
@@ -98,7 +98,7 @@ export default function MainPage() {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [userInfo.userId]);
 
 
   return (

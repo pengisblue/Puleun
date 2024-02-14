@@ -1,16 +1,17 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+
+import axios from "axios";
 import plus from "../asset/plus_slate.svg";
 import KidCard from "../components/Kids/KidCard";
-import { useNavigate } from "react-router-dom";
 import AddDetailCard from "../components/UI/AddDetailCard";
 
-// 하드코딩용
-import kidImg from "../test/kid3.png";
-
 export default function KidListPage() {
-  const [kidList, setKidList] = useState([]);
   const navigate = useNavigate();
+  const userInfo = useSelector((state) => state.auth.userInfo);
+
+  const [kidList, setKidList] = useState([]);
 
   const goDetailKid = (user_id) => {
     return () => navigate(`/kid/${user_id}`);
@@ -47,7 +48,7 @@ export default function KidListPage() {
     const getKids = async () => {
       try {
         const response = await axios.get(
-          `https://i10e101.p.ssafy.io/v1/user/child/${JSON.parse(localStorage.getItem("userInfo")).userId}`,
+          `https://i10e101.p.ssafy.io/v1/user/child/${userInfo.userId}`,
         );
         setKidList(response.data);
       } catch (e) {
@@ -55,7 +56,7 @@ export default function KidListPage() {
       }
     };
     getKids();
-  }, []);
+  }, [userInfo.userId]);
 
   return (
     <div className="px-6">

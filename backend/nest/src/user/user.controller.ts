@@ -122,10 +122,4 @@ export class UserController {
     async unMappingUser(@Param('user_id') user_id: number): Promise<UserListDto[]>{
         return await this.userService.unMappingUser(user_id);
     }   
-
-    @Get('byParent/:parent_id')
-    @ApiOperation({summary: '부모의 아이에 대한 간단 출력'})
-    async simpleUserList(@Param('parent_id') parent_id: number){
-        return await this.userService.simpleUserList(parent_id);
-    }
 }
