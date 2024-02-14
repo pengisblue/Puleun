@@ -25,14 +25,14 @@ export class PotController {
 
     @Get('/detail/:pot_id')
     @ApiOperation({ summary: "화분(식물) 상세 조회"})
-    @ApiOkResponse({ type:Pot, description:'선택한 화분(컬렉션에 있는 화분 포함)의 모든 정보 조회' })
+    @ApiOkResponse({ type:PotWithStatusDto, description:'선택한 화분(컬렉션에 있는 화분 포함)의 모든 정보 조회' })
     async potDetail(@Param('pot_id') pot_id: number): Promise<PotWithStatusDto>{
         return await this.potService.potDetail(pot_id);
     }
 
     @Post()
     @ApiBody({type: CreatePotDto})
-    @ApiOperation({ summary: '화분 등록'})
+    @ApiOperation({ summary: '화분 등록', description: '파일은 pot_img로 보내기'})
     @ApiOkResponse({ type: String, description:'SUCCESS or FAIL' })
     @UseInterceptors(FileInterceptor('pot_img'))
     async save( @Body() createPotDto: CreatePotDto,
@@ -52,7 +52,7 @@ export class PotController {
 
     @Put(':pot_id')
     @ApiBody( { type: UpdatePotDto } )
-    @ApiOperation({ summary: '화분 수정'})
+    @ApiOperation({ summary: '화분 수정', description: '파일은 pot_img로 보내기'})
     @ApiOkResponse({ type:String, description:'SUCCESS or FAIL' })
     @UseInterceptors(FileInterceptor('pot_img'))
     async update( @Param('pot_id') user_id: number, @Body() pot: UpdatePotDto,
@@ -65,26 +65,19 @@ export class PotController {
                 fileIsRequired: false,
                 errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
             })
-    ) file?: Express.Multer.File ): Promise<number>{
+    ) file?: Express.Multer.File ): Promise<String>{
         await this.potService.update(user_id, pot, file);
-        return 1 
+        return 'SUCCESS';
     }
 
     @Delete(':pot_id')
     @ApiOperation({ summary: '화분 삭제'})
-    @ApiOkResponse({ type:'1', description:'1 for SUCCESS' })
-    async delete(@Param('pot_id') pot_id: number): Promise<number>{
+    @ApiOkResponse({ type: String, description:'SUCCESS or FAIL' })
+    async delete(@Param('pot_id') pot_id: number): Promise<String>{
         await this.potService.delete(pot_id);
-        return 1;
+        return 'SUCCESS';
     }
 
-    // parentUserByStatus이 메소드로 대체
-    // @Get('user/:user_id')
-    // @ApiOperation({summary: '해당 유저의 모든 화분 조회'})
-    // @ApiOkResponse({ type: Pot, description:'유저의 컬렉션 정보 조회' })
-    // async findPotByUserId(@Param('user_id') user_id: number): Promise<Pot[]>{
-    //     return await this.potService.findPotsByUserId(user_id);
-    // }
 
     @Get('collection/:user_id')
     @ApiOperation({summary: '해당 유저의 모든 컬렉션 조회'})
@@ -95,10 +88,10 @@ export class PotController {
 
 
     @Put('collection/:pot_id')
-    @ApiOperation({summary: '성장완료 되서 컬렉션으로 이동'})
-    @ApiOkResponse({ type:'1', description:'1 for SUCCESS' })
-    async toCollection(@Param('pot_id') pot_id: number): Promise<number>{
+    @ApiOperation({summary: '성장완료 되서 컬렉션으로 이동', description: 'Body 없이 pot_id만 전달'})
+    @ApiOkResponse({ type: String, description:'SUCCESS or FAIL' })
+    async toCollection(@Param('pot_id') pot_id: number): Promise<String>{
         await this.potService.toCollection(pot_id);
-        return 1;
+        return 'SUCCESS';
     }
 }

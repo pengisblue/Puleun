@@ -10,12 +10,14 @@ import { Pot } from 'src/pot/pot.entity';
 import { UserWithAlarmDto } from 'src/alarm/alarm-res.dto';
 import * as fs from 'fs';
 import { join } from 'path';
+import { S3Service } from './../s3/s3.service';
 
 @Injectable()
 export class UserService {
     constructor(
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
+        private readonly s3Service: S3Service
     ){}
 
     async findByParent(user_id: number):Promise<UserListDto[]>{
@@ -38,16 +40,16 @@ export class UserService {
 
     async save(data: CreateUserDto, file?: Express.Multer.File): Promise<number>{
         await this.userRepository.save(data);
-        const filePath = join(process.cwd(), '/upload/profile/')
         const user: User = data as User
         try{
             const split = file.originalname.split('.')
             const extension = split[split.length -1]
+            const filePath = 'upload/profile/'
             const fileName = user.user_id + '.' + extension
-            fs.writeFileSync(filePath+fileName, file.buffer);
-            user.profile_img_url = filePath+fileName
+            user.profile_img_url = await this.s3Service.upload(file, filePath+fileName)
         } catch (e){
-            user.profile_img_url = join(process.cwd(), '/upload/profile/noImg.png')
+            console.log(e)
+            user.profile_img_url = 'upload/profile/noImg.png'
         }
         await this.userRepository.update(user.user_id,{...user})
         return user.user_id;
@@ -60,12 +62,11 @@ export class UserService {
             try{
                 const split = file.originalname.split('.')
                 const extension = split[split.length -1]
-                const filePath = join(process.cwd(), '/upload/profile/')
+                const filePath = 'upload/profile/'
                 const fileName = child.user_id + '.' + extension
-                fs.writeFileSync(filePath+fileName, file.buffer);
-                data.profile_img_url = filePath+fileName
+                data.profile_img_url = await this.s3Service.upload(file, filePath+fileName)
             } catch (e){
-                data.profile_img_url = join(process.cwd(), '/upload/profile/noImg.png')
+                data.profile_img_url = 'upload/profile/noImg.png'
             }
             return 1;
         }catch(e){
@@ -81,12 +82,11 @@ export class UserService {
         try{
             const split = file.originalname.split('.')
             const extension = split[split.length -1]
-            const filePath = join(process.cwd(), '/upload/profile/')
+            const filePath = 'upload/profile/'
             const fileName = user.user_id + '.' + extension
-            fs.writeFileSync(filePath+fileName, file.buffer);
-            data.profile_img_url = filePath+fileName
+            data.profile_img_url = await this.s3Service.upload(file, filePath+fileName)
         } catch (e){
-            data.profile_img_url = join(process.cwd(), '/upload/profile/noImg.png')
+            data.profile_img_url = 'upload/profile/noImg.png'
         }
         try{
             this.userRepository.update(user_id, {...data})

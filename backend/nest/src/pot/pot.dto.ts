@@ -1,4 +1,4 @@
-import { ApiOperation, ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from "@nestjs/swagger";
 import { IsDate, IsInt, IsOptional, IsString, Length, IsNumber } from "class-validator";
 import { Exclude, Expose, Type } from "class-transformer";
 import { User } from "src/user/user.entity";
@@ -16,6 +16,11 @@ export class PotUserDto{
 }
 
 export class CreatePotDto {
+    @IsNumber()
+    @ApiProperty({example: 1})
+    @Type(() => Number)
+    device_id: number;
+
     @IsString()
     @Length(1,10)
     @ApiProperty({example: '푸른', required: true})

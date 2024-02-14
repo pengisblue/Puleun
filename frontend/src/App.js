@@ -41,11 +41,7 @@ const router = createBrowserRouter([
       { path: "/kid/:userId", element: <KidDetailPage></KidDetailPage> },
       { path: "/talk/:talkId", element: <TalkDetailPage /> },
       { path: "/collection/:userId", element: <CollectionPage /> },
-      { path: "/kids/select", element: <KidSelectPage></KidSelectPage> },
-      {
-        path: "/message/create",
-        element: <MessageCreatePage></MessageCreatePage>,
-      },
+      { path: "/message/create", element: <MessageCreatePage></MessageCreatePage> },
     ],
   },
   {
