@@ -34,6 +34,7 @@ import { API_URL } from "../config/config";
 // }
 
 export default function PotCreatePage() {
+  // 저장된 디바이스 목록 가져오기
   const [deviceList, setDeviceList] = useState([]);
   useEffect(() => {
     const getDeviceList = async () => {
@@ -60,8 +61,8 @@ export default function PotCreatePage() {
     getDeviceList();
   }, []);
 
-  const [userList, setUserList] = useState([]);
   // 유저 목록 가져오기
+  const [userList, setUserList] = useState([]);
   useEffect(() => {
     const getUserList = async () => {
       try {
@@ -193,7 +194,7 @@ export default function PotCreatePage() {
     setPlantingDate(event.target.value);
   };
 
-  // 제출
+  // 화분 등록
   const createHandler = async () => {
     const potData = new FormData(); // 파일 전송을 위해 FormData객체 사용
     potData.append("device_id", 1); // 임시로 지정
