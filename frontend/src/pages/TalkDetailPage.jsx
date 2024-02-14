@@ -56,7 +56,7 @@ export default function TalkDetailPage() {
   const handlePlayState = () => {
     const newPlayState = !playState;
     setPlayState(newPlayState);
-    console.log(talkDetail.sentences.audio);
+    console.log(1);
     const audio = new Audio(talkDetail.sentences.audio);
     audio.play();
   };
@@ -122,6 +122,7 @@ export default function TalkDetailPage() {
               <KidChatBubble
                 userImg={talkDetail.pot.user.profile_img_url}
                 userName={talkDetail.pot.user.user_id}
+                audioUrl={chat.audio}
               >
                 {chat.content}
               </KidChatBubble>
@@ -143,7 +144,7 @@ export default function TalkDetailPage() {
             alt="rewind button"
           />
           <img
-            onClick={handlePlayState}
+            onClick={() => handlePlayState()}
             src={playState ? pause : play}
             className="w-8 cursor-pointer"
             alt="play button"
