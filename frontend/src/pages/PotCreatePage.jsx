@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import axios from "axios";
 import DeviceChoice from "../components/Devices/DeviceChoice";
 import SpeciesSelector from "../components/Pots/SpeciesSelector";
@@ -34,6 +35,8 @@ import { API_URL } from "../config/config";
 // }
 
 export default function PotCreatePage() {
+  const isOpen = useSelector((state) => state.device.isOpen);
+
   // 저장된 디바이스 목록 가져오기
   const [deviceList, setDeviceList] = useState([]);
   useEffect(() => {
@@ -46,7 +49,7 @@ export default function PotCreatePage() {
         });
 
         const deviceList = res.data.map((item) => ({
-          diviceId: item.device_id,
+          deviceId: item.device_id,
           deviceName: item.device_name,
           serialNum: item.serial_number,
         }));
@@ -59,7 +62,7 @@ export default function PotCreatePage() {
       }
     };
     getDeviceList();
-  }, []);
+  }, [isOpen]);
 
   // 유저 목록 가져오기
   const [userList, setUserList] = useState([]);
@@ -122,7 +125,7 @@ export default function PotCreatePage() {
   }, []);
 
   // 기기
-  const [selectedDevice, setSelectedDevice] = useState({});
+  const [selectedDevice, setSelectedDevice] = useState(deviceList[0]);
   const handleSelectedDevice = (value) => {
     setSelectedDevice(value);
   };
@@ -237,7 +240,6 @@ export default function PotCreatePage() {
             <DeviceChoice
               deviceList={deviceList}
               onSelect={handleSelectedDevice}
-              selectedDevice={selectedDevice}
             />
           </div>
         </section>
@@ -360,7 +362,7 @@ export default function PotCreatePage() {
       </div>
 
       {/* 임시 확인용 */}
-      {/* <p>selectedDevice: {selectedDevice.deviceId}</p> */}
+      <p>selectedDevice: {selectedDevice?.deviceId}</p>
       <p>selectedUser:{selectedUser}</p>
       <p>dd:{potName}</p>
       <p>{selectedPlant.name}</p>

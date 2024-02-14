@@ -1,11 +1,21 @@
-import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Dialog, Transition } from "@headlessui/react";
 import Input from "../UI/Input";
 import Button from "../UI/Button";
 import axios from "axios";
 import { API_URL } from "../../config/config";
+import { deviceActions } from "../../store/device-slice";
 
-export default function DeviceAddModal({ isOpen, closeModal }) {
+export default function DeviceAddModal() {
+  const dispatch = useDispatch();
+
+  const isOpen = useSelector((state) => state.device.isOpen);
+
+  const closeDeviceAddModal = () => {
+    dispatch(deviceActions.modalClose());
+  };
+
   // 시리얼 넘버
   const [serialNum, setSerialNum] = useState(null);
   const handleSerialNum = (event) => {
@@ -37,7 +47,7 @@ export default function DeviceAddModal({ isOpen, closeModal }) {
 
   // 모달창 닫기
   const handleClose = () => {
-    closeModal();
+    closeDeviceAddModal();
     setSerialNum(null);
     setIsValidDevice(null);
     setDeviceName(null);
@@ -58,13 +68,13 @@ export default function DeviceAddModal({ isOpen, closeModal }) {
         data: data,
       });
 
-      console.log(res.data);
       handleClose();
+
+      console.log(res.data);
     } catch (err) {
       console.log(err);
     }
   };
-
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-30" onClose={handleClose}>

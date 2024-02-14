@@ -4,26 +4,33 @@ import DeviceAddCard from "./DeviceAddCard";
 import DeviceAddModal from "./DeviceAddModal";
 import radioOff from "../../asset/radio_off.svg";
 import radioOn from "../../asset/radio_on.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { RadioGroup } from "@headlessui/react";
+import { deviceActions } from "../../store/device-slice";
 import "swiper/css";
 
-export default function DeviceChoice({ deviceList, onSelect, selectedDevice }) {
+export default function DeviceChoice({ deviceList, onSelect }) {
+  const dispatch = useDispatch();
+
   // 선택된 기기
-  const [selected, setSelected] = useState(selectedDevice);
+  const [selected, setSelected] = useState(null);
+
+  useEffect(() => {
+    if (deviceList.length > 0) {
+      setSelected(deviceList[0]);
+    }
+  }, [deviceList]);
+
   const handleChange = function (value) {
     setSelected(value);
     onSelect(value);
   };
 
-  // 기기 등록 모달
-  const [isOpen, setIsOpen] = useState(false);
+  // 기기 등록 모달열기
   const openDeviceAddModal = () => {
-    setIsOpen(true);
-  };
-  const closeDeviceAddModal = () => {
-    setIsOpen(false);
+    dispatch(deviceActions.modalOpen());
   };
 
   return (
@@ -58,7 +65,7 @@ export default function DeviceChoice({ deviceList, onSelect, selectedDevice }) {
           <div onClick={openDeviceAddModal} className="cursor-pointer">
             <DeviceAddCard />
           </div>
-          <DeviceAddModal isOpen={isOpen} closeModal={closeDeviceAddModal} />
+          <DeviceAddModal />
         </SwiperSlide>
       </Swiper>
     </RadioGroup>
