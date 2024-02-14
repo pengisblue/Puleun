@@ -17,7 +17,7 @@ export default function RootLayout() {
     } else if (isKidsMode) {
       navigate("/kidsmode");
     }
-  }, [isAuth, navigate]);
+  }, [isAuth, isKidsMode, navigate]);
 
   return (
     <div className="max-w-md">

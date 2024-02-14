@@ -9,6 +9,7 @@ import { deviceActions } from "../../store/device-slice";
 
 export default function DeviceAddModal() {
   const dispatch = useDispatch();
+  const userInfo = useSelector((state) => state.auth.userInfo);
 
   const isOpen = useSelector((state) => state.device.isOpen);
 
@@ -58,7 +59,7 @@ export default function DeviceAddModal() {
     const data = {
       serial_number: serialNum,
       device_name: deviceName,
-      user_id: JSON.parse(localStorage.getItem("userInfo")).userId,
+      user_id: userInfo.userId,
     };
 
     try {

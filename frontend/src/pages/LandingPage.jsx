@@ -19,7 +19,7 @@ export default function LandingPage() {
         navigate("/kidsmode");
       }
     }
-  }, [isAuth, navigate]);
+  }, [isAuth, isKidsMode, navigate]);
 
   const goSignUp = () => {
     navigate("/signup");

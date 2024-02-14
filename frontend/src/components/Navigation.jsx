@@ -152,7 +152,7 @@ export default function Navigation() {
                           </div>
                         </Switch.Group>
                       </Menu.Item>
-                      <Menu.Item>
+                      {/* <Menu.Item>
                         {({ active }) => (
                           <a
                             href="#!"
@@ -164,8 +164,8 @@ export default function Navigation() {
                             Your Profile
                           </a>
                         )}
-                      </Menu.Item>
-                      <Menu.Item>
+                      </Menu.Item> */}
+                      {/* <Menu.Item>
                         {({ active }) => (
                           <a
                             href="#!"
@@ -177,7 +177,7 @@ export default function Navigation() {
                             Settings
                           </a>
                         )}
-                      </Menu.Item>
+                      </Menu.Item> */}
                       <Menu.Item>
                         {({ active }) => (
                           <Form method="post" action="/logout">

@@ -17,9 +17,8 @@ import KidsModeRootLayout from "./pages/KidsModeRoot";
 import KidsModeDetailLayout from "./pages/KidsModeDetail";
 import KidsModePot from "./pages/KidsModePot";
 import KidsModeCollection from "./pages/KidsModeCollection";
-import LoginPage, { action as loginAction } from "./pages/LoginPage";
+import LoginPage from "./pages/LoginPage";
 import SignUpPage, { action as signUpAction } from "./pages/SignUpPage";
-import { action as logoutAction } from "./pages/LogoutPage";
 import MeassageListPage from "./pages/MessageListPage";
 import MessageCreatePage from "./pages/MessageCreatePage";
 
@@ -72,16 +71,11 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <LoginPage />,
-    action: loginAction,
   },
   {
     path: "/signup",
     element: <SignUpPage />,
     action: signUpAction,
-  },
-  {
-    path: "/logout",
-    action: logoutAction,
   },
 
   // 테스트용

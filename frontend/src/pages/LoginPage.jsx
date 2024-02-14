@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NavLink, redirect, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import Button from "../components/UI/Button";
@@ -143,9 +143,4 @@ export default function LoginPage() {
       </div>
     </>
   );
-}
-
-// login action
-export async function action({ request }) {
-  const data = await request.formData();
 }
