@@ -1,5 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Exclude, Expose, Type } from "class-transformer";
+import { UserListDto } from "src/user/user-res.dto";
+import { User } from "src/user/user.entity";
 
 export class SelectCollectionDto {
     @Expose()
@@ -26,16 +28,7 @@ export class SelectCollectionDto {
     @ApiProperty()
     happy_cnt: number;
 
-    @ApiProperty({example: 1})
     @Expose()
-    user_id: number;
-
-    @ApiProperty()
-    @Expose()
-    nickname: string;
-
-    @ApiProperty()
-    @Expose()
-    profile_img_url?: string="";
-
+    @Type(() => UserListDto)
+    user: UserListDto;
 }
