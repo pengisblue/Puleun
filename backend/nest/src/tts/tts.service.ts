@@ -8,7 +8,7 @@ export class TtsService {
 
     /**  */
     async tts(answer: string, filePath: string): Promise<any>{    
-        if(!fs.existsSync) fs.mkdirSync(filePath);    
+        
         const writer = fs.createWriteStream(filePath);
 
         await axios({  

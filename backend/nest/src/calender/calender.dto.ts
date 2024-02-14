@@ -28,3 +28,12 @@ export class SimpleCalenderDto{
     @Expose()
     createdAt: Date;
 }
+
+export class WaterAndTalkDto{
+    water: string;
+    water_calender_id: number;
+    water_createdAt: Date;
+    talk: string;
+    talk_calender_id: number;
+    talk_createdAt: Date;
+}
