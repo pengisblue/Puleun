@@ -58,16 +58,17 @@ export class UserService {
     async saveChild(data: ChildSaveDto, file?: Express.Multer.File): Promise<number>{   
         const child = this.userRepository.create(data);
         try{            
-            await this.userRepository.save(data)            
+            await this.userRepository.save(child)
             try{
                 const split = file.originalname.split('.')
                 const extension = split[split.length -1]
                 const filePath = 'upload/profile/'
                 const fileName = child.user_id + '.' + extension
-                data.profile_img_url = await this.s3Service.upload(file, filePath+fileName)
+                child.profile_img_url = await this.s3Service.upload(file, filePath+fileName)
             } catch (e){
-                data.profile_img_url = 'upload/profile/noImg.png'
+                child.profile_img_url = 'upload/profile/noImg.png'
             }
+            await this.userRepository.update(child.user_id,{...data})
             return 1;
         }catch(e){
             throw new HttpException('Bad_REQUEST', HttpStatus.BAD_REQUEST)
