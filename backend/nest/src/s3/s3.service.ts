@@ -23,7 +23,8 @@ export class S3Service {
             Bucket: process.env.AWS_BUCKET_NAME,
             ACL: 'public-read',
             Key: fileName,
-            Body: file.buffer
+            Body: file.buffer,
+            ContentType: 'image'
         })
         await this.s3cli.send(params)
 
@@ -35,7 +36,8 @@ export class S3Service {
             Bucket: process.env.AWS_BUCKET_NAME,
             ACL: 'public-read',
             Key: fileName,
-            Body: buffer
+            Body: buffer,
+            ContentType: 'audio'
         })
         await this.s3cli.send(params)
 
