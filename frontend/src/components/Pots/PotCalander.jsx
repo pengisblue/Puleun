@@ -1,5 +1,6 @@
 import Calander from "react-calendar";
 import dayjs from "dayjs";
+import utc from "dayjs-plugin-utc";
 import waterImg from "../../asset/water.svg";
 import talkImg from "../../asset/chat-bubble.svg";
 import "react-calendar/dist/Calendar.css";
@@ -24,7 +25,9 @@ export default function PotCalander() {
 
         const convertedData = res.data.reduce(
           (acc, item) => {
-            const date = dayjs(item.createdAt).format("YYYY-MM-DD");
+            // 날짜 확인하고 수정 필요할지도
+            dayjs.extend(utc)
+            const date = dayjs.utc(item.createdAt).format("YYYY-MM-DD");
 
             if (item.code === "T") {
               acc.talkDayList.push(date);

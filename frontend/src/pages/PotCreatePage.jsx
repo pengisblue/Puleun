@@ -9,6 +9,7 @@ import Input from "../components/UI/Input";
 import Button from "../components/UI/Button";
 import defaultImg from "../asset/no_pot_img.png";
 import { API_URL } from "../config/config";
+import { useNavigate } from "react-router-dom";
 
 // 하드코딩 테스트용 데이터
 // import { plantList } from "../test/plantList";
@@ -36,6 +37,7 @@ import { API_URL } from "../config/config";
 
 export default function PotCreatePage() {
   const isOpen = useSelector((state) => state.device.isOpen);
+  const navigate = useNavigate();
 
   // 저장된 디바이스 목록 가져오기
   const [deviceList, setDeviceList] = useState([]);
@@ -199,32 +201,36 @@ export default function PotCreatePage() {
 
   // 화분 등록
   const createHandler = async () => {
-    const formData = new FormData(); // 파일 전송을 위해 FormData객체 사용
-    formData.append("device_id", selectedDevice.deviceId); // 임시로 지정
-    formData.append("user", selectedUser);
-    formData.append("pot_name", potName);
-    formData.append("pot_img", inputImg);
-    formData.append("pot_species", selectedPlant.name);
-    formData.append("min_temperature", minTemperature);
-    formData.append("max_temperature", maxTemperature);
-    formData.append("min_moisture", minMoisture);
-    formData.append("max_moisture", maxMoisture);
-    formData.append("planting_day", plantingDate);
+    const isConfirmed = window.confirm(`${potName}을 심으시겠습니까?`);
 
-    try {
-      const res = await axios({
-        method: "post",
-        url: `${API_URL}/pot`,
-        data: formData,
-        headers: {
-          // 요청 헤더에 Content-Type을 multipart/form-data로 설정
-          "Content-Type": "multipart/form-data",
-        },
-      });
+    if (isConfirmed) {
+      const formData = new FormData(); // 파일 전송을 위해 FormData객체 사용
+      formData.append("device_id", selectedDevice.deviceId); // 임시로 지정
+      formData.append("user", selectedUser);
+      formData.append("pot_name", potName);
+      formData.append("pot_img", inputImg);
+      formData.append("pot_species", selectedPlant.name);
+      formData.append("min_temperature", minTemperature);
+      formData.append("max_temperature", maxTemperature);
+      formData.append("min_moisture", minMoisture);
+      formData.append("max_moisture", maxMoisture);
+      formData.append("planting_day", plantingDate);
 
-      console.log(res.data);
-    } catch (err) {
-      console.log(err);
+      try {
+        const res = await axios({
+          method: "post",
+          url: `${API_URL}/pot`,
+          data: formData,
+          headers: {
+            // 요청 헤더에 Content-Type을 multipart/form-data로 설정
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        navigate("/pot");
+      } catch (err) {
+        console.log(err);
+      }
     }
   };
 

@@ -75,7 +75,7 @@ export default function PotListPage() {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [potList]);
 
   // 주인 필터링 확인
   useEffect(() => {
