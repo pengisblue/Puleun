@@ -6,7 +6,6 @@ import { CollectionDto, CreatePotDto, PotWithStatusDto, SelectPotDto, UpdatePotD
 import { PotStateService } from 'src/pot-state/pot-state.service';
 import * as fs from 'fs';
 import { join } from 'path';
-import { Device } from 'src/device/device.entity';
 import { DeviceService } from 'src/device/device.service';
 
 @Injectable()

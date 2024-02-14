@@ -39,12 +39,17 @@ export class DeviceUpdateDto{
 @Exclude()
 export class SelectDeviceDto{
 
+    @IsNumber()
+    @Type(() => Number)
+    pot_id: number;
+
     @IsString()
     @Type( () => String )
     serial_number: string;
 
-    @IsNumber()
-    pot_id: number;
+    @IsString()
+    @Type(() => String)
+    device_name: string;
 }
 
 export class UserInitDeviceDto{

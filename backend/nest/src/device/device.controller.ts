@@ -10,14 +10,14 @@ export class DeviceController {
 
     @Get('unMapping/:user_id')
     @ApiOperation({summary: '비어있는 디바이스 출력', description: '화분 등록시 등록 가능한 디바이스 출력'})
-    async emptyDevice(@Param('user_id') user_id: number): Promise<SelectDeviceDto[]>{
-        return await this.deviceService.emptyDevice(user_id);
+    async unMappingDevice(@Param('user_id') user_id: number): Promise<SelectDeviceDto[]>{
+        return await this.deviceService.unMappingDevice(user_id);
     }
 
     @Get('Mapping/:user_id')
     @ApiOperation({summary: '비어있지 않은 디바이스 출력'})
-    async unEmptyDevice(@Param('user_id') user_id: number): Promise<SelectDeviceDto[]>{
-        return await this.deviceService.unEmptyDevice(user_id);
+    async mappingDevice(@Param('user_id') user_id: number): Promise<SelectDeviceDto[]>{
+        return await this.deviceService.mappingDevice(user_id);
     }
 
     @Put('user')
