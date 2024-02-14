@@ -27,6 +27,7 @@ export default function Navigation() {
 
   const logoutHandler = () => {
     dispatch(authActions.logout());
+    navigate('/hello')
   };
 
   const [enabled, setEnabled] = useState(false);
@@ -179,17 +180,15 @@ export default function Navigation() {
                       </Menu.Item> */}
                       <Menu.Item>
                         {({ active }) => (
-                          <Form method="post" action="/logout">
-                            <button
-                              onClick={logoutHandler}
-                              className={classNames(
-                                active ? "bg-gray-100" : "",
-                                "w-full px-4 py-2 text-start text-sm text-gray-700",
-                              )}
-                            >
-                              로그아웃
-                            </button>
-                          </Form>
+                          <button
+                            onClick={logoutHandler}
+                            className={classNames(
+                              active ? "bg-gray-100" : "",
+                              "w-full px-4 py-2 text-start text-sm text-gray-700",
+                            )}
+                          >
+                            로그아웃
+                          </button>
                         )}
                       </Menu.Item>
                     </Menu.Items>
