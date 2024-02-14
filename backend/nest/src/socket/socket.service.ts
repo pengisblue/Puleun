@@ -8,6 +8,7 @@ import { TtsService } from 'src/tts/tts.service';
 import { FileService } from './../file/file.service';
 import { SentenceCreateDto } from 'src/sentence/sentence-req.dto';
 import { PotService } from 'src/pot/pot.service';
+import { S3Service } from 'src/s3/s3.service';
 
 @Injectable()
 export class SocketService {
@@ -16,7 +17,8 @@ export class SocketService {
     private readonly sentenceService: SentenceService,
     private readonly ttsService: TtsService,
     private readonly fileService: FileService,
-    private readonly potService: PotService
+    private readonly potService: PotService,
+    private readonly s3Service: S3Service,
   ){}
 
   // device 정보 + socket id 저장
@@ -52,18 +54,15 @@ export class SocketService {
   /** stt-> tts : stt 받아서 tts로 return */
   async stt(text: string, talk_id: number, base64Data: string): Promise<string>{
     const today = this.fileService.getToday();
-    const filePath = process.cwd() + "upload/talk/" + today + "/"
-    if (!fs.existsSync(process.cwd()+'upload/')) fs.mkdir(process.cwd()+'/upload/', (e)=>{if (e) throw e})
-    if (!fs.existsSync(filePath)) fs.mkdir(filePath, (e)=>{if (e) throw e})
+    const filePath = "upload/talk/" + today + "/"
 
     let nextSentenceId = await this.sentenceService.nestSentenceId(talk_id)
     const saveFilePath =  filePath + talk_id + "-" + nextSentenceId + ".mp3"
     const decodedBuffer = Buffer.from(base64Data, 'base64');
-    fs.writeFileSync(saveFilePath, decodedBuffer);
 
     const sentenceDto = new SentenceCreateDto()
     sentenceDto.content = text
-    sentenceDto.audio = saveFilePath
+    sentenceDto.audio = await this.s3Service.uploadBuffer(decodedBuffer, saveFilePath)
     sentenceDto.sentence_DTN = today as unknown as Date
     sentenceDto.talker = "user"
     sentenceDto.talk_id = talk_id

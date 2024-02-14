@@ -29,4 +29,16 @@ export class S3Service {
 
         return `https://s3.${process.env.AWS_REGION}.amazonaws.com/${process.env.AWS_BUCKET_NAME}/${fileName}`;
     }
+
+    async uploadBuffer(buffer: Buffer, fileName: string){
+        const params = new PutObjectCommand({
+            Bucket: process.env.AWS_BUCKET_NAME,
+            ACL: 'public-read',
+            Key: fileName,
+            Body: buffer
+        })
+        await this.s3cli.send(params)
+
+        return `https://s3.${process.env.AWS_REGION}.amazonaws.com/${process.env.AWS_BUCKET_NAME}/${fileName}`;
+    }
 }
