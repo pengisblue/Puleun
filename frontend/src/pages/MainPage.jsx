@@ -4,9 +4,11 @@ import chevron from "../asset/chevron-right.svg";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import dayjs from "dayjs";
+
 
 // 하드코딩 테스트용 데이터
-import { potDetailList } from "../test/potList";
+// import { potDetailList } from "../test/potList";
 
 // 화분 상태정보 = {
 //   화분 아이디,
@@ -33,8 +35,58 @@ export default function MainPage() {
     navigate("/talk");
   };
 
-  const [talkList, setTalkList] = useState([]);
+  // parentId 로컬
+  // const [parentId, setParentId] = useState("");
 
+  const [talkList, setTalkList] = useState([]);
+  const [potDetailList, setPotDetailList] = useState({
+    // pot_id: 0,
+    // pot_name: "",
+    // pot_species: "",
+    // pot_img_url: "",
+    // temperature: 0,
+    // moisture: 0,
+    // planting_day: "",
+    // user: {},
+    // statusDto: {}
+  });
+  
+
+
+  // axios - 화분 정보
+  useEffect(() => {
+    const getPotDetailList = async () => {
+      try {
+        const res = await axios.get(
+          `https://i10e101.p.ssafy.io/v1/pot/${JSON.parse(localStorage.getItem("userInfo")).userId}`,
+        );
+        console.log(res.data)
+        const potDetail = {
+          potId: res.data.pot_id,
+          potName: res.data.pot_name,
+          // userName: res.data.user.nickname,
+          // userImgUrl: res.data.user.profile_img_url, // test
+          potImgUrl: res.data.pot_img_url,
+          potSpecies: res.data.pot_species,
+          nowTemprature: res.data.temperature,
+          // tempratureStatus: res.data.statusDto.temp_state,
+          nowMoisture: res.data.moisture,
+          // moistureStatus: res.data.statusDto.mois_state,
+          // daysSinceWatering: res.data.statusDto.lastWaterDay,
+          plantDate: dayjs(res.data.planting_day).format("YY/MM/DD"),
+          // daysSincePlanting: res.data.statusDto.together_day,
+        }
+        setPotDetailList(potDetail);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getPotDetailList();
+  }, []);
+
+
+  
+  // 대화
   useEffect(() => {
     axios
       .get(
@@ -47,6 +99,7 @@ export default function MainPage() {
         console.log(err);
       });
   }, []);
+
 
   return (
     <div className="flex flex-col gap-8 px-6">
