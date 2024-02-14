@@ -67,11 +67,11 @@ export class PotService {
 
             statusDto.lastTalkDay = lastTalkDay;
             statusDto.lastWaterDay = lastWaterDay;
+            statusDto.mois_state = moisState;
+            statusDto.temp_state = tempState;
+            statusDto.together_day = together_day;
+            
             element.statusDto = statusDto;
-
-            element.mois_state = moisState;
-            element.temp_state = tempState;
-            element.together_day = together_day;
             element.statusDto = statusDto;
             statusDtos.push(element);
         }
@@ -112,9 +112,9 @@ export class PotService {
 
         statusDto.lastTalkDay = lastTalkDay;
         statusDto.lastWaterDay = lastWaterDay;
-        pot.mois_state = moisState;
-        pot.temp_state = tempState;
-        pot.together_day = together_day;
+        statusDto.mois_state = moisState;
+        statusDto.temp_state = tempState;
+        statusDto.together_day = together_day;
         pot.statusDto = statusDto;
         
         return pot;

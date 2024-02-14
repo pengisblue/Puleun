@@ -235,8 +235,26 @@ export class CollectionDto{
 }
 
 export class StatusDto{
+    @ApiProperty()
+    @IsNumber()
     lastWaterDay: number;
+
+    @ApiProperty()
+    @IsNumber()
     lastTalkDay: number;
+
+    @ApiProperty()
+    @IsString()
+    temp_state: string;
+
+    @ApiProperty()
+    @IsString()
+    mois_state: string;
+
+    @ApiProperty()
+    @IsNumber()
+    @Type(()=>Number)
+    together_day: number;
 }
 
 export class PotWithStatusDto{
@@ -275,12 +293,6 @@ export class PotWithStatusDto{
     @Type(()=>Number)
     moisture: number;
 
-    @IsString()
-    temp_state: string;
-
-    @IsString()
-    mois_state: string;
-
     @IsNumber()
     @Type(()=>Number)
     last_water: number;
@@ -288,10 +300,6 @@ export class PotWithStatusDto{
     @IsString()
     @Type(()=>Date)
     planting_day: Date;
-
-    @IsNumber()
-    @Type(()=>Number)
-    together_day: number;
 
     @IsNumber()
     @Type(()=>Number)
