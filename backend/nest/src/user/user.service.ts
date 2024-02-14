@@ -2,12 +2,11 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { User } from './user.entity';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ChildSaveDto, CreateUserDto, UpdateUserDto, UserWithUserLoginDto } from './user-req.dto';
+import { ChildSaveDto, CreateUserDto, UpdateUserDto } from './user-req.dto';
 import { SimpleUserListDto, UserDetailDto, UserListDto } from './user-res.dto';
 import { plainToInstance } from 'class-transformer';
 import { AllUserDto } from 'src/user-login/user-login.dto';
 import { Pot } from 'src/pot/pot.entity';
-import { UserWithAlarmDto } from 'src/alarm/alarm-res.dto';
 import { S3Service } from './../s3/s3.service';
 import { SelectCollectionDto } from 'src/pot/pot-res.dto';
 
@@ -201,43 +200,6 @@ export class UserService {
         
         return collection; 
 
-    }
-    // user의 모든 알람을 표시
-    // alarm controller에서 사용중
-    async allAlarmOfUser(user_id: number): Promise<any>{
-        const dtos = new Array<UserWithAlarmDto>();
-        const result = await this.userRepository.createQueryBuilder('user')
-            .where('user.user_id= :user_id', {user_id})
-            .orWhere('user.parent_id= :user_id', {user_id})
-            .leftJoin('user.pots', 'pot', 'user.user_id=pot.user_id')
-            .leftJoinAndSelect('pot.alarm', 'alarm', 'pot.pot_id=alarm.pot_id')
-            .select(['user', 'pot', 'alarm'])
-            .getMany();
-
-        // result.forEach(arr => {
-        //     const dto = new UserWithAlarmDto();
-        //     dto.user_id = arr.user_id;
-        //     dto.nickname = arr.nickname;            
-        //     arr.pots.forEach(pot =>{
-        //         dto.pot_id = pot.pot_id;
-        //         dto.pot_name = pot.pot_name;
-        //         pot.alarm.forEach(alarm => {
-        //             dto.alarm_id = alarm.alarm_id
-        //             dto.alarm_name = alarm.alarm_name
-        //             dto.alarm_content = alarm.alarm_content
-        //             dto.active_FG = alarm.active_FG
-        //             dto.alarm_date = alarm.alarm_date
-        //             dto.routine = alarm.routine
-        //         })
-        //     });
-        //     dtos.push(dto);
-        // })
-        result.forEach(arr => {
-            const userDto = plainToInstance(UserWithAlarmDto, arr, {excludeExtraneousValues: true});
-            dtos.push(userDto);
-        })
-        
-          return dtos;
     }
 
 }

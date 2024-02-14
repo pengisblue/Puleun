@@ -10,7 +10,6 @@ import { DeviceModule } from './device/device.module';
 import { CalenderModule } from './calender/calender.module';
 import { TalkModule } from './talk/talk.module';
 import { SentenceModule } from './sentence/sentence.module';
-import { AlarmModule } from './alarm/alarm.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FileModule } from './file/file.module';
 import { SocketModule } from './socket/socket.module';
@@ -23,7 +22,7 @@ import { S3Module } from './s3/s3.module';
 @Module({
   imports: [UserModule, PotModule, FileModule, SocketModule,
     PotStateModule, SpeciesModule, UserLoginModule, DeviceModule, 
-    CalenderModule, TalkModule, SentenceModule, AlarmModule,
+    CalenderModule, TalkModule, SentenceModule,
     // 얘가 있어야 .env 파일을 nest에서 읽을 수 있음
     ConfigModule.forRoot(), ScheduleModule.forRoot(),
     TypeOrmModule.forRoot({
