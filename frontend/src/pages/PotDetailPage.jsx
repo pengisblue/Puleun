@@ -25,7 +25,6 @@ export default function PotDetailPage() {
           method: "get",
           url: `${API_URL}/pot/detail/${potId}`,
         });
-        console.log(res.data);
 
         const potInfo = {
           potId: potId,
@@ -62,7 +61,6 @@ export default function PotDetailPage() {
           url: `${API_URL}/pot-state/yesterday/${potId}`,
         });
 
-        console.log(res.data);
         const data = {
           temperature: res.data.temperature.map((item) => ({
             mesure_DT: item.measure_DT.replace("T", " ").replace(".000Z", ""),
@@ -100,6 +98,29 @@ export default function PotDetailPage() {
     return hasCoda(name) ? "의" : "이의";
   }
 
+  // 성장완료 컬렉션 이동
+  const growthComplete = async () => {
+    const isConfirmed = window.confirm(
+      `${potInfo.potName}${selectPostposition(potInfo.potName)} 성장이 끝났나요?`,
+    );
+
+    if (isConfirmed) {
+      const collectingPot = async () => {
+        try {
+          const res = await axios({
+            method: "put",
+            url: `${API_URL}/pot/collection/${potId}`,
+          });
+
+          navigate(`/collection/${potInfo.userId}`);
+        } catch (err) {
+          console.log(err);
+        }
+      };
+      collectingPot();
+    }
+  };
+
   return (
     <div className="flex flex-col gap-4 px-6">
       <h1 className="mt-2 text-xl font-bold">
@@ -131,38 +152,53 @@ export default function PotDetailPage() {
         <div className="mb-4">
           <h2 className="mb-2 text-section">어제의 온도</h2>
           <div className="flex w-full justify-center rounded-xl border bg-white shadow-md">
-            <div className="w-11/12  overflow-auto">
-              <div className="h-96 min-w-[48rem] bg-white">
-                <PotChart
-                  potData={potStatus.temperature}
-                  id="온도"
-                  scheme="pastel1"
-                  type="temperature"
-                />
+            {potStatus.temperature.length > 0 ? (
+              <div className="w-11/12  overflow-auto">
+                <div className="h-96 min-w-[48rem] bg-white">
+                  <PotChart
+                    potData={potStatus.temperature}
+                    id="온도"
+                    scheme="pastel1"
+                    type="temperature"
+                  />
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="te flex w-full justify-center p-4">
+                <p>내일이 되면 오늘의 기록을 볼 수 있어요!</p>
+              </div>
+            )}
           </div>
         </div>
         <div>
           <h2 className="mb-2 text-section">어제의 습도</h2>
           <div className="flex w-full justify-center rounded-xl border bg-white shadow-md">
-            <div className="w-11/12  overflow-auto">
-              <div className="h-96 min-w-[48rem] bg-white">
-                <PotChart
-                  potData={potStatus.moisture}
-                  id="습도"
-                  scheme="paired"
-                  type="moisture"
-                />
+            {potStatus.temperature.length > 0 ? (
+              <div className="w-11/12  overflow-auto">
+                <div className="h-96 min-w-[48rem] bg-white">
+                  <PotChart
+                    potData={potStatus.moisture}
+                    id="습도"
+                    scheme="paired"
+                    type="moisture"
+                  />
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="te flex w-full justify-center p-4">
+                <p>내일이 되면 오늘의 기록을 볼 수 있어요!</p>
+              </div>
+            )}
           </div>
         </div>
       </section>
 
       {/* 성장완료 버튼 */}
       <div className="mt-6 grid place-items-center">
-        <Button className="w-32 bg-amber-300 text-white hover:bg-amber-400">
+        <Button
+          onClick={growthComplete}
+          className="w-32 bg-amber-300 text-white hover:bg-amber-400"
+        >
           성장완료
         </Button>
       </div>
