@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import DeviceChoice from "../components/Devices/DeviceChoice";
@@ -9,7 +10,6 @@ import Input from "../components/UI/Input";
 import Button from "../components/UI/Button";
 import defaultImg from "../asset/no_pot_img.png";
 import { API_URL } from "../config/config";
-import { useNavigate } from "react-router-dom";
 
 // 하드코딩 테스트용 데이터
 // import { plantList } from "../test/plantList";
@@ -36,8 +36,9 @@ import { useNavigate } from "react-router-dom";
 // }
 
 export default function PotCreatePage() {
-  const isOpen = useSelector((state) => state.device.isOpen);
   const navigate = useNavigate();
+  const userInfo = useSelector((state) => state.auth.userInfo);
+  const isOpen = useSelector((state) => state.device.isOpen);
 
   // 저장된 디바이스 목록 가져오기
   const [deviceList, setDeviceList] = useState([]);
@@ -46,8 +47,7 @@ export default function PotCreatePage() {
       try {
         const res = await axios({
           method: "get",
-          url: `${API_URL}/device/unMapping/${JSON.parse(localStorage.getItem("userInfo")).userId}`,
-          // 유저 아이디 받아오는 부분 리덕스로 수정해야함
+          url: `${API_URL}/device/unMapping/${userInfo.userId}`,
         });
 
         const deviceList = res.data.map((item) => ({
@@ -64,7 +64,7 @@ export default function PotCreatePage() {
       }
     };
     getDeviceList();
-  }, [isOpen]);
+  }, [isOpen, userInfo.userId]);
 
   // 유저 목록 가져오기
   const [userList, setUserList] = useState([]);
@@ -73,8 +73,7 @@ export default function PotCreatePage() {
       try {
         const res = await axios({
           method: "get",
-          url: `${API_URL}/user/child/${JSON.parse(localStorage.getItem("userInfo")).userId}`,
-          // 유저 아이디 받아오는 부분 리덕스로 수정해야함
+          url: `${API_URL}/user/child/${userInfo.userId}`,
         });
 
         const userList = res.data.map((item) => ({
@@ -89,7 +88,7 @@ export default function PotCreatePage() {
       }
     };
     getUserList();
-  }, []);
+  }, [userInfo.userId]);
 
   // 식물 목록 가져오기
   const [plantList, setPlantList] = useState([]);

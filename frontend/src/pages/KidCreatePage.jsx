@@ -1,19 +1,22 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import axios from "axios";
 import Button from "../components/UI/Button";
 import Input from "../components/UI/Input";
 import KidProfileImage from "../components/Kids/KidProfileImage";
 import defaultImg from "../asset/no_profile_img.png";
-import { useNavigate } from "react-router-dom";
 
 export default function KidCreatePage() {
+  const navigate = useNavigate();
+  const userInfo = useSelector((state) => state.auth.userInfo);
+
   const [preview, setPreview] = useState(defaultImg);
   const [inputImg, setInputImg] = useState(null);
   const [nickname, setNickname] = useState(null);
   const today = new Date().toISOString().split("T")[0];
   const [birthDate, setBirthDate] = useState(today);
   const [gender, setGender] = useState(null);
-  const navigate = useNavigate();
 
   const handleInputImg = (event) => {
     const files = event.target.files;
@@ -48,10 +51,7 @@ export default function KidCreatePage() {
     formData.append("nickname", nickname);
     formData.append("birth_DT", birthDate);
     formData.append("gender", gender);
-    formData.append(
-      "parent_id",
-      JSON.parse(localStorage.getItem("userInfo")).userId,
-    );
+    formData.append("parent_id", userInfo.userId);
     formData.append("profile_img", inputImg);
 
     axios({
