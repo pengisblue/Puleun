@@ -32,24 +32,33 @@ export default function PotDetailCard({
 
   // 이름 뒤의 조사 선택
   function selectPostposition(name) {
+    if (!name) {
+      return ""
+    }
     return hasCoda(name) ? "의" : "이의";
   }
 
   const textSize = function (userName, potName) {
-    const totalLength = userName.length + selectPostposition(userName).length + potName.length
-    if (totalLength < 18) {
-      return "text-lg"
-    } else if (totalLength < 21) {
-      return "text-base"
-    } else {
-      return "text-sm"
+    if (!userName || !potName) {
+      return "";
     }
-  }
+    const totalLength =
+      userName.length + selectPostposition(userName).length + potName.length;
+    if (totalLength < 18) {
+      return "text-lg";
+    } else if (totalLength < 21) {
+      return "text-base";
+    } else {
+      return "text-sm";
+    }
+  };
 
   return (
     <BaseDetailCard className={className}>
       <div className="grid grid-cols-12 place-content-center gap-1">
-        <h1 className={`col-span-12 flex flex-wrap font-bold ${textSize(userName, potName)} ${nameDisplay}`}>
+        <h1
+          className={`col-span-12 flex flex-wrap font-bold ${textSize(userName, potName)} ${nameDisplay}`}
+        >
           <span className="me-2">
             {userName}
             {selectPostposition(userName)}
