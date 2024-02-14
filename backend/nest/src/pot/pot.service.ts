@@ -8,6 +8,7 @@ import * as fs from 'fs';
 import { join } from 'path';
 import { DeviceService } from 'src/device/device.service';
 import { S3Service } from 'src/s3/s3.service';
+import { CalenderService } from 'src/calender/calender.service';
 
 @Injectable()
 export class PotService {
@@ -16,7 +17,8 @@ export class PotService {
         private readonly potRepository: Repository<Pot>,
         private readonly deviceService: DeviceService,
         @Inject(forwardRef(() => PotStateService))
-        private readonly potStateService: PotStateService,        
+        private readonly potStateService: PotStateService,    
+        private readonly calenderService: CalenderService,    
         private readonly s3Service: S3Service,        
     ){}
 
@@ -93,20 +95,22 @@ export class PotService {
         const now = new Date();
         const pot = await this.potRepository.createQueryBuilder('pot')
         .select(['pot.pot_id', 'pot.pot_name', 'pot.pot_species','pot.planting_day', 
-                        'user.parent_id', 'pot.temperature','pot.min_temperature', 'pot.max_temperature',
-                        'pot.min_moisture', 'pot.max_moisture',
-                        'pot.moisture', 'pot.pot_img_url', 'user.user_id', 'user.nickname',
-                        'user.profile_img_url', 'calender.code', 'calender.createdAt'])                         
+                 'user.parent_id', 'pot.temperature','pot.min_temperature', 'pot.max_temperature',
+                 'pot.min_moisture', 'pot.max_moisture',
+                 'pot.moisture', 'pot.pot_img_url', 'user.user_id', 'user.nickname',
+                 'user.profile_img_url', 'calender.code', 'calender.createdAt'])                         
         .leftJoinAndSelect('pot.user', 'user', 'user.user_id = pot.user_id')
         .leftJoinAndSelect('pot.calender', 'calender','calender.pot_id = pot.pot_id')
-        .where('(pot.pot_id= :pot_id) AND (calender.pot_id IS NULL) OR (calender.pot_id, calender.code, calender.createdAt) IN ' +
-            '(SELECT pot_id, code, MAX(createdAt) ' +
-            'FROM calender ' +
-            'GROUP BY pot_id, code)', {pot_id}
-        )
+        // .where('(pot.pot_id= :pot_id) AND (calender.pot_id IS NULL) OR (calender.pot_id, calender.code, calender.createdAt) IN ' +
+        //     '(SELECT pot_id, code, MAX(createdAt) ' +
+        //     'FROM calender ' +
+        //     'GROUP BY pot_id, code)', {pot_id}
+        // )
         .andWhere('pot.collection_FG= :flag', {flag: false})
         .andWhere('pot.pot_id= :pot_id', {pot_id})
         .getOne();
+
+        console.log(pot);
 
         const statusDto = new PotWithStatusDto();
 
@@ -144,6 +148,8 @@ export class PotService {
     async save(createPotDto: CreatePotDto, file?: Express.Multer.File) {
         const pot: Pot = this.potRepository.create(createPotDto);
         const savePot = await this.potRepository.save(pot);
+        // console.log(savePot);
+        await this.calenderService.whenPotSave(savePot.pot_id);
         await this.deviceService.mappingPot(createPotDto.device_id, savePot.pot_id);
 
         const filePath = join('upload/pot/')
