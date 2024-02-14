@@ -49,7 +49,7 @@ export class UserService {
             user.profile_img_url = await this.s3Service.upload(file, filePath+fileName)
         } catch (e){
             console.log(e)
-            user.profile_img_url = 'upload/profile/noImg.png'
+            user.profile_img_url = 'https://puroon.s3.ap-northeast-2.amazonaws.com/upload/profile/noImg.png'
         }
         await this.userRepository.update(user.user_id,{...user})
         return user.user_id;
@@ -66,7 +66,7 @@ export class UserService {
                 const fileName = child.user_id + '.' + extension
                 child.profile_img_url = await this.s3Service.upload(file, filePath+fileName)
             } catch (e){
-                child.profile_img_url = 'upload/profile/noImg.png'
+                child.profile_img_url = 'https://puroon.s3.ap-northeast-2.amazonaws.com/upload/profile/noImg.png'
             }
             await this.userRepository.update(child.user_id,{...child})
             return 1;
@@ -87,7 +87,7 @@ export class UserService {
             const fileName = user.user_id + '.' + extension
             data.profile_img_url = await this.s3Service.upload(file, filePath+fileName)
         } catch (e){
-            data.profile_img_url = 'upload/profile/noImg.png'
+            data.profile_img_url = 'https://puroon.s3.ap-northeast-2.amazonaws.com/upload/profile/noImg.png'
         }
         try{
             this.userRepository.update(user_id, {...data})
