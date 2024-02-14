@@ -40,7 +40,7 @@ export class Pot {
   @Column({ length: 200, nullable: false, default: 'noimage.png' })
   pot_img_url: string;
   
-  @Column({ type: 'int', nullable: true})
+  @Column({ type: 'int', nullable: true, default: 0})
   happy_cnt: number;
   
   @Column({ type: 'tinyint', nullable: false, default: 0})
@@ -55,6 +55,9 @@ export class Pot {
   @ManyToOne(() => User, (user) => user.pots, {onUpdate: 'CASCADE', onDelete: 'CASCADE'})// 외래키 식별자로 사용될 컬럼명
   @JoinColumn({name: 'user_id'})
   user: User;
+
+  @Column({type: 'int', nullable: true})
+  user_id: number;
   
   @OneToMany(() => Calender, calender => calender.pot)
   calender: Calender[];

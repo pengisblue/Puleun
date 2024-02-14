@@ -82,6 +82,7 @@ export class SocketGateway {
     if (!pot_id) client.emit('talk_id',1)
     dto.pot_id = pot_id
     dto.code = 'T'
+    this.potService.increaseHappyCnt(pot_id);
     this.calenderService.save(dto)
     const pot:Pot = await this.potService.find(pot_id)
     const fileName = pot.pot_name + '과 ' + pot.user.nickname+ '의 대화'
