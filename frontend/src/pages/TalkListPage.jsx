@@ -11,22 +11,19 @@ export default function TalkListPage() {
   const handleClickFavorite = () => {
     setIsStar(true);
   };
-
   const [talkList, setTalkList] = useState([]);
 
   useEffect(() => {
-    const getTalkList = async () => {
-      try {
-        const response = await axios.get(
-          `https://i10e101.p.ssafy.io/v1/talk/all/${JSON.parse(localStorage.getItem("userInfo")).userId}`,
-        );
-        setTalkList(response.data);
-      } catch (e) {
-        console.log(e);
-      }
-    };
-
-    getTalkList();
+    axios
+      .get(
+        `https://i10e101.p.ssafy.io/v1/talk/all/${JSON.parse(localStorage.getItem("userInfo")).userId}`,
+      )
+      .then((res) => {
+        setTalkList(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
   return (

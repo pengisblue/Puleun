@@ -22,7 +22,7 @@ export default function KidCreatePage() {
       const reader = new FileReader();
       reader.onload = () => {
         setPreview(reader.result);
-        setInputImg(reader.result);
+        setInputImg(file);
       };
       reader.readAsDataURL(file);
     }
@@ -56,7 +56,7 @@ export default function KidCreatePage() {
 
     axios({
       method: "post",
-      url: `https://i10e101.p.ssafy.io/v1/user/child/`,
+      url: `https://i10e101.p.ssafy.io/v1/user/`,
       headers: {
         "Content-Type": "multipart/form-data",
       },
