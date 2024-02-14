@@ -23,6 +23,7 @@ export class PotService {
         private readonly s3Service: S3Service,        
     ){}
 
+    KR_TIME_DIFF = 9 * 60 * 60 * 1000;
     async findAllPot(): Promise<SelectPotDto[]>{
         const result = await this.potRepository.find({
             relations: {user: true}
@@ -43,6 +44,7 @@ export class PotService {
             .orWhere('user.parent_id= :parent_id', {parent_id})                     
             .getMany()
             .then(o => plainToInstance(PotWithStatusDto, o));
+        pot.forEach(arr => console.log(arr.planting_day));
 
         const statusDtos = new Array<PotWithStatusDto>();
         for(let i = 0; i < pot.length; i++){
@@ -52,15 +54,14 @@ export class PotService {
 
             const water_calender_id = waterAndTalkDto.water_calender_id;
             const talk_calender_id = waterAndTalkDto.talk_calender_id;
-
             let lastWaterDay = 0;
             let lastTalkDay = 0;
 
             if(water_calender_id == null) lastWaterDay = 0;
-            else lastWaterDay = Math.floor((now.getTime() - waterAndTalkDto.water_createdAt.getTime())/(1000 * 24 * 24 * 60));
+            else lastWaterDay = Math.floor((now.getTime() + this.KR_TIME_DIFF - waterAndTalkDto.water_createdAt.getTime())/(1000 * 24 * 24 * 60));
     
             if(talk_calender_id == null) lastTalkDay = 0;
-            else lastTalkDay = Math.floor((now.getTime() - waterAndTalkDto.talk_createdAt.getTime())/(1000 * 24 * 24 * 60));
+            else lastTalkDay = Math.floor((now.getTime() + this.KR_TIME_DIFF - waterAndTalkDto.talk_createdAt.getTime())/(1000 * 24 * 24 * 60));
 
             const together_day = await this.potStateService.theDayWeWereTogether(element.planting_day);
             const moisState = await this.potStateService.moisState(element.min_moisture, element.max_moisture, element.moisture);
@@ -102,10 +103,10 @@ export class PotService {
         let lastTalkDay = 0;
 
         if(water_calender_id == null) lastWaterDay = 0;
-        else lastWaterDay = Math.floor((now.getTime() - waterAndTalkDto.water_createdAt.getTime())/(1000 * 24 * 24 * 60));
+        else lastWaterDay = Math.floor((now.getTime() + this.KR_TIME_DIFF - waterAndTalkDto.water_createdAt.getTime())/(1000 * 24 * 24 * 60));
 
         if(talk_calender_id == null) lastTalkDay = 0;
-        else lastTalkDay = Math.floor((now.getTime() - waterAndTalkDto.talk_createdAt.getTime())/(1000 * 24 * 24 * 60));
+        else lastTalkDay = Math.floor((now.getTime() + this.KR_TIME_DIFF- waterAndTalkDto.talk_createdAt.getTime())/(1000 * 24 * 24 * 60));
 
         const together_day = await this.potStateService.theDayWeWereTogether(pot.planting_day);
         const moisState = await this.potStateService.moisState(pot.min_moisture, pot.max_moisture, pot.moisture);
@@ -185,15 +186,12 @@ export class PotService {
     }
 
     async findCollection(user_id: number): Promise<SelectCollectionDto[]> {
-        return await this.potRepository.createQueryBuilder('pot')
-        .select(['pot.pot_id', 'pot.pot_name', 'pot.pot_species', 'pot.pot_img_url',
-                    'pot.planting_day', 'pot.happy_cnt', 'user.user_id', 'user.nickname',
-                    'user.profile_img_url'])
-        .where('pot.user_id= :user_id', {user_id})
-        .andWhere('pot.collection_FG= :flag', {flag: true})
-        .leftJoinAndSelect('pot.user', 'user', 'user.user_id = pot.user_id')
-        .getMany()
-        .then(o => plainToInstance(SelectCollectionDto, o));
+        const collection = await this.potRepository.find({
+            relations: {user: true},
+            where:{user_id: user_id, collection_FG: true},            
+        }).then(o => plainToInstance(SelectCollectionDto, o, {excludeExtraneousValues: true}))
+        return collection;
+        
     }
 
     async toCollection(pot_id: number){
