@@ -32,39 +32,36 @@ export class PotService {
     async potWithStatus(parent_id: number): Promise<PotWithStatusDto[]>{
         const now = new Date();
         const pot = await this.potRepository.createQueryBuilder('pot')
-            .leftJoinAndSelect('pot.user', 'user', 'user.user_id = pot.user_id')
-            .leftJoinAndSelect('pot.calender', 'calender','calender.pot_id = pot.pot_id')
-            .where('((user.user_id= :parent_id OR user.parent_id = :parent_id) AND (calender.pot_id IS NULL)) OR' + 
-            '(calender.pot_id, calender.code, calender.createdAt) IN ' +
-                '(SELECT pot_id, code, MAX(createdAt) ' +
-                'FROM calender ' +
-                'GROUP BY pot_id, code)', {parent_id} 
-            )
-            .andWhere('pot.user_id= :parent_id', {parent_id})
-            .andWhere('pot.collection_FG= :flag', {flag: false})
-            .andWhere('user.user_id= :parent_id', {parent_id})
-            .orWhere('user.parent_id= :parent_id', {parent_id})
-            .select(['pot.pot_id', 'pot.pot_name', 'pot.pot_species','pot.planting_day', 
+        .select(['pot.pot_id', 'pot.pot_name', 'pot.pot_species','pot.planting_day', 
                         'user.parent_id', 'pot.temperature','pot.min_temperature', 'pot.max_temperature',
                         'pot.min_moisture', 'pot.max_moisture',
                         'pot.moisture', 'pot.pot_img_url', 'user.user_id', 'user.nickname',
-                        'user.profile_img_url', 'calender.code', 'calender.createdAt'])                         
+                        'user.profile_img_url'])    
+            .leftJoinAndSelect('pot.user', 'user', 'user.user_id = pot.user_id')
+            .leftJoinAndSelect('pot.calender', 'calender','calender.pot_id = pot.pot_id')
+            .andWhere('pot.user_id= :parent_id', {parent_id})
+            .andWhere('pot.collection_FG= :flag', {flag: false})
+            .andWhere('user.user_id= :parent_id', {parent_id})
+            .orWhere('user.parent_id= :parent_id', {parent_id})                     
             .getMany();
-    
-        pot.forEach(pot => console.log(pot));
 
         const statusDtos = new Array<PotWithStatusDto>();
         for(let i = 0; i < pot.length; i++){
             const statusDto = new PotWithStatusDto();
             const element = pot[i];
+            const waterAndTalkDto = await this.calenderService.getLastTalkAndWater(element.pot_id);
+
+            const water_calender_id = waterAndTalkDto.water_calender_id;
+            const talk_calender_id = waterAndTalkDto.talk_calender_id;
 
             let lastWaterDay = 0;
             let lastTalkDay = 0;
 
-            element.calender.forEach(arr => {
-                if(arr.code == 'W') lastWaterDay = Math.floor((now.getTime() - arr.createdAt.getTime())/(1000 * 24 * 24 * 60));
-                else lastTalkDay = Math.floor((now.getTime() - arr.createdAt.getTime())/(1000 * 24 * 24 * 60));
-            })
+            if(water_calender_id == null) lastWaterDay = 0;
+            else lastWaterDay = Math.floor((now.getTime() - waterAndTalkDto.water_createdAt.getTime())/(1000 * 24 * 24 * 60));
+    
+            if(talk_calender_id == null) lastTalkDay = 0;
+            else lastTalkDay = Math.floor((now.getTime() - waterAndTalkDto.talk_createdAt.getTime())/(1000 * 24 * 24 * 60));
 
             const together_day = await this.potStateService.theDayWeWereTogether(element.planting_day);
             const moisState = await this.potStateService.moisState(element.min_moisture, element.max_moisture, element.moisture);
@@ -93,34 +90,31 @@ export class PotService {
 
     async potDetail(pot_id: number): Promise<PotWithStatusDto>{
         const now = new Date();
+        const waterAndTalkDto = await this.calenderService.getLastTalkAndWater(pot_id);
+        const water_calender_id = waterAndTalkDto.water_calender_id;
+        const talk_calender_id = waterAndTalkDto.talk_calender_id;
+
         const pot = await this.potRepository.createQueryBuilder('pot')
         .select(['pot.pot_id', 'pot.pot_name', 'pot.pot_species','pot.planting_day', 
                  'user.parent_id', 'pot.temperature','pot.min_temperature', 'pot.max_temperature',
                  'pot.min_moisture', 'pot.max_moisture',
                  'pot.moisture', 'pot.pot_img_url', 'user.user_id', 'user.nickname',
-                 'user.profile_img_url', 'calender.code', 'calender.createdAt'])                         
-        .leftJoinAndSelect('pot.user', 'user', 'user.user_id = pot.user_id')
-        .leftJoinAndSelect('pot.calender', 'calender','calender.pot_id = pot.pot_id')
-        // .where('(pot.pot_id= :pot_id) AND (calender.pot_id IS NULL) OR (calender.pot_id, calender.code, calender.createdAt) IN ' +
-        //     '(SELECT pot_id, code, MAX(createdAt) ' +
-        //     'FROM calender ' +
-        //     'GROUP BY pot_id, code)', {pot_id}
-        // )
+                 'user.profile_img_url'])                         
+        .leftJoin('pot.user', 'user', 'user.user_id = pot.user_id')
         .andWhere('pot.collection_FG= :flag', {flag: false})
         .andWhere('pot.pot_id= :pot_id', {pot_id})
         .getOne();
-
-        console.log(pot);
 
         const statusDto = new PotWithStatusDto();
 
         let lastWaterDay = 0;
         let lastTalkDay = 0;
 
-        pot.calender.forEach(arr => {
-            if(arr.code == 'W') lastWaterDay = Math.floor((now.getTime() - arr.createdAt.getTime())/(1000 * 24 * 24 * 60));
-            else lastTalkDay = Math.floor((now.getTime() - arr.createdAt.getTime())/(1000 * 24 * 24 * 60));
-        })
+        if(water_calender_id == null) lastWaterDay = 0;
+        else lastWaterDay = Math.floor((now.getTime() - waterAndTalkDto.water_createdAt.getTime())/(1000 * 24 * 24 * 60));
+
+        if(talk_calender_id == null) lastTalkDay = 0;
+        else lastTalkDay = Math.floor((now.getTime() - waterAndTalkDto.talk_createdAt.getTime())/(1000 * 24 * 24 * 60));
 
         const together_day = await this.potStateService.theDayWeWereTogether(pot.planting_day);
         const moisState = await this.potStateService.moisState(pot.min_moisture, pot.max_moisture, pot.moisture);
