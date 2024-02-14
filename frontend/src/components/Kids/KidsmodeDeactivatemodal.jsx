@@ -11,7 +11,7 @@ import { API_URL } from "../../config/config";
 import { authActions } from "../../store/auth-slice";
 import { uiActions } from "../../store/ui-slice";
 
-export default function KidsmodeDeactivatePage() {
+export default function KidsmodeDeactivate() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const userInfo = useSelector((state) => state.auth.userInfo);

@@ -4,8 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Disclosure, Menu, Switch, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
+import KidsmodeDeactivate from "./Kids/KidsmodeDeactivatemodal";
 import UserProfileImage from "../components/Users/UserProfileImage";
-import KidsmodeDeactivatePage from "./Kids/KidsmodeDeactivatemodal";
 import navImg from "../asset/log.svg";
 import { authActions } from "../store/auth-slice";
 import { uiActions } from "../store/ui-slice";
@@ -188,7 +188,8 @@ export default function Navigation() {
               </div>
             </div>
           </div>
-          <KidsmodeDeactivatePage />
+          {/* 키즈모드 해제 모달 */}
+          <KidsmodeDeactivate />
 
           <Disclosure.Panel className="">
             {({ close }) => (
