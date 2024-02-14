@@ -6,7 +6,7 @@ export class Sentence {
   @PrimaryGeneratedColumn()
   sentence_id: number;
 
-  @Column({ length: 200, nullable: false })
+  @Column({ length: 400, nullable: false })
   content: string;
 
   @Column({ length: 100, nullable: false })
