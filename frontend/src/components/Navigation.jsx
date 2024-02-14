@@ -5,6 +5,7 @@ import { Disclosure, Menu, Switch, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
 import Session from "react-session-api";
+import UserProfileImage from "../components/Users/UserProfileImage";
 import navImg from "../asset/log.svg";
 import { authActions } from "../store/auth-slice";
 
@@ -27,24 +28,17 @@ export default function Navigation() {
 
   const logoutHandler = () => {
     dispatch(authActions.logout());
-    navigate('/hello')
+    navigate("/hello");
   };
 
-  const [enabled, setEnabled] = useState(false);
-
+  // 키즈모드 dispatch
   const switchKidsMode = () => {
-    const ch = Session.get("kidsmode");
-
-    if (!!ch) {
-      setEnabled(false);
+    if (isKidsMode) {
       // 임시
       // 키즈모드 해제 페이지로 이동해야됨
-      Session.remove("kidsmode");
       dispatch(authActions.deactivateKidsMode());
       navigate("/");
     } else {
-      setEnabled(true);
-      Session.set("kidsmode", true);
       dispatch(authActions.activateKidsMode());
       navigate("/kidsmode");
     }
@@ -112,11 +106,9 @@ export default function Navigation() {
                       <span className="sr-only">Open user menu</span>
                       {/* 프로필 이미지 */}
                       {userInfo && (
-                        <img
-                          className="h-8 w-8 rounded-full ring-2 ring-amber-300"
-                          src={userInfo.userImgUrl}
-                          alt="profile"
-                        />
+                        <div className="h-8 w-8 overflow-hidden rounded-full ring-2 ring-amber-300">
+                          <UserProfileImage imgUrl={userInfo.userImgUrl} />
+                        </div>
                       )}
                     </Menu.Button>
                   </div>
@@ -137,15 +129,15 @@ export default function Navigation() {
                               키즈 모드
                             </Switch.Label>
                             <Switch
-                              checked={enabled}
+                              checked={isKidsMode}
                               onChange={switchKidsMode}
                               className={`${
-                                enabled ? "bg-green-600" : "bg-gray-200"
+                                isKidsMode ? "bg-green-600" : "bg-gray-200"
                               } relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2`}
                             >
                               <span
                                 className={`${
-                                  enabled ? "translate-x-6" : "translate-x-1"
+                                  isKidsMode ? "translate-x-6" : "translate-x-1"
                                 } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
                               />
                             </Switch>
