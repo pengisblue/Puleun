@@ -1,9 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn, CreateDateColumn, DeleteDateColumn, UpdateDateColumn, OneToOne } from 'typeorm';
 import { User } from '../user/user.entity'; // 다른 엔터티에 따라 수정해야 합니다.
 import { Calender } from 'src/calender/calender.entity';
-import { Alarm } from 'src/alarm/alarm.entity';
 import { Talk } from 'src/talk/talk.entity';
-import { Device } from 'src/device/device.entity';
 
 @Entity()
 export class Pot {
@@ -61,9 +59,6 @@ export class Pot {
   
   @OneToMany(() => Calender, calender => calender.pot)
   calender: Calender[];
-
-  @OneToMany(() => Alarm, alarm => alarm.pot)
-  alarm: Alarm[];
 
   @OneToMany( () => Talk, talk => talk.pot)
   talk: Talk[]
