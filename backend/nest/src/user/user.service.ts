@@ -30,7 +30,7 @@ export class UserService {
         const user = await this.userRepository.createQueryBuilder('user')
             .where('user.user_id= :user_id', {user_id})
             .leftJoinAndSelect('user.pots', 'pot', 'pot.user_id = user.user_id')
-            .select(['user', 'pot.pot_id', 'pot.pot_name', 'pot.pot_species'])
+            .select(['user', 'pot.pot_id', 'pot.pot_name', 'pot.pot_species', 'pot.pot_img_url'])
             .getOne()
         
         if (!user) throw new HttpException('Check User_Id', HttpStatus.BAD_REQUEST)
