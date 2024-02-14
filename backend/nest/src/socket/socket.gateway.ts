@@ -97,4 +97,9 @@ export class SocketGateway {
     const situationDto = await this.socketService.situation(pot_id);
     client.emit('situation', situationDto);
   }
+
+  @SubscribeMessage('tts')
+  async ttsThisMessage(@ConnectedSocket() client: Socket, @MessageBody('text') text: string){
+    const returnData = await this.socketService.toTts(text)
+  }
 }

@@ -3,9 +3,6 @@ import cog from "../asset/cog-8-tooth.svg";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-// 테스트 데이터
-import { TALK_LIST } from "../test/talkList";
-
 export default function TalkListPage() {
   const [isStar, setIsStar] = useState(false);
   const handleClickAll = () => {
@@ -14,22 +11,19 @@ export default function TalkListPage() {
   const handleClickFavorite = () => {
     setIsStar(true);
   };
-
   const [talkList, setTalkList] = useState([]);
 
   useEffect(() => {
-    const getTalkList = async () => {
-      try {
-        const response = await axios.get(
-          `https://i10e101.p.ssafy.io/v1/talk/all/${JSON.parse(localStorage.getItem("userInfo")).userId}`,
-        );
-        setTalkList(response.data);
-      } catch (e) {
-        console.log(e);
-      }
-    };
-
-    getTalkList();
+    axios
+      .get(
+        `https://i10e101.p.ssafy.io/v1/talk/all/${JSON.parse(localStorage.getItem("userInfo")).userId}`,
+      )
+      .then((res) => {
+        setTalkList(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
   return (
