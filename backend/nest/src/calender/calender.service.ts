@@ -44,4 +44,9 @@ export class CalenderService {
         if (temp == null) return (null)
         return temp.createdAt;
     }
+
+    async whenPotSave(pot_id: number){
+        await this.calenderRepository.save({pot_id, code: 'T'});
+        await this.calenderRepository.save({pot_id, code: 'W'});
+    }
 }
