@@ -57,6 +57,7 @@ export class TalkService {
         .leftJoin('talk.pot','pot','talk.pot_id = pot.pot_id')
         .leftJoin('pot.user', 'user','pot.user_id = user.user_id')
         .where('user.user_id = :user_id',{user_id})
+        .orWhere('user.parent_id = :user_id',{user_id})
         .getMany()
         .then((v)=> {
             return v.map(o=>o as unknown as TalkListDto)

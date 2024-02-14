@@ -4,8 +4,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Between, Repository } from 'typeorm';
 import { CreatePotStateDto } from './pot-state-insert.dto';
 import { PotService } from 'src/pot/pot.service';
-import { StatusResultDto } from './pot-state.dto';
+import { DataDto, MoisAndTemp, StatusResultDto } from './pot-state.dto';
 import { CalenderService } from 'src/calender/calender.service';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class PotStateService {
@@ -64,7 +65,8 @@ export class PotStateService {
   }
 
   // 전날 온습도 데이터
-  async yesterdayMoisAndTemp(pot_state_id: number): Promise<any>{
+  async yesterdayMoisAndTemp(pot_id: number): Promise<MoisAndTemp>{
+    const moisAndTemp = new MoisAndTemp();
     const today = new Date();
     const yesterdayStart = new Date(today);
     yesterdayStart.setDate(today.getDate() - 1);
@@ -73,31 +75,60 @@ export class PotStateService {
     const yesterdayEnd = new Date(today);
     yesterdayEnd.setDate(today.getDate() - 1);
     yesterdayEnd.setHours(23, 59, 59, 999);
-    
-    const yester_temp = await this.potStateRepository.find({
+    const yester_temp = plainToInstance(DataDto, await this.potStateRepository.find({
       where:{
-        pot_state_id: pot_state_id, isTemp_FG: true, measure_DT: Between(
-        yesterdayStart, yesterdayEnd
-      )},
+        pot_id: pot_id, isTemp_FG: true, measure_DT: Between(
+          yesterdayStart, yesterdayEnd
+        )},
       order:{measure_DT: 'DESC'},
       select: {data: true, measure_DT: true}
-    })
+    }), {excludeExtraneousValues: true});
 
-    const yester_mois = await this.potStateRepository.find({
+    const yester_mois = plainToInstance(DataDto ,await this.potStateRepository.find({
       where:{
-        pot_state_id: pot_state_id, isTemp_FG: false, measure_DT: Between(
+        pot_id: pot_id, isTemp_FG: false, measure_DT: Between(
           yesterdayStart, yesterdayEnd
-        )
-      },
+        )},
       order:{measure_DT: 'DESC'},
       select: {data: true, measure_DT:true}
-    })
-    
-    return {
-      temperature: yester_temp,
-      moisture: yester_mois
-    }
+    }), {excludeExtraneousValues: true})
 
+    moisAndTemp.temperature = yester_temp;
+    moisAndTemp.moisture = yester_mois;
+    
+    return moisAndTemp;
+  }
+
+  // 오늘 온습도 데이터
+  async todayMoisAndTemp(pot_id: number): Promise<MoisAndTemp>{
+    const moisAndTemp = new MoisAndTemp();
+    const today = new Date();
+    const todayStart = new Date(today);
+    todayStart.setHours(0, 0, 0, 0);
+
+    const todayEnd = new Date(today);
+    const yester_temp = plainToInstance(DataDto, await this.potStateRepository.find({
+      where:{
+        pot_id: pot_id, isTemp_FG: true, measure_DT: Between(
+          todayStart, todayEnd
+        )},
+      order:{measure_DT: 'DESC'},
+      select: {data: true, measure_DT: true}
+    }), {excludeExtraneousValues: true});
+
+    const yester_mois = plainToInstance(DataDto ,await this.potStateRepository.find({
+      where:{
+        pot_id: pot_id, isTemp_FG: false, measure_DT: Between(
+          todayStart, todayEnd
+        )},
+      order:{measure_DT: 'DESC'},
+      select: {data: true, measure_DT:true}
+    }), {excludeExtraneousValues: true})
+
+    moisAndTemp.temperature = yester_temp;
+    moisAndTemp.moisture = yester_mois;
+    
+    return moisAndTemp;
   }
 
   // 현재 시간과 식물을 심은날을 day로 계산

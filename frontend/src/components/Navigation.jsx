@@ -43,14 +43,14 @@ export default function Navigation() {
       setEnabled(false);
       // 임시
       // 키즈모드 해제 페이지로 이동해야됨
-      navigate("/");
       Session.remove("kidsmode");
       dispatch(authActions.deactivateKidsMode());
+      navigate("/");
     } else {
       setEnabled(true);
       Session.set("kidsmode", true);
-      navigate("/kids/select");
       dispatch(authActions.activateKidsMode());
+      navigate("/kidsmode");
     }
   };
 

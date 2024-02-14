@@ -16,9 +16,8 @@ export class CreateUserDto{
     gender: string;
 
     @ApiProperty({example:1, description:'0 if user is parent'})
-    @IsNumber()
     @Type(()=>Number)
-    parent_id: number;
+    parent_id?: number=null;
 
     @IsString()
     @IsOptional()
@@ -80,7 +79,7 @@ export class ChildSaveDto{
     @ApiProperty({example:'F', description:'M for male'})
     gender: string;
 
-    @ApiProperty({example:0, description:'if user is parent'})
+    @ApiProperty({example:1, description:'if user is parent'})
     @IsNumber()
     @Type(()=>Number)
     parent_id: number;

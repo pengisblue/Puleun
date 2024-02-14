@@ -8,6 +8,7 @@ import { TtsService } from 'src/tts/tts.service';
 import { FileService } from './../file/file.service';
 import { SentenceCreateDto } from 'src/sentence/sentence-req.dto';
 import { PotService } from 'src/pot/pot.service';
+import { S3Service } from 'src/s3/s3.service';
 
 @Injectable()
 export class SocketService {
@@ -16,7 +17,8 @@ export class SocketService {
     private readonly sentenceService: SentenceService,
     private readonly ttsService: TtsService,
     private readonly fileService: FileService,
-    private readonly potService: PotService
+    private readonly potService: PotService,
+    private readonly s3Service: S3Service,
   ){}
 
   // device 정보 + socket id 저장
@@ -52,17 +54,15 @@ export class SocketService {
   /** stt-> tts : stt 받아서 tts로 return */
   async stt(text: string, talk_id: number, base64Data: string): Promise<string>{
     const today = this.fileService.getToday();
-    const filePath = "./upload/talk/" + today + "/"
-    if (!fs.existsSync(filePath)) fs.mkdir(filePath, (e)=>{if (e) throw e})
+    const filePath = "upload/talk/" + today + "/"
 
     let nextSentenceId = await this.sentenceService.nestSentenceId(talk_id)
     const saveFilePath =  filePath + talk_id + "-" + nextSentenceId + ".mp3"
     const decodedBuffer = Buffer.from(base64Data, 'base64');
-    fs.writeFileSync(saveFilePath, decodedBuffer);
 
     const sentenceDto = new SentenceCreateDto()
     sentenceDto.content = text
-    sentenceDto.audio = saveFilePath
+    sentenceDto.audio = await this.s3Service.uploadBuffer(decodedBuffer, saveFilePath)
     sentenceDto.sentence_DTN = today as unknown as Date
     sentenceDto.talker = "user"
     sentenceDto.talk_id = talk_id
@@ -71,12 +71,13 @@ export class SocketService {
     const answerText = await this.sentenceService.answer(text)
     
     const uploadFilePath = filePath + talk_id + "-" + (nextSentenceId+1) + ".wav"
+    const saveTtsPath = './'+talk_id + "-" + nextSentenceId + ".mp3"
     // message -> tts
-    await this.ttsService.tts(answerText, uploadFilePath)
+    await this.ttsService.tts(answerText, saveTtsPath)
     
     // client.emit
     const content = await new Promise<Buffer>((resolve, reject) => {
-      fs.readFile(uploadFilePath, (err, data) => {
+      fs.readFile(saveTtsPath, (err, data) => {
         if (err) {
           reject(err)
         } else {
@@ -90,7 +91,7 @@ export class SocketService {
     
     const sentenceDto2 = new SentenceCreateDto()
     sentenceDto2.content = answerText
-    sentenceDto2.audio = uploadFilePath
+    sentenceDto2.audio = await this.s3Service.uploadBuffer(content, uploadFilePath)
     sentenceDto.sentence_DTN = today as unknown as Date
     sentenceDto2.talker = "ai"
     sentenceDto2.talk_id = talk_id

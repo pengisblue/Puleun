@@ -21,18 +21,18 @@ export class DeviceService {
     return 1;
   }
 
-  /** 유저의 디바이스 중 매핑된 유저와 식물이 없는 디바이스 출력 */
-  async emptyDevice(user_id: number): Promise<SelectDeviceDto[]>{
+  /** 유저의 디바이스 중 식물이 없는 디바이스 출력 */
+  async unMappingDevice(user_id: number): Promise<SelectDeviceDto[]>{
     return this.deviceRepository.find({
-      where: {user_id, empty_FG: false, pot_id: IsNull() },
-      select: {device_id: true, serial_number: true}
+      where: {user_id, pot_id: IsNull() },
+      select: {device_id: true, serial_number: true, device_name: true}
     })
   }
 
-  async unEmptyDevice(user_id: number): Promise<SelectDeviceDto[]>{
+  async mappingDevice(user_id: number): Promise<SelectDeviceDto[]>{
     return this.deviceRepository.find({
-      where: {user_id, empty_FG: true, pot_id: Not(IsNull())},
-      select: {device_id: true, serial_number: true}
+      where: {user_id, pot_id: Not(IsNull())},
+      select: {device_id: true, serial_number: true, device_name: true}
     })
   }
 
@@ -56,11 +56,6 @@ export class DeviceService {
     await this.deviceRepository.update(res.device_id, {device_name: userInitDeviceDto.device_name, user_id: userInitDeviceDto.user_id})
   }
 
-  /** 기기를 화분에 매핑 */
-  async mappingPotDevice(potInitDeviceDto: PotInitDeviceDto){
-    await this.deviceRepository.update(potInitDeviceDto.device_id, {pot_id: potInitDeviceDto.pot_id})
-  }
-
   async deleteDevice(device_id: number){
     await this.deviceRepository.delete(device_id);
   }
@@ -73,6 +68,6 @@ export class DeviceService {
   }
 
   async mappingPot(device_id: number, pot_id: number){
-    return await this.deviceRepository.update(device_id, {pot_id: pot_id});
+    return await this.deviceRepository.update(device_id, {pot_id, empty_FG: true});
   }
 }
