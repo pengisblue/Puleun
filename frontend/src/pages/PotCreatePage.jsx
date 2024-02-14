@@ -161,7 +161,7 @@ export default function PotCreatePage() {
   };
 
   // 선택된 품종
-  const [selectedPlant, setSelectedPlant] = useState({});
+  const [selectedPlant, setSelectedPlant] = useState(plantList[0]);
 
   // 세부 정보
   const [minTemperature, setMinTemperature] = useState(0);
@@ -199,23 +199,23 @@ export default function PotCreatePage() {
 
   // 화분 등록
   const createHandler = async () => {
-    const potData = new FormData(); // 파일 전송을 위해 FormData객체 사용
-    potData.append("device_id", 1); // 임시로 지정
-    potData.append("user", selectedUser);
-    potData.append("pot_name", potName);
-    potData.append("pot_img", inputImg);
-    potData.append("pot_species", selectedPlant.name);
-    potData.append("min_temperature", Number(minTemperature));
-    potData.append("max_temperature", Number(maxTemperature));
-    potData.append("min_moisture", Number(minMoisture));
-    potData.append("max_moisture", Number(maxMoisture));
-    potData.append("planting_day", plantingDate);
+    const formData = new FormData(); // 파일 전송을 위해 FormData객체 사용
+    formData.append("device_id", selectedDevice.deviceId); // 임시로 지정
+    formData.append("user", selectedUser);
+    formData.append("pot_name", potName);
+    formData.append("pot_img", inputImg);
+    formData.append("pot_species", selectedPlant.name);
+    formData.append("min_temperature", minTemperature);
+    formData.append("max_temperature", maxTemperature);
+    formData.append("min_moisture", minMoisture);
+    formData.append("max_moisture", maxMoisture);
+    formData.append("planting_day", plantingDate);
 
     try {
       const res = await axios({
         method: "post",
         url: `${API_URL}/pot`,
-        data: potData,
+        data: formData,
         headers: {
           // 요청 헤더에 Content-Type을 multipart/form-data로 설정
           "Content-Type": "multipart/form-data",
@@ -288,7 +288,6 @@ export default function PotCreatePage() {
             <SpeciesSelector
               plantList={plantList}
               onSelect={handleSelectChange}
-              selectedPlant={selectedPlant}
             />
           </div>
         </section>
@@ -360,16 +359,6 @@ export default function PotCreatePage() {
           등록하기
         </Button>
       </div>
-
-      {/* 임시 확인용 */}
-      <p>selectedDevice: {selectedDevice?.deviceId}</p>
-      <p>selectedUser:{selectedUser}</p>
-      <p>dd:{potName}</p>
-      <p>{selectedPlant.name}</p>
-      <p>
-        {minTemperature}/{maxTemperature}/{minMoisture}/{maxMoisture}
-      </p>
-      <p>{plantingDate}</p>
     </div>
   );
 }

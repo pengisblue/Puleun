@@ -1,13 +1,19 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Combobox, Transition } from "@headlessui/react";
 import chevronUpDown from "../../asset/chevron-up-down.svg";
 
 export default function SpeciesSelector({
   plantList,
   onSelect,
-  selectedPlant,
 }) {
-  const [selected, setSelected] = useState(selectedPlant);
+  const [selected, setSelected] = useState(null);
+
+  useEffect(() => {
+    if (plantList.length > 0) {
+      setSelected(plantList[0]);
+    }
+  }, [plantList]);
+
   const [query, setQuery] = useState("");
 
   // 검색어
@@ -36,7 +42,7 @@ export default function SpeciesSelector({
           <Combobox.Input
             className="w-full rounded-lg border-gray-100 py-3 pl-3 pr-10 leading-5 text-gray-900 shadow-sm 
               focus:border-amber-100 focus:shadow-md focus:ring focus:ring-amber-200 focus:ring-opacity-50"
-            displayValue={(plant) => plant.speciesName}
+            displayValue={(plant) => plant?.speciesName}
             onChange={(event) => setQuery(event.target.value)}
           />
           <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
