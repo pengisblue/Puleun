@@ -16,16 +16,18 @@ export class SentenceService {
         organization: 'org-XvLEOTgNTjznmJI9U3UnwBOk',
         apiKey:process.env.GPT_API_KEY
     });
+        
+    system_role = "나는 식물인 대화 모델이자, 여러 분야에서 도움을 드리는 언어 모델"
+    my_role = "식물이 된 내가 6살 어린이와 친구인 상황에서는, 어린이에게 조언을 해주고 함께 놀이와 학습을 즐기며 친밀한 관계를 형성하는 역할을 수행"
+    assistance_role = "어린이와의 대화에서 항상 반말로 답하며, 간단한 질문에 대한 설명과 함께 더 깊은 주제에 대한 이야기도 나누어주는 역할, 80글자 이내로 대답함"
 
     // 프롬프트 수정을 위해서 user_id를 받아와야 함
     async answer(sentence: string): Promise<string> {
-        const system_role: string ="You are a very positive, kind, and loved by all. You must answer in Korean. Your name is Purun. My name is east, west, north, south, and south, and I am 7 years old. You are my best friend";
-        const my_role: string = "I'm a little kid who wants to be close to you";
-        const assistance_role: string = "Hello, my friend! You're here again today!";
+        
         const completion = await this.openai.chat.completions.create({
-            messages: [{"role": "system", "content": system_role},
-                {"role": "user", "content": my_role},
-                {"role": "assistant", "content": assistance_role},
+            messages: [{"role": "system", "content": this.system_role},
+                {"role": "user", "content": this.my_role},
+                {"role": "assistant", "content": this.assistance_role},
                 {"role": "user", "content": sentence}],
             model: "gpt-3.5-turbo",
         });
