@@ -79,6 +79,7 @@ export class SocketGateway {
   @SubscribeMessage('hot_word')
   async hotWord( @ConnectedSocket() client: Socket, @MessageBody('pot_id') pot_id: number ): Promise<void>{
     const dto = new CalenderCreateDto()
+    if (!pot_id) client.emit('talk_id',1)
     dto.pot_id = pot_id
     dto.code = 'T'
     this.calenderService.save(dto)

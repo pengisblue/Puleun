@@ -42,12 +42,8 @@ export class SocketService {
     // 이전 연결이 있는 경우
     }else{
       await this.deviceService.connectDevice(serial_number, clientId)
-      if (device.user_id) result.is_owner = true
-      if (device.pot_id) result.pot_id = device.pot_id
+      if (device.pot_id) result.is_owner = true; result.pot_id = device.pot_id
     }
-    //for test
-    result.is_owner = true
-    result.pot_id = 1
     return result;
   }
 
