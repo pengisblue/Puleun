@@ -68,7 +68,7 @@ export class UserService {
             } catch (e){
                 child.profile_img_url = 'upload/profile/noImg.png'
             }
-            await this.userRepository.update(child.user_id,{...data})
+            await this.userRepository.update(child.user_id,{...child})
             return 1;
         }catch(e){
             throw new HttpException('Bad_REQUEST', HttpStatus.BAD_REQUEST)

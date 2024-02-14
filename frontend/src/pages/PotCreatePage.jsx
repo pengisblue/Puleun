@@ -1,16 +1,18 @@
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import axios from "axios";
 import DeviceChoice from "../components/Devices/DeviceChoice";
 import SpeciesSelector from "../components/Pots/SpeciesSelector";
 import PotProfileImage from "../components/Pots/PotProfileImage";
 import Filter from "../components/UI/Filter";
 import Input from "../components/UI/Input";
 import Button from "../components/UI/Button";
-import defaultImg from "../asset/no_pot_img.png"
-import { useState } from "react";
+import defaultImg from "../asset/no_pot_img.png";
+import { API_URL } from "../config/config";
 
 // 하드코딩 테스트용 데이터
-import { userList } from "../test/userList";
-import { plantList } from "../test/plantList";
-import { deviceList } from "../test/deviceList";
+// import { plantList } from "../test/plantList";
+// import { deviceList } from "../test/deviceList";
 
 // 기본 화분 이미지
 
@@ -33,6 +35,95 @@ import { deviceList } from "../test/deviceList";
 // }
 
 export default function PotCreatePage() {
+  const isOpen = useSelector((state) => state.device.isOpen);
+
+  // 저장된 디바이스 목록 가져오기
+  const [deviceList, setDeviceList] = useState([]);
+  useEffect(() => {
+    const getDeviceList = async () => {
+      try {
+        const res = await axios({
+          method: "get",
+          url: `${API_URL}/device/unMapping/${JSON.parse(localStorage.getItem("userInfo")).userId}`,
+          // 유저 아이디 받아오는 부분 리덕스로 수정해야함
+        });
+
+        const deviceList = res.data.map((item) => ({
+          deviceId: item.device_id,
+          deviceName: item.device_name,
+          serialNum: item.serial_number,
+        }));
+
+        const firstDevice = deviceList[0];
+        setDeviceList(deviceList);
+        setSelectedDevice(firstDevice);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getDeviceList();
+  }, [isOpen]);
+
+  // 유저 목록 가져오기
+  const [userList, setUserList] = useState([]);
+  useEffect(() => {
+    const getUserList = async () => {
+      try {
+        const res = await axios({
+          method: "get",
+          url: `${API_URL}/user/child/${JSON.parse(localStorage.getItem("userInfo")).userId}`,
+          // 유저 아이디 받아오는 부분 리덕스로 수정해야함
+        });
+
+        const userList = res.data.map((item) => ({
+          userId: item.user_id,
+          userName: item.nickname,
+          userImgUrl: item.profile_img_url,
+        }));
+
+        setUserList(userList);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getUserList();
+  }, []);
+
+  // 식물 목록 가져오기
+  const [plantList, setPlantList] = useState([]);
+  useEffect(() => {
+    const getPlantList = async () => {
+      try {
+        const res = await axios({
+          method: "get",
+          url: `${API_URL}/species`,
+          // 유저 아이디 받아오는 부분 리덕스로 수정해야함
+        });
+
+        // console.log(res.data)
+        const plantList = res.data.map((item) => ({
+          speciesId: item.species_id,
+          speciesName: item.species_name,
+          minTemperature: item.min_temperature,
+          maxTemperature: item.max_temperature,
+          minMoisture: item.min_moisture,
+          maxMoisture: item.max_moisture,
+        }));
+
+        const firstPlant = plantList[0];
+        setPlantList(plantList);
+        setSelectedPlant(firstPlant);
+        setMinTemperature(firstPlant.minTemperature);
+        setMaxTemperature(firstPlant.maxTemperature);
+        setMinMoisture(firstPlant.minMoisture);
+        setMaxMoisture(firstPlant.maxMoisture);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getPlantList();
+  }, []);
+
   // 기기
   const [selectedDevice, setSelectedDevice] = useState(deviceList[0]);
   const handleSelectedDevice = (value) => {
@@ -44,27 +135,27 @@ export default function PotCreatePage() {
   const [inputImg, setInputImg] = useState(null);
   const handleInputImg = (event) => {
     const files = event.target.files;
-    // console.log(files)
     if (files.length > 0) {
       const file = files[0];
+      setInputImg(file);
+      // console.log(file);
       const reader = new FileReader();
       // console.log(reader)
       reader.onload = () => {
         setPreview(reader.result);
-        setInputImg(reader.result);
       };
       reader.readAsDataURL(file);
     }
   };
 
   // 주인
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedUser, setSelectedUser] = useState("");
   const handleSelectedUser = (value) => {
     setSelectedUser(value);
   };
 
   // 화분 애칭
-  const [potName, setPotName] = useState(null);
+  const [potName, setPotName] = useState("");
   const handlePotNameInput = (event) => {
     setPotName(event.target.value);
   };
@@ -73,14 +164,10 @@ export default function PotCreatePage() {
   const [selectedPlant, setSelectedPlant] = useState(plantList[0]);
 
   // 세부 정보
-  const [minTemperature, setMinTemperature] = useState(
-    selectedPlant.minTemperature,
-  );
-  const [maxTemperature, setMaxTemperature] = useState(
-    selectedPlant.maxTemperature,
-  );
-  const [minMoisture, setMinMoisture] = useState(selectedPlant.minMoisture);
-  const [maxMoisture, setMaxMoisture] = useState(selectedPlant.maxMoisture);
+  const [minTemperature, setMinTemperature] = useState(0);
+  const [maxTemperature, setMaxTemperature] = useState(0);
+  const [minMoisture, setMinMoisture] = useState(0);
+  const [maxMoisture, setMaxMoisture] = useState(0);
 
   const handleSelectChange = (value) => {
     setSelectedPlant(value);
@@ -110,6 +197,37 @@ export default function PotCreatePage() {
     setPlantingDate(event.target.value);
   };
 
+  // 화분 등록
+  const createHandler = async () => {
+    const formData = new FormData(); // 파일 전송을 위해 FormData객체 사용
+    formData.append("device_id", selectedDevice.deviceId); // 임시로 지정
+    formData.append("user", selectedUser);
+    formData.append("pot_name", potName);
+    formData.append("pot_img", inputImg);
+    formData.append("pot_species", selectedPlant.name);
+    formData.append("min_temperature", minTemperature);
+    formData.append("max_temperature", maxTemperature);
+    formData.append("min_moisture", minMoisture);
+    formData.append("max_moisture", maxMoisture);
+    formData.append("planting_day", plantingDate);
+
+    try {
+      const res = await axios({
+        method: "post",
+        url: `${API_URL}/pot`,
+        data: formData,
+        headers: {
+          // 요청 헤더에 Content-Type을 multipart/form-data로 설정
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      console.log(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="px-6">
       <h1 className="mx-2 my-4 text-title">식물 심기</h1>
@@ -122,7 +240,6 @@ export default function PotCreatePage() {
             <DeviceChoice
               deviceList={deviceList}
               onSelect={handleSelectedDevice}
-              selectedDevice={selectedDevice}
             />
           </div>
         </section>
@@ -171,7 +288,6 @@ export default function PotCreatePage() {
             <SpeciesSelector
               plantList={plantList}
               onSelect={handleSelectChange}
-              selectedPlant={selectedPlant}
             />
           </div>
         </section>
@@ -236,24 +352,13 @@ export default function PotCreatePage() {
       {/* 등록 버튼 */}
       <div className="mt-6 grid place-content-center">
         <Button
+          onClick={createHandler}
           className="w-40 bg-amber-300 text-white hover:bg-amber-400"
           isDisabled={false}
         >
           등록하기
         </Button>
       </div>
-
-      {/* 임시 확인용 */}
-      <pre>{JSON.stringify(selectedDevice, null, 2)}</pre>
-      <span>프리뷰: {preview}</span>
-      <span>인풋: {inputImg}</span>
-      <span>{selectedUser}</span>
-      <span>{potName}</span>
-      <pre>{JSON.stringify(selectedPlant, null, 2)}</pre>
-      <span>
-        {minTemperature}/{maxTemperature}/{minMoisture}/{maxMoisture}
-      </span>
-      <span>{plantingDate}</span>
     </div>
   );
 }

@@ -86,9 +86,8 @@ export class SocketService {
       })
     })
     
-    // text, answerText 파일 저장 -> redis
+    // text, answerText 파일 저장
     console.log(text)
-    
     const sentenceDto2 = new SentenceCreateDto()
     sentenceDto2.content = answerText
     sentenceDto2.audio = await this.s3Service.uploadBuffer(content, uploadFilePath)
@@ -205,5 +204,10 @@ export class SocketService {
   getRandomIntegerWav(min, max): string {
     // Math.floor와 Math.random을 사용하여 랜덤 정수 생성
     return String(Math.floor(Math.random() * (max - min + 1)) + min) + '.wav';
+  }
+
+  async toTts(text: string) {
+    const filePath = './hi dongho.mp3'
+    await this.ttsService.tts(text, filePath)
   }
 }
