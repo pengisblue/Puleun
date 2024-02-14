@@ -6,8 +6,8 @@ import { CollectionDto, CreatePotDto, PotWithStatusDto, SelectPotDto, UpdatePotD
 import { PotStateService } from 'src/pot-state/pot-state.service';
 import * as fs from 'fs';
 import { join } from 'path';
-import { Device } from 'src/device/device.entity';
 import { DeviceService } from 'src/device/device.service';
+import { S3Service } from 'src/s3/s3.service';
 
 @Injectable()
 export class PotService {
@@ -17,6 +17,7 @@ export class PotService {
         private readonly deviceService: DeviceService,
         @Inject(forwardRef(() => PotStateService))
         private readonly potStateService: PotStateService,        
+        private readonly s3Service: S3Service,        
     ){}
 
     async findAllPot(): Promise<SelectPotDto[]>{
@@ -141,21 +142,18 @@ export class PotService {
     }  
 
     async save(createPotDto: CreatePotDto, file?: Express.Multer.File) {
-
-        const savePot = await this.potRepository.save(createPotDto);
-        const pot: Pot = await this.potRepository.create(createPotDto);
+        const pot: Pot = this.potRepository.create(createPotDto);
+        const savePot = await this.potRepository.save(pot);
         await this.deviceService.mappingPot(createPotDto.device_id, savePot.pot_id);
 
-        const filePath = join(process.cwd(), '/upload/pot/')
-        if (!fs.existsSync(filePath)) fs.mkdir(filePath, (e)=>{if (e) throw e})
+        const filePath = join('upload/pot/')
         try{
             const split = file.originalname.split('.')
             const extension = split[split.length -1]
             const fileName = pot.pot_id + '.' + extension
-            fs.writeFileSync(filePath+fileName, file.buffer);
-            pot.pot_img_url = filePath + fileName
+            pot.pot_img_url = await this.s3Service.upload(file, filePath + fileName)
         } catch (e){
-            pot.pot_img_url = join(process.cwd(), '/upload/pot/noImg.png')
+            pot.pot_img_url = 'upload/pot/noImg.png'
         }
         await this.potRepository.update(pot.pot_id,pot)
     }
@@ -164,13 +162,11 @@ export class PotService {
         try{
             const split = file.originalname.split('.')
             const extension = split[split.length -1]
-            const filePath = join(process.cwd(), '/upload/pot/')
-            if (!fs.existsSync(filePath)) fs.mkdir(filePath, (e)=>{if (e) throw e})
+            const filePath ='upload/pot/'
             const fileName = pot_id + '.' + extension
-            fs.writeFileSync(filePath+fileName, file.buffer);
-            data.pot_img_url = filePath + fileName
+            data.pot_img_url = await this.s3Service.upload(file, filePath + fileName)
         } catch (e){
-            data.pot_img_url = join(process.cwd(), '/upload/pot/noImg.png')
+            data.pot_img_url = 'upload/pot/noImg.png'
         }
         await this.potRepository.update(pot_id, {...data})
     }

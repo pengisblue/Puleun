@@ -21,18 +21,18 @@ export class DeviceService {
     return 1;
   }
 
-  /** 유저의 디바이스 중 매핑된 유저와 식물이 없는 디바이스 출력 */
-  async emptyDevice(user_id: number): Promise<SelectDeviceDto[]>{
+  /** 유저의 디바이스 중 식물이 없는 디바이스 출력 */
+  async unMappingDevice(user_id: number): Promise<SelectDeviceDto[]>{
     return this.deviceRepository.find({
-      where: {user_id, empty_FG: false, pot_id: IsNull() },
-      select: {device_id: true, serial_number: true}
+      where: {user_id, pot_id: IsNull() },
+      select: {device_id: true, serial_number: true, device_name: true}
     })
   }
 
-  async unEmptyDevice(user_id: number): Promise<SelectDeviceDto[]>{
+  async mappingDevice(user_id: number): Promise<SelectDeviceDto[]>{
     return this.deviceRepository.find({
-      where: {user_id, empty_FG: true, pot_id: Not(IsNull())},
-      select: {device_id: true, serial_number: true}
+      where: {user_id, pot_id: Not(IsNull())},
+      select: {device_id: true, serial_number: true, device_name: true}
     })
   }
 

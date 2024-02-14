@@ -1,5 +1,5 @@
 import { IsDate, IsNumber, IsOptional, IsString, Length } from "class-validator";
-import { ApiOperation, ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from "@nestjs/swagger";
 import { Expose, Type } from "class-transformer";
 
 export class CreateUserDto{
@@ -16,9 +16,8 @@ export class CreateUserDto{
     gender: string;
 
     @ApiProperty({example:1, description:'0 if user is parent'})
-    @IsNumber()
     @Type(()=>Number)
-    parent_id: number;
+    parent_id?: number=null;
 
     @IsString()
     @IsOptional()

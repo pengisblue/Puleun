@@ -12,10 +12,11 @@ import { RedisModule } from 'src/redis/redis.module';
 import { FileModule } from 'src/file/file.module';
 import { TalkModule } from 'src/talk/talk.module';
 import { PotModule } from 'src/pot/pot.module';
+import { S3Module } from 'src/s3/s3.module';
 
 @Module({
   imports: [ TypeOrmModule.forFeature([PotState]), PotStateModule, FileModule, TalkModule,
-  DeviceModule, SentenceModule, CalenderModule, TtsModule, RedisModule, PotModule],
+  DeviceModule, SentenceModule, CalenderModule, TtsModule, RedisModule, PotModule, S3Module],
   providers:[SocketGateway, SocketService],
   exports:[SocketGateway]})
 export class SocketModule {

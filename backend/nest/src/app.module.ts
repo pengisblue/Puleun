@@ -18,6 +18,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TtsModule } from './tts/tts.module';
 import { RedisModule } from './redis/redis.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { S3Module } from './s3/s3.module';
 
 @Module({
   imports: [UserModule, PotModule, FileModule, SocketModule,
@@ -41,6 +42,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     }),
     TtsModule,
     RedisModule,
+    S3Module,
   ],
   controllers: [AppController],
   providers: [AppService],
