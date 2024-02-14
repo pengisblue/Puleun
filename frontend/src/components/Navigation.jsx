@@ -24,15 +24,11 @@ export default function Navigation() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isKidsMode = useSelector((state) => state.auth.isKidsMode);
+  const userInfo = useSelector((state) => state.auth.userInfo);
 
   const logoutHandler = () => {
     dispatch(authActions.logout());
   };
-
-  function getUserImage() {
-    const userInfo = localStorage.getItem("userInfo");
-    return userInfo ? JSON.parse(userInfo).userImgUrl : null;
-  }
 
   const [enabled, setEnabled] = useState(false);
 
@@ -115,11 +111,11 @@ export default function Navigation() {
                       <span className="absolute -inset-1.5" />
                       <span className="sr-only">Open user menu</span>
                       {/* 프로필 이미지 */}
-                      {getUserImage() && (
+                      {userInfo && (
                         <img
-                          className="h-8 w-8 rounded-full"
-                          src={API_URL + getUserImage()}
-                          alt="kid"
+                          className="h-8 w-8 rounded-full ring-2 ring-amber-300"
+                          src={userInfo.userImgUrl}
+                          alt="profile"
                         />
                       )}
                     </Menu.Button>
@@ -189,7 +185,7 @@ export default function Navigation() {
                               onClick={logoutHandler}
                               className={classNames(
                                 active ? "bg-gray-100" : "",
-                                "block px-4 py-2 text-sm text-gray-700",
+                                "w-full px-4 py-2 text-start text-sm text-gray-700",
                               )}
                             >
                               로그아웃

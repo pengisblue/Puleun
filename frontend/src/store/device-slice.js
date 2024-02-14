@@ -19,4 +19,4 @@ const deviceSlice = createSlice({
 
 export const deviceActions = deviceSlice.actions;
 
-export default deviceSlice;
+export default deviceSlice.reducer;

@@ -1,14 +1,61 @@
-import { Form, NavLink, redirect, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { NavLink, redirect, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import axios from "axios";
 import Button from "../components/UI/Button";
 import logImg from "../asset/log.svg";
 import Input from "../components/UI/Input";
+import { authActions } from "../store/auth-slice";
+import { API_URL } from "../config/config";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const goLanding = () => {
     navigate("/hello");
+  };
+
+  const [userEmail, setUserEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleEmail = (event) => {
+    setUserEmail(event.target.value);
+  };
+  const handlePassword = (event) => {
+    setPassword(event.target.value);
+  };
+
+  // 로그인
+  const login = async (event) => {
+    event.preventDefault();
+
+    const loginData = {
+      user_email: userEmail,
+      user_password: password,
+    };
+
+    try {
+      const res = await axios({
+        method: "post",
+        url: `${API_URL}/user-login`,
+        data: loginData,
+      });
+
+      const { user_id, user_email, profile_img_url } = res.data;
+
+      const userInfo = {
+        userId: user_id,
+        userEmail: user_email,
+        userImgUrl: profile_img_url,
+      };
+
+      dispatch(authActions.login(userInfo));
+
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -25,7 +72,7 @@ export default function LoginPage() {
         </div>
 
         <div className="mt-10 ">
-          <Form method="post">
+          <form onSubmit={login}>
             <div className="space-y-6">
               <section>
                 <label
@@ -37,9 +84,9 @@ export default function LoginPage() {
                 <div className="mt-2">
                   <Input
                     id="email"
-                    name="email"
                     type="email"
-                    autoComplete="email"
+                    onChange={handleEmail}
+                    value={userEmail}
                     placeholder="email@google.com"
                     required
                     className="block w-full placeholder:text-gray-400 focus:ring-green-400 "
@@ -64,8 +111,9 @@ export default function LoginPage() {
                 <div className="mt-2">
                   <Input
                     id="password"
-                    name="password"
                     type="password"
+                    onChange={handlePassword}
+                    value={password}
                     required
                     className="block w-full focus:ring-green-400"
                   />
@@ -73,10 +121,13 @@ export default function LoginPage() {
               </section>
             </div>
 
-            <Button className="mt-10 w-full bg-green-300 text-white shadow-sm hover:bg-green-400">
+            <Button
+              type="submit"
+              className="mt-10 w-full bg-green-300 text-white shadow-sm hover:bg-green-400"
+            >
               로그인
             </Button>
-          </Form>
+          </form>
 
           <p className="text-m mt-6 text-center text-gray-500">
             서비스를 이용하고 싶으신가요?{" "}
@@ -97,32 +148,4 @@ export default function LoginPage() {
 // login action
 export async function action({ request }) {
   const data = await request.formData();
-
-  const loginData = {
-    user_email: data.get("email"),
-    user_password: data.get("password"),
-  };
-
-  try {
-    const res = await axios({
-      method: request.method,
-      url: "https://i10e101.p.ssafy.io/v1/user-login",
-      data: loginData,
-    });
-
-    const { user_id, user_email, profile_img_url } = res.data;
-
-    const userInfo = {
-      userId: user_id,
-      userEmail: user_email,
-      userImgUrl: profile_img_url,
-    };
-
-    localStorage.clear();
-    localStorage.setItem("userInfo", JSON.stringify(userInfo));
-
-    return redirect("/");
-  } catch (err) {
-    console.log(err);
-  }
 }

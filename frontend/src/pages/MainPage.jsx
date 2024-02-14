@@ -1,9 +1,12 @@
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import axios from "axios";
+
 import PotSwiper from "../components/Pots/PotSwiper";
 import TalkTitleCard from "../components/Talk/TalkTitleCard";
 import chevron from "../asset/chevron-right.svg";
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { API_URL } from "../config/config";
 
 // 하드코딩 테스트용 데이터
 import { potDetailList } from "../test/potList";
@@ -24,6 +27,7 @@ import { potDetailList } from "../test/potList";
 
 export default function MainPage() {
   const navigate = useNavigate();
+  const userInfo = useSelector((state) => state.auth.userInfo);
 
   const goPotList = function () {
     navigate("/pot");
@@ -38,7 +42,7 @@ export default function MainPage() {
   useEffect(() => {
     axios
       .get(
-        `https://i10e101.p.ssafy.io/v1/talk/all/${JSON.parse(localStorage.getItem("userInfo")).userId}`,
+        `${API_URL}/talk/all/${userInfo.userId}`,
       )
       .then((res) => {
         setTalkList(res.data);
