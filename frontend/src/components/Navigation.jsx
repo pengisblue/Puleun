@@ -4,10 +4,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { Disclosure, Menu, Switch, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
-import Session from "react-session-api";
 import UserProfileImage from "../components/Users/UserProfileImage";
+import KidsmodeDeactivatePage from "./Kids/KidsmodeDeactivatemodal";
 import navImg from "../asset/log.svg";
 import { authActions } from "../store/auth-slice";
+import { uiActions } from "../store/ui-slice";
 
 const navigation = [
   { name: "화분 관리", href: "/pot", current: false },
@@ -23,8 +24,8 @@ function classNames(...classes) {
 export default function Navigation() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const isKidsMode = useSelector((state) => state.auth.isKidsMode);
   const userInfo = useSelector((state) => state.auth.userInfo);
+  const isKidsMode = useSelector((state) => state.auth.isKidsMode);
 
   const logoutHandler = () => {
     dispatch(authActions.logout());
@@ -34,10 +35,8 @@ export default function Navigation() {
   // 키즈모드 dispatch
   const switchKidsMode = () => {
     if (isKidsMode) {
-      // 임시
-      // 키즈모드 해제 페이지로 이동해야됨
-      dispatch(authActions.deactivateKidsMode());
-      navigate("/");
+      // 키즈모드 해제 모달
+      dispatch(uiActions.kidsmodeModalOpen());
     } else {
       dispatch(authActions.activateKidsMode());
       navigate("/kidsmode");
@@ -189,6 +188,7 @@ export default function Navigation() {
               </div>
             </div>
           </div>
+          <KidsmodeDeactivatePage />
 
           <Disclosure.Panel className="">
             {({ close }) => (

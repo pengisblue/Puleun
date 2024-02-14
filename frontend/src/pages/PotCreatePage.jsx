@@ -38,7 +38,7 @@ import { API_URL } from "../config/config";
 export default function PotCreatePage() {
   const navigate = useNavigate();
   const userInfo = useSelector((state) => state.auth.userInfo);
-  const isOpen = useSelector((state) => state.device.isOpen);
+  const isOpen = useSelector((state) => state.ui.deviceModalIsOpen);
 
   // 저장된 디바이스 목록 가져오기
   const [deviceList, setDeviceList] = useState([]);
