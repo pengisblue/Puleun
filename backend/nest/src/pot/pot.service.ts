@@ -23,9 +23,7 @@ export class PotService {
         private readonly s3Service: S3Service,        
     ){}
 
-    // UTC과 KST의 시차차이(9시간)
-    kr_time_diff:number = 9 * 60 * 60 * 1000;
-
+    KR_TIME_DIFF = 9 * 60 * 60 * 1000;
     async findAllPot(): Promise<SelectPotDto[]>{
         const result = await this.potRepository.find({
             relations: {user: true}
@@ -60,10 +58,10 @@ export class PotService {
             let lastTalkDay = 0;
 
             if(water_calender_id == null) lastWaterDay = 0;
-            else lastWaterDay = Math.floor((now.getTime()+this.kr_time_diff - waterAndTalkDto.water_createdAt.getTime() + this.kr_time_diff)/(1000 * 24 * 24 * 60));
+            else lastWaterDay = Math.floor((now.getTime() + this.KR_TIME_DIFF - waterAndTalkDto.water_createdAt.getTime())/(1000 * 24 * 24 * 60));
     
             if(talk_calender_id == null) lastTalkDay = 0;
-            else lastTalkDay = Math.floor((now.getTime() + this.kr_time_diff - waterAndTalkDto.talk_createdAt.getTime() + this.kr_time_diff)/(1000 * 24 * 24 * 60));
+            else lastTalkDay = Math.floor((now.getTime() + this.KR_TIME_DIFF - waterAndTalkDto.talk_createdAt.getTime())/(1000 * 24 * 24 * 60));
 
             const together_day = await this.potStateService.theDayWeWereTogether(element.planting_day);
             const moisState = await this.potStateService.moisState(element.min_moisture, element.max_moisture, element.moisture);
@@ -105,10 +103,10 @@ export class PotService {
         let lastTalkDay = 0;
 
         if(water_calender_id == null) lastWaterDay = 0;
-        else lastWaterDay = Math.floor((now.getTime()+this.kr_time_diff - waterAndTalkDto.water_createdAt.getTime() + this.kr_time_diff)/(1000 * 24 * 24 * 60));
+        else lastWaterDay = Math.floor((now.getTime() + this.KR_TIME_DIFF - waterAndTalkDto.water_createdAt.getTime())/(1000 * 24 * 24 * 60));
 
         if(talk_calender_id == null) lastTalkDay = 0;
-        else lastTalkDay = Math.floor((now.getTime() + this.kr_time_diff - waterAndTalkDto.talk_createdAt.getTime() + this.kr_time_diff)/(1000 * 24 * 24 * 60));
+        else lastTalkDay = Math.floor((now.getTime() + this.KR_TIME_DIFF- waterAndTalkDto.talk_createdAt.getTime())/(1000 * 24 * 24 * 60));
 
         const together_day = await this.potStateService.theDayWeWereTogether(pot.planting_day);
         const moisState = await this.potStateService.moisState(pot.min_moisture, pot.max_moisture, pot.moisture);
