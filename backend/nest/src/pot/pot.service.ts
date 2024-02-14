@@ -156,7 +156,7 @@ export class PotService {
     }
 
     async delete(pot_id: number){
-        await this.potRepository.softDelete(pot_id);
+        await this.potRepository.delete(pot_id);
     }
 
     async findPotsByUserId(user_id: number): Promise<Pot[]> {
