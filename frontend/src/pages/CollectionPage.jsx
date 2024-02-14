@@ -1,34 +1,41 @@
-import PotProfileImage from "../components/Pots/PotProfileImage";
-import BaseSimpleCard from "../components/UI/BaseSimpleCard";
-import chevron from "../asset/chevron-left.svg";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-
+import PotCollection from "../components/Pots/PotCollection";
+import chevron from "../asset/chevron-left.svg";
+import { API_URL } from "../config/config";
 
 export default function CollectionPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const params = useParams();
+  const { userId } = useParams();
 
   const handleBack = () => {
     if (location.state?.from) {
       navigate(-1);
     } else {
-      navigate(`/kid/${params.userId}`);
+      navigate(`/kid/${userId}`);
     }
   };
 
-  const [collectionInfo, setCollectionInfo] = useState({
-    pot_name: "",
-    pot_img_url: "",
-    happy_cnt: 0,
-    // together_day: 0, // 아직 안됨
-    user: {}
-  });
+  // 아이 이름
+  const [userName, setUserName] = useState("");
+  useEffect(() => {
+    const getUserName = async () => {
+      try {
+        const res = await axios({
+          method: "get",
+          url: `${API_URL}/user/${userId}`,
+        });
 
-  const userId = params.userId
-  const [userName, setUserName] = useState('')
+        console.log(res.data);
+        setUserName(res.data.nickname);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getUserName();
+  }, [userId]);
 
   // 이름이 받침으로 끝나는지 확인
   function hasCoda(name) {
@@ -46,24 +53,6 @@ export default function CollectionPage() {
     return hasCoda(name) ? "의" : "이의";
   }
 
-  // axios
-  useEffect(() => {
-    const getCollectionInfo = async () => {
-      try {
-        const response = await axios.get(
-          `https://i10e101.p.ssafy.io/v1/pot/collection/${userId}`,
-        );
-        setCollectionInfo(response.data);
-        if (response.data.length > 0) {
-          setUserName(response.data[0].user.nickname);
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    };
-    getCollectionInfo();
-  }, [userId]);
-
   return (
     <div className="px-6">
       <div className="flex gap-2">
@@ -75,54 +64,18 @@ export default function CollectionPage() {
           className="w-8 cursor-pointer"
         />
         <div>
-          {userName && 
+          {userName && (
             <span className="font-semibold">
               {userName}
               {selectPostposition(userName)}
             </span>
-          }
+          )}
           <h1 className="text-title">컬렉션</h1>
         </div>
       </div>
 
       {/* 컬렉션 리스트 */}
-      {collectionInfo.length > 0 ? (
-        <div className="grid grid-cols-2">
-          {collectionInfo.map((pot) => (
-            <BaseSimpleCard key={pot.pot_name} className="w-[9.5rem]">
-              <div className="overflow-hidden rounded-lg">
-                <PotProfileImage imgUrl={pot.pot_img_url} />
-              </div>
-              <ul className="mt-2">
-                <li>
-                  <p className="font-semibold">{pot.pot_name}</p>
-                </li>
-                <li>
-                  <span className="me-2">함께한 날:</span>
-                  <span className="me-0.5 text-xl font-bold text-emerald-600">
-                    {pot.together_day}
-                  </span>
-                  <span>일</span>
-                </li>
-                <li>
-                  <span className="me-2">행복한 날:</span>
-                  <span className="me-0.5 text-xl font-bold text-emerald-600">
-                    {pot.happy_cnt}
-                  </span>
-                  <span>일</span>
-                </li>
-              </ul>
-            </BaseSimpleCard>
-          ))}
-        </div>
-      ) : (
-        <div className="mt-6 mx-4 rounded-xl bg-emerald-50 p-6 text-center text-emerald-900 shadow-md">
-          <p>아직 성장을 완료한 식물이 없네요.</p>
-          <p className="font-semibold">
-            식물을 키우고 컬렉션을 모아보세요!
-          </p>
-        </div>
-      )}
+      <PotCollection />
     </div>
   );
 }

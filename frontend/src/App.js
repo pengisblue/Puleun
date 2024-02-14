@@ -16,7 +16,7 @@ import CollectionPage from "./pages/CollectionPage";
 import KidsModeRootLayout from "./pages/KidsModeRoot";
 import KidsModeDetailLayout from "./pages/KidsModeDetail";
 import KidsModePotPage from "./pages/KidsModePotPage";
-import KidsModeCollection from "./pages/KidsModeCollection";
+import KidsModeCollectionPage from "./pages/KidsModeCollectionPage";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage, { action as signUpAction } from "./pages/SignUpPage";
 import MeassageListPage from "./pages/MessageListPage";
@@ -61,7 +61,7 @@ const router = createBrowserRouter([
           { index: true, element: <KidsModePotPage /> },
           {
             path: "/kidsmode/:userId/collection",
-            element: <KidsModeCollection />,
+            element: <KidsModeCollectionPage />,
           },
         ],
       },
