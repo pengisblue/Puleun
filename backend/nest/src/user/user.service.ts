@@ -154,35 +154,6 @@ export class UserService {
         })
     }
 
-    async simpleUserList(user_id: number): Promise<SimpleUserListDto[]>{
-        const dtos = new Array<SimpleUserListDto>();
-        const dto = await this.userRepository.createQueryBuilder('user')
-            .select(['user.user_id', 'user.nickname', 'user.profile_img_url',
-                    'pot.pot_id', 'pot.pot_name', 'pot.pot_img_url', 'user.parent_id'])
-            .leftJoin('user.pots', 'pot', 'user.user_id = pot.user_id')
-            .where('user.user_id= :user_id', {user_id})
-            .orWhere('user.parent_id= :user_id', {user_id})
-            .getMany();
-
-        for(let i = 0; i < dto.length; i++){
-            const tempDto = new SimpleUserListDto();
-            const element = dto[i];
-
-            element.pots.forEach(pot => {
-                tempDto.pot_id = pot.pot_id;
-                tempDto.pot_img_url = pot.pot_img_url;
-                tempDto.pot_name = pot.pot_name;
-            });
-
-            tempDto.user_id = element.user_id;
-            tempDto.nickname = element.nickname;
-            tempDto.profile_img_url = element.profile_img_url;
-            tempDto.parent_id = element.parent_id;
-            dtos.push(tempDto);
-        }
-        return dtos;
-    }
-
         async findCollection(user_id: number): Promise<SelectCollectionDto> {
         const collection = await this.userRepository.createQueryBuilder('user')
             .withDeleted()

@@ -19,7 +19,6 @@ async function bootstrap() {
     .addTag('Pot')
     .addTag('Device')
     .addTag('Calender')
-    .addTag('Alarm')
     .build();
   
   app.useGlobalPipes(new ValidationPipe());
