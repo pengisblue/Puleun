@@ -21,7 +21,7 @@ export default function TalkListPage() {
     const getTalkList = async () => {
       try {
         const response = await axios.get(
-          `https://i10e101.p.ssafy.io/v1/talk/all/1`,
+          `https://i10e101.p.ssafy.io/v1/talk/all/${JSON.parse(localStorage.getItem("userInfo")).userId}`,
         );
         setTalkList(response.data);
       } catch (e) {

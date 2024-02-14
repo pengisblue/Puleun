@@ -10,7 +10,6 @@ export class Device {
   @Column({length:36, nullable: true })
   serial_number: string;
 
-  // 0 이라면 비어있다.
   @Column({ type: 'tinyint', nullable: false, default: 0 })
   empty_FG: boolean;
 
@@ -30,4 +29,7 @@ export class Device {
 
   @Column({type: 'int', nullable: true})
   pot_id: number;
+
+  @Column({type: 'varchar', nullable: true})
+  device_name: string;
 }

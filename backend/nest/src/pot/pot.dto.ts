@@ -16,6 +16,16 @@ export class PotUserDto{
 }
 
 export class CreatePotDto {
+    @IsNumber()
+    @ApiProperty({example: 1})
+    @Type(() => Number)
+    device_id: number;
+
+    // @IsNumber()
+    // @ApiProperty({example: 1})
+    // @Type(() => Number)
+    // pot_id: number;
+
     @IsString()
     @Length(1,10)
     @ApiProperty({example: '푸른', required: true})
@@ -49,16 +59,6 @@ export class CreatePotDto {
     @IsString()
     @IsOptional()
     pot_img_url: string;
-
-    @IsNumber()
-    @IsOptional()
-    @ApiProperty({example: 10.5, description: '현재 화분의 온도'})
-    temperature: number;
-
-    @IsOptional()
-    @IsNumber()
-    @ApiProperty({example: 10.5, description: '현재 화분의 습도'})
-    moisture: number;
 
     @IsOptional()
     @IsDate()

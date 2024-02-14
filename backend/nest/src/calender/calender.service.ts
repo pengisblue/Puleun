@@ -4,6 +4,8 @@ import { Calender } from './calender.entity';
 import { Repository } from 'typeorm';
 import { CalenderCreateDto } from './calender-req.dto';
 import { FileService } from './../file/file.service';
+import { SelectCalenderDto, SimpleCalenderDto } from './calender.dto';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class CalenderService {
@@ -14,26 +16,22 @@ export class CalenderService {
     ){}
     
     /** 식물의 캘린더 찾기 */
-    async findCalenderByPotId(pot_id: number): Promise<Calender[]>{
-        const entity = await this.calenderRepository.createQueryBuilder('calender')
-            .where('calender.pot_id= :pot_id', {pot_id})
-            .leftJoinAndSelect('calender.pot', 'pot')
-            .select(['calender']).getMany();
-        return entity;
+    async findCalenderByPotId(pot_id: number): Promise<SimpleCalenderDto[]>{
+        return plainToInstance(SimpleCalenderDto, await this.calenderRepository.find({where:{pot_id}}), {excludeExtraneousValues: true});
     }
 
     /** save "W" day or "T" day*/
     async save(calenderCreateDto: CalenderCreateDto): Promise<string>{
         const res = await this.getLastDay(calenderCreateDto.pot_id, calenderCreateDto.code)
-        const today: Date = this.fileService.getToday() as unknown as Date
-        if (!res || (res.getFullYear() == today.getFullYear()
+        const today: Date = new Date(this.fileService.getToday())
+        if (res == null || (res.getFullYear() == today.getFullYear()
                 && res.getMonth() == today.getMonth()
                 && res.getDate() == today.getDate())) await this.calenderRepository.save(calenderCreateDto)
         return "success";
     }
 
-    async findAllCalender(): Promise<Calender[]>{
-        return await this.calenderRepository.find();
+    async findAllCalender(): Promise<SimpleCalenderDto[]>{
+        return plainToInstance(SimpleCalenderDto, await this.calenderRepository.find(), {excludeExtraneousValues: true});
     }
 
     async getLastDay(pot_id: number, code:string):Promise<Date>{
@@ -43,7 +41,7 @@ export class CalenderService {
             order: {createdAt: 'DESC'},
             take: 1
         })
-        if (temp == null) return ("9999-99-99" as unknown as Date)
+        if (temp == null) return (null)
         return temp.createdAt;
     }
 }

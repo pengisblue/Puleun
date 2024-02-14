@@ -60,6 +60,8 @@ def login_result(data):
     pot_id = data['pot_id'] # 화분 고유 id 받기
     print(data)
     if is_owner:
+        pot_state() # 시작 시 보낼 데이터
+        time.sleep(5)
         is_owner_event.set()
         print('프로세스 실행')
     else:
@@ -80,6 +82,7 @@ def talk_tts(data):
 # data==True일 때 이름 파일 받아서 저장
 @sio.on('owner_change')
 def owner_change(data): 
+    global is_owner
     # data={
     #     'is_owner': bool,
     #     'name_voice': wavfile,
@@ -173,24 +176,27 @@ def start_sound():
     effect_path = "effect_sound.wav"
     name_voice_path = "name_voice.wav"
 
-    send_sig_to_arduino("talk start")
+    send_sig_to_arduino(ser2, "talk start")
     play_sound(effect_path)  # 효과음 재생
     play_sound(name_voice_path)  # 이름 음성 파일 재생
 
 
 # 호출어 인식 - process로 만듦
-def keyword(): 
+def keyword():
+    global is_talking
     while True:
         is_owner_event.wait()
-        print('keyword start')
-        if hotword():
-            sio.emit('hot_word') # 서버에게 hot_word 요청
-            send_sig_to_arduino('hotword')
-            print("키워드인식")
-            STT()   # 호출어 인식이 되면 stt 실행
-        else:
-            # 호출어 인식 실패 시
-            pass
+        if not is_talking:  # 대화 중이 아닐 때만 hotword 검사 실행
+            print('keyword start')
+            if hotword():
+                sio.emit('hot_word')  # 서버에게 hot_word 요청
+                send_sig_to_arduino(ser2, 'hotword')
+                print("키워드인식")
+                STT()   # 호출어 인식이 되면 STT 실행
+            else:
+                # 호출어 인식 실패 시
+                pass
+        time.sleep(1)  # CPU 사용률 관리를 위해 짧은 대기 시간 추가
 
 
 # stt 텍스트, 음성파일 전송
@@ -230,43 +236,32 @@ def TTS(data):
     send_sig_to_arduino(ser1, 0)
     STT()
     
-    # pygame.mixer.init()
-    # try:
-    #     pygame.mixer.music.load(file_path)
-    #     pygame.mixer.music.play()
-        
-    #     # 파일 재생이 완료될 때까지 대기
-    #     while pygame.mixer.music.get_busy():
-    #         pygame.time.Clock().tick(10)
-
-    # except pygame.error as e:
-    #     print("오류 발생:", e)
-    # finally:
-    #     print("File play done")
-    #     pygame.mixer.quit()
-
 
 # 아두이노 측정값 + 물줬을때, 아두이노에서 측정값 받고 보내기
 def pot_state(): 
-    # 측정 시작 신호 전송
-    # ser2.write(b"START\n")
     print('start pot_state')
 
+    send_sig_to_arduino(ser2, 'get value')
     # 시간 두고 아두이노가 신호 처리 하도록
-    time.sleep(0.5) # 한번 측정할 정도의 시간임
+    time.sleep(2) # 한번 측정할 정도의 시간임
 
     while ser2.in_waiting > 0:
         sensor_value = ser2.readline().decode('utf-8').strip()
         is_temp = False
+        # T이면 온도
         if (sensor_value[:1] == 'T'):
             sensor_value = float(sensor_value[1:])
             is_temp = True
+        # M이면 습도
         elif (sensor_value[:1] == 'M'):
             sensor_value = float(sensor_value[1:])
+        # D이면 거리 -> 전송 안함
+        else:
+            continue
         print(sensor_value)
 
         # Socket.IO로 데이터 전송
-        # sio.emit('pot_state', {'pot_id' : pot_id, 'data': sensor_value, 'isTemp_FG': is_temp})
+        sio.emit('pot_state', {'pot_id' : pot_id, 'data': sensor_value, 'isTemp_FG': is_temp})
 
 
 # 아두이노로 메시지 보내기
@@ -286,18 +281,20 @@ def send_sig_to_arduino(ser, msg):
 
 # Threading - Process로 만듦
 def arduino_work():
+    global is_water
     print('arduino start')
     while True:
         is_owner_event.wait()
         # water 들어오면 emit하기
         while ser2.in_waiting > 0:
             sensor_value = ser2.readline().decode('utf-8').strip()
+            # 물 줬고, 오늘 한번도 물 안줬다면 물 신호 보내기
             if (sensor_value == 'Water' and is_water == False):
                 print('sending water signal')
                 is_water = True
-                # sio.emit('water', {'pot_id' : pot_id})
+                sio.emit('water', {'pot_id' : pot_id})
 
-        # 정각마다 pot_state 실행
+        # 정각마다 pot_state 한 번 실행
         now = datetime.datetime.now()
         if now.minute == 0:
             if status_flag == False:
@@ -309,39 +306,48 @@ def arduino_work():
 
 # 메인 실행문
 if __name__ == '__main__': 
-    global ser1, ser2
+    global ser1, ser2, is_owner_event
 
     server_url = os.getenv('SERVER_URL')
     sio.connect(server_url)
+    
+    effect_path = "effect_sound.wav"
+    play_sound(effect_path)
 
     # threading event
     is_owner_event = Event()
-
+    
     # 시리얼 열기
     # 시리얼 통신 객체 생성
     # ser2 = serial.Serial(arduino_port, 9600)  # 아두이노와의 통신 속도에 맞게 설정 > 윈도우
     # ser1 = serial.Serial("COM5", 115200)  # 아두이노와의 통신 속도에 맞게 설정 > 윈도우
     ser1 = serial.Serial(arduino_port_1, 115200)  # TFT_LCD & arduino uno
     ser2 = serial.Serial(arduino_port_2, 9600)  # arduino nano    
-    time.sleep(5) # 시리얼 통신 기다리기 (+ login 정보 받기?)
-    pot_state() # 시작 시 보낼 데이터
+
     
-    time.sleep(5)
+    # if is_owner:
+    #     pot_state()
+    #     time.sleep(2)
+    #     is_owner_event.set()
+    #     print('프로세스 실행')
+    # else:
+    #     is_owner_event.clear()
+    #     print('프로세스 종료')
 
     # thread 지정
     rasp = Thread(target=keyword, args=(), daemon=True)
     ard = Thread(target=arduino_work, args=(), daemon=True)
+
+
     # process 시작
     rasp.start()
     ard.start()
-    
-
 
     # main 함수 끝나지 않도록 설정
     while True:
         time.sleep(1)
         
-    # -----
+    # -----       
         
     # 시리얼 포트 닫기
     # ser.close()

@@ -16,6 +16,7 @@ import { PotModule } from 'src/pot/pot.module';
 @Module({
   imports: [ TypeOrmModule.forFeature([PotState]), PotStateModule, FileModule, TalkModule,
   DeviceModule, SentenceModule, CalenderModule, TtsModule, RedisModule, PotModule],
-  providers:[SocketGateway, SocketService],})
+  providers:[SocketGateway, SocketService],
+  exports:[SocketGateway]})
 export class SocketModule {
 }

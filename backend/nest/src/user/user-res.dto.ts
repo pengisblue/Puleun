@@ -5,7 +5,7 @@ import { Species } from "src/species/species.entity";
 
 @Exclude()
 export class UserListDto{
-    @ApiProperty()
+    @ApiProperty({example: 1})
     @Expose()
     user_id: number;
 

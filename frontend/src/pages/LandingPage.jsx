@@ -39,7 +39,6 @@ export default function LandingPage() {
               회원가입
             </Button>
           </div>
-          <p>로그인 버튼 누르세요</p>
         </div>
       </div>
     </div>
