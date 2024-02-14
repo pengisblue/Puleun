@@ -73,6 +73,16 @@ export default function PotCalander() {
 
   return (
     <>
+      <div className="me-6 mt-2 flex justify-end gap-3">
+        <div className="flex items-center rounded-xl bg-lime-200/60 px-2 py-1">
+          <span>물 준 날</span>
+          <img src={waterImg} alt="waterImg" className="ms-1 w-4" />
+        </div>
+        <div className="flex items-center rounded-xl bg-lime-200/60 px-2 py-1">
+          <span>대화한 날</span>
+          <img src={talkImg} alt="talkImg" className="w-4" />
+        </div>
+      </div>
       <Calander
         calendarType="gregory"
         locale="ko"

@@ -8,38 +8,6 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { API_URL } from "../config/config";
 
-// 화분 상태정보 = {
-//   화분 아이디,
-//   화분 이름,
-//   주인 이름,
-//   화분 이미지,
-//   품종,
-//   현재 온도,
-//   현재 습도,
-//   온도 상태,
-//   습도 상태,
-//   물 준 날(가장 최근),
-//   심은 날
-// }
-// 캘린더 = {
-//   물준 날짜,
-//   대화한 날짜
-// }
-// 온,습도 = {
-//   온도: [
-//     {
-//       x: 시간,
-//       y: 온도
-//     }
-//   ],
-//   습도: [
-//     {
-//       x: 시간,
-//       y: 습도
-//     }
-//   ]
-// }
-
 export default function PotDetailPage() {
   const { potId } = useParams();
   const navigate = useNavigate();
@@ -57,21 +25,22 @@ export default function PotDetailPage() {
           method: "get",
           url: `${API_URL}/pot/detail/${potId}`,
         });
+        console.log(res.data);
 
         const potInfo = {
           potId: potId,
           potName: res.data.pot_name,
-          userId: res.data.user_id,
-          userName: res.data.nickname,
-          potImgUrl: API_URL + res.data.pot_img_url,
+          userId: res.data.user.user_id,
+          userName: res.data.user.nickname,
+          potImgUrl: res.data.pot_img_url,
           potSpecies: res.data.pot_species,
           nowTemprature: res.data.temperature,
-          tempratureStatus: res.data.temp_state,
+          tempratureStatus: res.data.statusDto.temp_state,
           nowMoisture: res.data.moisture,
-          moistureStatus: res.data.mois_state,
-          daysSinceWatering: res.data.last_water,
+          moistureStatus: res.data.statusDto.mois_state,
+          daysSinceWatering: res.data.statusDto.lastWaterDay,
           plantDate: dayjs(res.data.planting_day).format("YY/MM/DD"),
-          daysSincePlanting: res.data.together_day,
+          daysSincePlanting: res.data.statusDto.together_day,
         };
 
         setPotInfo(potInfo);
@@ -152,7 +121,7 @@ export default function PotDetailPage() {
       {/* 캘린더 */}
       <section>
         <h2 className="mb-2 text-section">함께 한 기록</h2>
-        <div className="max-w-[30rem] overflow-hidden rounded-xl border shadow-md">
+        <div className="max-w-[30rem] overflow-hidden rounded-xl border bg-white shadow-md">
           <PotCalander />
         </div>
       </section>

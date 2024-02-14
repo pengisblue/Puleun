@@ -33,7 +33,7 @@ export default function PotDetailCard({
   // 이름 뒤의 조사 선택
   function selectPostposition(name) {
     if (!name) {
-      return ""
+      return "";
     }
     return hasCoda(name) ? "의" : "이의";
   }
@@ -75,12 +75,22 @@ export default function PotDetailCard({
             품종: <span>{potSpecies}</span>
           </li>
           <li>
-            현재 온도: <span>{nowTemprature}℃</span>{" "}
-            <span>({tempratureStatus})</span>
+            현재 온도: <span>{nowTemprature}℃</span> (
+            <span
+              className={`${tempratureStatus === "적정" ? "text-green-700" : "text-orange-500"}`}
+            >
+              {tempratureStatus}
+            </span>
+            )
           </li>
           <li>
-            현재 습도: <span>{nowMoisture}%</span>{" "}
-            <span>({moistureStatus})</span>
+            현재 습도: <span>{nowMoisture}%</span> (
+            <span
+              className={`${tempratureStatus === "적정" ? "text-green-700" : "text-orange-500"}`}
+            >
+              {moistureStatus}
+            </span>
+            )
           </li>
           <li>
             물 준 날: <span>{daysSinceWatering}</span>일 전
