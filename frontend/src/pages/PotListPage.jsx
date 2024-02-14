@@ -50,8 +50,8 @@ export default function PotListPage() {
           potId: item.pot_id,
           potName: item.pot_name,
           potImgUrl: item.pot_img_url,
-          userId: item.user_id,
-          userImgUrl: item.profile_img_url,
+          userId: item.user.user_id,
+          userImgUrl: item.user.profile_img_url,
         }));
         setPotList(potList);
       })
