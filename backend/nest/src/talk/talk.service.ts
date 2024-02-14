@@ -37,6 +37,7 @@ export class TalkService {
         'pot.pot_id', 'pot.pot_img_url'])
         .leftJoin('talk.pot','pot','talk.pot_id = pot.pot_id')
         .leftJoin('pot.user', 'user','pot.user_id = user.user_id')
+        .leftJoinAndSelect('talk.sentences','sentence')
         .where('talk.talk_id = :talk_id',{talk_id})
         .getOne()
         .then((v)=> v as unknown as TalkListDto)
