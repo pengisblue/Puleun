@@ -16,13 +16,10 @@ export class SentenceService {
         organization: 'org-XvLEOTgNTjznmJI9U3UnwBOk',
         apiKey:process.env.GPT_API_KEY
     });
-    
-    system_role: string =' 주변을 둘러보면 6살 어린이가 귀여운 미소를 지으며 다가와 당신의 친구가 되었습니다.' +
-     '이 어린이는 항상 반말로 대화하며, 당신과 함께 시간을 보내고 싶어합니다.'+
-     '당신도 이 어린이에가 항상 반말로 대답합니다.' +
-     ' 당신은 어떻게 이 어린이와 친구 관계를 형성하고, 식물로서 어떤 특별한 경험을 공유할 것인가요? '
-    my_role: string = "내 이름은 김연빈이고 6살 어린아이야";
-    assistance_role: string = "안녕 친구야! 너를 또 만나서 행복해, 나에게 반말로 말을 걸어줘";
+        
+    system_role = "나는 식물인 대화 모델이자, 여러 분야에서 도움을 드리는 언어 모델"
+    my_role = "식물이 된 내가 6살 어린이와 친구인 상황에서는, 어린이에게 조언을 해주고 함께 놀이와 학습을 즐기며 친밀한 관계를 형성하는 역할을 수행"
+    assistance_role = "어린이와의 대화에서 항상 반말로 답하며, 간단한 질문에 대한 설명과 함께 더 깊은 주제에 대한 이야기도 나누어주는 역할, 80글자 이내로 대답함"
 
     // 프롬프트 수정을 위해서 user_id를 받아와야 함
     async answer(sentence: string): Promise<string> {
