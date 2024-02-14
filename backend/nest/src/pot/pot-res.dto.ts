@@ -3,7 +3,7 @@ import { Exclude, Expose, Type } from "class-transformer";
 import { UserListDto } from "src/user/user-res.dto";
 import { User } from "src/user/user.entity";
 
-export class SelectCollectionDto {
+export class CollectionPotDto{
     @Expose()
     @ApiProperty()
     pot_id: number;
@@ -23,12 +23,23 @@ export class SelectCollectionDto {
     @Expose()
     @ApiProperty()
     planting_day: Date;
+
+    @Expose()
+    @ApiProperty()
+    deletedAt: Date;
     
     @Expose()
     @ApiProperty()
     happy_cnt: number;
 
     @Expose()
-    @Type(() => UserListDto)
-    user: UserListDto;
+    @ApiProperty()
+    together_day: number;
+}
+
+export class SelectCollectionDto extends UserListDto {
+
+    @Expose()
+    @Type(() => CollectionPotDto)
+    pots: CollectionPotDto[]
 }

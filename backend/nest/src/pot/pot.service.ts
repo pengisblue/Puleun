@@ -2,7 +2,7 @@ import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Pot } from './pot.entity';
 import { Repository } from 'typeorm';
-import { CollectionDto, CreatePotDto, PotWithStatusDto, SelectPotDto, StatusDto, UpdatePotDto } from './pot.dto';
+import { CreatePotDto, PotWithStatusDto, SelectPotDto, StatusDto, UpdatePotDto } from './pot.dto';
 import { PotStateService } from 'src/pot-state/pot-state.service';
 import { join } from 'path';
 import { DeviceService } from 'src/device/device.service';
@@ -10,6 +10,7 @@ import { S3Service } from 'src/s3/s3.service';
 import { CalenderService } from 'src/calender/calender.service';
 import { plainToInstance } from 'class-transformer';
 import { SelectCollectionDto } from './pot-res.dto';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class PotService {
@@ -20,7 +21,8 @@ export class PotService {
         @Inject(forwardRef(() => PotStateService))
         private readonly potStateService: PotStateService,    
         private readonly calenderService: CalenderService,    
-        private readonly s3Service: S3Service,        
+        private readonly s3Service: S3Service,       
+        private readonly userService: UserService 
     ){}
 
     KR_TIME_DIFF = 9 * 60 * 60 * 1000;
@@ -185,16 +187,12 @@ export class PotService {
         return result;
     }
 
-    async findCollection(user_id: number): Promise<SelectCollectionDto[]> {
-        const collection = await this.potRepository.find({
-            relations: {user: true},
-            where:{user_id: user_id, collection_FG: true},            
-        }).then(o => plainToInstance(SelectCollectionDto, o, {excludeExtraneousValues: true}))
-        return collection;
-        
+    async findCollection(user_id: number): Promise<SelectCollectionDto> {
+        return await this.userService.findCollection(user_id);        
     }
 
     async toCollection(pot_id: number){
+        await this.potRepository.softDelete(pot_id);
         await this.potRepository.update(pot_id, {collection_FG: true});
     }
 

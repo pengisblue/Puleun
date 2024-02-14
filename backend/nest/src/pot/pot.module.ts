@@ -10,7 +10,7 @@ import { DeviceModule } from 'src/device/device.module';
 import { S3Module } from 'src/s3/s3.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Pot]), UserModule, CalenderModule, DeviceModule, S3Module, CalenderModule,
+  imports: [TypeOrmModule.forFeature([Pot]), UserModule, CalenderModule, DeviceModule, S3Module, CalenderModule, UserModule,
   forwardRef(() =>PotStateModule)],
   controllers: [PotController],
   providers: [PotService],

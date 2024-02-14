@@ -8,9 +8,8 @@ import { plainToInstance } from 'class-transformer';
 import { AllUserDto } from 'src/user-login/user-login.dto';
 import { Pot } from 'src/pot/pot.entity';
 import { UserWithAlarmDto } from 'src/alarm/alarm-res.dto';
-import * as fs from 'fs';
-import { join } from 'path';
 import { S3Service } from './../s3/s3.service';
+import { SelectCollectionDto } from 'src/pot/pot-res.dto';
 
 @Injectable()
 export class UserService {
@@ -185,10 +184,27 @@ export class UserService {
         return dtos;
     }
 
+        async findCollection(user_id: number): Promise<SelectCollectionDto> {
+        const collection = await this.userRepository.createQueryBuilder('user')
+            .withDeleted()
+            .select(['user.profile_img_url', 'user.user_id', 'user.nickname',
+                     'pot.pot_id', 'pot.pot_name', 'pot.pot_species', 'pot.pot_img_url', 'pot.planting_day',
+                     'pot.deletedAt', 'pot.happy_cnt'])
+            .leftJoin('user.pots', 'pot', 'user.user_id = pot.user_id')            
+            .where({user_id}).andWhere('pot.collection_FG= :flag', {flag: true})
+            .andWhere('pot.deletedAt IS NOT NULL')            
+            .getOne().then(o => plainToInstance(SelectCollectionDto, o, {excludeExtraneousValues: true}))        
 
+        collection.pots.forEach(arr => {
+            arr.together_day = Math.ceil((arr.deletedAt.getTime() - arr.planting_day.getTime())/(1000 * 60 * 60 * 24));
+        })
+        
+        return collection; 
+
+    }
     // user의 모든 알람을 표시
     // alarm controller에서 사용중
-    async allAlarmOfUser(user_id: number): Promise<UserWithAlarmDto[]>{
+    async allAlarmOfUser(user_id: number): Promise<any>{
         const dtos = new Array<UserWithAlarmDto>();
         const result = await this.userRepository.createQueryBuilder('user')
             .where('user.user_id= :user_id', {user_id})
@@ -216,12 +232,12 @@ export class UserService {
         //     });
         //     dtos.push(dto);
         // })
-
         result.forEach(arr => {
             const userDto = plainToInstance(UserWithAlarmDto, arr, {excludeExtraneousValues: true});
             dtos.push(userDto);
         })
-
-        return dtos;
+        
+          return dtos;
     }
+
 }
