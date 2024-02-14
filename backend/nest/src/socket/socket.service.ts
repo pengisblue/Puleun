@@ -52,7 +52,8 @@ export class SocketService {
   /** stt-> tts : stt 받아서 tts로 return */
   async stt(text: string, talk_id: number, base64Data: string): Promise<string>{
     const today = this.fileService.getToday();
-    const filePath = "./upload/talk/" + today + "/"
+    const filePath = process.cwd() + "/upload/talk/" + today + "/"
+    if (!!fs.existsSync(process.cwd()+'/upload/')) fs.mkdir(process.cwd()+'/upload/', (e)=>{if (e) throw e})
     if (!fs.existsSync(filePath)) fs.mkdir(filePath, (e)=>{if (e) throw e})
 
     let nextSentenceId = await this.sentenceService.nestSentenceId(talk_id)

@@ -39,6 +39,8 @@ export class UserService {
     async save(data: CreateUserDto, file?: Express.Multer.File): Promise<number>{
         await this.userRepository.save(data);
         const filePath = join(process.cwd(), '/upload/profile/')
+        if (!!fs.existsSync(process.cwd()+'/upload/')) fs.mkdir(process.cwd()+'/upload/', (e)=>{if (e) throw e})
+        if (!!fs.existsSync(filePath)) fs.mkdir(filePath, (e)=>{if (e) throw e})
         const user: User = data as User
         try{
             const split = file.originalname.split('.')
@@ -61,6 +63,8 @@ export class UserService {
                 const split = file.originalname.split('.')
                 const extension = split[split.length -1]
                 const filePath = join(process.cwd(), '/upload/profile/')
+                if (!!fs.existsSync(process.cwd()+'/upload/')) fs.mkdir(process.cwd()+'/upload/', (e)=>{if (e) throw e})
+                if (!!fs.existsSync(filePath)) fs.mkdir(filePath, (e)=>{if (e) throw e})
                 const fileName = child.user_id + '.' + extension
                 fs.writeFileSync(filePath+fileName, file.buffer);
                 data.profile_img_url = filePath+fileName
@@ -82,6 +86,8 @@ export class UserService {
             const split = file.originalname.split('.')
             const extension = split[split.length -1]
             const filePath = join(process.cwd(), '/upload/profile/')
+            if (!!fs.existsSync(process.cwd()+'/upload/')) fs.mkdir(process.cwd()+'/upload/', (e)=>{if (e) throw e})
+            if (!!fs.existsSync(filePath)) fs.mkdir(filePath, (e)=>{if (e) throw e})
             const fileName = user.user_id + '.' + extension
             fs.writeFileSync(filePath+fileName, file.buffer);
             data.profile_img_url = filePath+fileName
