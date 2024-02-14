@@ -83,7 +83,7 @@ export class SocketGateway {
     dto.code = 'T'
     this.calenderService.save(dto)
     const pot:Pot = await this.potService.find(pot_id)
-    const fileName = join(pot.pot_name, '과 ', pot.user.nickname, '의 대화')
+    const fileName = pot.pot_name + '과 ' + pot.user.nickname+ '의 대화'
     const talk_id = await this.talkService.saveTalk(pot.pot_id, fileName)
     client.emit('talk_id',{talk_id})
   }
