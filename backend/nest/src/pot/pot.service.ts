@@ -2,13 +2,13 @@ import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Pot } from './pot.entity';
 import { Repository } from 'typeorm';
-import { CollectionDto, CreatePotDto, PotWithStatusDto, SelectPotDto, UpdatePotDto } from './pot.dto';
+import { CollectionDto, CreatePotDto, PotWithStatusDto, SelectPotDto, StatusDto, UpdatePotDto } from './pot.dto';
 import { PotStateService } from 'src/pot-state/pot-state.service';
-import * as fs from 'fs';
 import { join } from 'path';
 import { DeviceService } from 'src/device/device.service';
 import { S3Service } from 'src/s3/s3.service';
 import { CalenderService } from 'src/calender/calender.service';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class PotService {
@@ -37,17 +37,15 @@ export class PotService {
                         'pot.min_moisture', 'pot.max_moisture',
                         'pot.moisture', 'pot.pot_img_url', 'user.user_id', 'user.nickname',
                         'user.profile_img_url'])    
-            .leftJoinAndSelect('pot.user', 'user', 'user.user_id = pot.user_id')
-            .leftJoinAndSelect('pot.calender', 'calender','calender.pot_id = pot.pot_id')
-            .andWhere('pot.user_id= :parent_id', {parent_id})
-            .andWhere('pot.collection_FG= :flag', {flag: false})
-            .andWhere('user.user_id= :parent_id', {parent_id})
+            .leftJoin('pot.user', 'user', 'user.user_id = pot.user_id')
+            .where('user.user_id= :parent_id', {parent_id})
             .orWhere('user.parent_id= :parent_id', {parent_id})                     
-            .getMany();
+            .getMany()
+            .then(o => plainToInstance(PotWithStatusDto, o));
 
         const statusDtos = new Array<PotWithStatusDto>();
         for(let i = 0; i < pot.length; i++){
-            const statusDto = new PotWithStatusDto();
+            const statusDto = new StatusDto();
             const element = pot[i];
             const waterAndTalkDto = await this.calenderService.getLastTalkAndWater(element.pot_id);
 
@@ -67,23 +65,15 @@ export class PotService {
             const moisState = await this.potStateService.moisState(element.min_moisture, element.max_moisture, element.moisture);
             const tempState = await this.potStateService.tempState(element.min_temperature, element.max_temperature, element.temperature);
 
-            statusDto.pot_id = element.pot_id;
-            statusDto.pot_name = element.pot_name;
-            statusDto.pot_img_url = element.pot_img_url;
-            statusDto.pot_species = element.pot_species;
-            statusDto.temperature = element.temperature;
-            statusDto.moisture = element.moisture;            
-            statusDto.user_id = element.user.user_id;
-            statusDto.profile_img_url = element.user.profile_img_url;
-            statusDto.nickname = element.user.nickname;
-            statusDto.temp_state = tempState;
-            statusDto.mois_state = moisState
-            statusDto.last_water = lastWaterDay;
-            statusDto.planting_day = element.planting_day;
-            statusDto.together_day = together_day;
-            statusDto.last_talk = lastTalkDay;
-            statusDto.parent_id = element.user.parent_id;
-            statusDtos.push(statusDto);
+            statusDto.lastTalkDay = lastTalkDay;
+            statusDto.lastWaterDay = lastWaterDay;
+            element.statusDto = statusDto;
+
+            element.mois_state = moisState;
+            element.temp_state = tempState;
+            element.together_day = together_day;
+            element.statusDto = statusDto;
+            statusDtos.push(element);
         }
         return statusDtos;
     }
@@ -101,11 +91,11 @@ export class PotService {
                  'pot.moisture', 'pot.pot_img_url', 'user.user_id', 'user.nickname',
                  'user.profile_img_url'])                         
         .leftJoin('pot.user', 'user', 'user.user_id = pot.user_id')
-        .andWhere('pot.collection_FG= :flag', {flag: false})
-        .andWhere('pot.pot_id= :pot_id', {pot_id})
-        .getOne();
+        .where('pot.pot_id= :pot_id', {pot_id})
+        .getOne()
+        .then(o => plainToInstance(PotWithStatusDto, o));
 
-        const statusDto = new PotWithStatusDto();
+        const statusDto = new StatusDto();
 
         let lastWaterDay = 0;
         let lastTalkDay = 0;
@@ -120,29 +110,19 @@ export class PotService {
         const moisState = await this.potStateService.moisState(pot.min_moisture, pot.max_moisture, pot.moisture);
         const tempState = await this.potStateService.tempState(pot.min_temperature, pot.max_temperature, pot.temperature);
 
-        statusDto.pot_id = pot.pot_id;
-        statusDto.pot_name = pot.pot_name;
-        statusDto.pot_img_url = pot.pot_img_url;
-        statusDto.pot_species = pot.pot_species;
-        statusDto.temperature = pot.temperature;
-        statusDto.moisture = pot.moisture;            
-        statusDto.user_id = pot.user.user_id;
-        statusDto.profile_img_url = pot.user.profile_img_url;
-        statusDto.nickname = pot.user.nickname;
-        statusDto.temp_state = tempState;
-        statusDto.mois_state = moisState
-        statusDto.last_water = lastWaterDay;
-        statusDto.planting_day = pot.planting_day;
-        statusDto.together_day = together_day;
-        statusDto.last_talk = lastTalkDay;
-        statusDto.parent_id = pot.user.parent_id;
-        return statusDto;
+        statusDto.lastTalkDay = lastTalkDay;
+        statusDto.lastWaterDay = lastWaterDay;
+        pot.mois_state = moisState;
+        pot.temp_state = tempState;
+        pot.together_day = together_day;
+        pot.statusDto = statusDto;
+        
+        return pot;
     }  
 
     async save(createPotDto: CreatePotDto, file?: Express.Multer.File) {
         const pot: Pot = this.potRepository.create(createPotDto);
         const savePot = await this.potRepository.save(pot);
-        // console.log(savePot);
         await this.calenderService.whenPotSave(savePot.pot_id);
         await this.deviceService.mappingPot(createPotDto.device_id, savePot.pot_id);
 

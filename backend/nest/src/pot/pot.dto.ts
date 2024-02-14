@@ -234,6 +234,10 @@ export class CollectionDto{
     happy_cnt ? : number;
 }
 
+export class StatusDto{
+    lastWaterDay: number;
+    lastTalkDay: number;
+}
 
 export class PotWithStatusDto{
     @IsNumber()
@@ -292,6 +296,31 @@ export class PotWithStatusDto{
     @IsNumber()
     @Type(()=>Number)
     last_talk: number;
+
+    @Exclude()
+    @IsNumber()
+    @Type(() => Number)
+    min_moisture: number;
+
+    @Exclude()
+    @IsNumber()
+    @Type(() => Number)
+    max_moisture: number;
+
+    @Exclude()
+    @IsNumber()
+    @Type(() => Number)
+    min_temperature: number;
+
+    @Exclude()
+    @IsNumber()
+    @Type(() => Number)
+    max_temperature: number;
+
+    @Type(() => StatusDto)
+    statusDto: StatusDto;
 }
+
+
 
 
