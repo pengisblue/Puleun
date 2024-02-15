@@ -18,7 +18,7 @@ export class DeviceService {
 
   async findByPotId(pot_id: number): Promise<string>{
     const [res] = await this.deviceRepository.find({where:{pot_id}, take:1})
-    return res.client_id
+    if (res) return res.client_id
   }
   
   async save(device: DeviceCreateDto): Promise<number>{
