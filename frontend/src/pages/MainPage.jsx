@@ -77,12 +77,13 @@ export default function MainPage() {
         );
         const result = changeKeysToCamelCase(res.data);
         setPotDetailList(result);
+        console.log(potDetailList)
       } catch (e) {
         console.log(e);
       }
     };
     getPotDetailList();
-  }, []);
+  }, [potDetailList]);
 
 
   
