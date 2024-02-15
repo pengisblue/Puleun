@@ -19,7 +19,7 @@ export class UserService {
     ){}
 
     async findByParent(user_id: number):Promise<UserListDto[]>{
-        const child = await this.userRepository.findBy({parent_id:user_id})
+        const child = await this.userRepository.find({where: {parent_id:user_id}})
         child.push( await this.userRepository.findOneBy({user_id}) )
         return plainToInstance(UserListDto, child);
     }
@@ -107,6 +107,7 @@ export class UserService {
     async findPot(user_id: number): Promise<User>{
         const user: User = await this.userRepository.createQueryBuilder('user')
             .where('user.user_id= :user_id', {user_id})
+            .andWhere('pot.collection_FG= :flag', {flag: false})
             .leftJoinAndSelect('user.pots', 'pot', 'pot.user_id=user.user_id')
             .select([
                 'user', 'pot.pot_id', 'pot.pot_name', 'pot.pot_species'
