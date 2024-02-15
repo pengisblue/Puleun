@@ -1,4 +1,5 @@
 import { Optional } from "@nestjs/common";
+import { ApiProduces, ApiProperty } from "@nestjs/swagger";
 import { Exclude, Expose, Type,  } from "class-transformer";
 import { IsNumber, IsString, IsDate } from 'class-validator';
 
@@ -71,16 +72,20 @@ export class CompareDataDto{
 
 export class DataDto{
     @Expose()
+    @ApiProperty()
     data: number;
 
     @Expose()
+    @ApiProperty()
     measure_DT: Date;
 }
 
 export class MoisAndTemp{
     @Expose()
+    @ApiProperty()
     temperature: DataDto[];
 
     @Expose()
+    @ApiProperty()
     moisture: DataDto[];
 }
