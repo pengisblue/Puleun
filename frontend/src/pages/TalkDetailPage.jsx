@@ -12,6 +12,7 @@ import dayjs from "dayjs";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { API_URL } from "../config/config";
 
 export default function TalkDetailPage() {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ export default function TalkDetailPage() {
     talk_id: 0,
     talk_title: "",
     talk_DT: "",
+    star_FG: 0,
     sentences: [],
     pot: {
       pot_id: 0,
@@ -44,11 +46,19 @@ export default function TalkDetailPage() {
   };
 
   // 즐겨찾기
-  const isFavorite = true;
-  const [starState, setStarState] = useState(isFavorite);
+  const [starState, setStarState] = useState(0);
   const handleStar = () => {
-    const newStarState = !starState;
-    setStarState(newStarState);
+    axios({
+      method: "put",
+      url: `${API_URL}/talk/bookmark/${talkId}`,
+    })
+      .then((res) => {
+        const newStarState = !starState;
+        setStarState(newStarState);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   // 전체 재생
@@ -61,13 +71,13 @@ export default function TalkDetailPage() {
     audio.play();
   };
 
+  // 대화 불러오기
   useEffect(() => {
     const getTalkDetail = async () => {
       try {
-        const response = await axios.get(
-          `https://i10e101.p.ssafy.io/v1/talk/${talkId}`,
-        );
+        const response = await axios.get(`${API_URL}/talk/${talkId}`);
         setTalkDetail(response.data);
+        setStarState(response.data.star_FG);
         console.log(response.data);
       } catch (e) {
         console.log(e);
@@ -116,9 +126,9 @@ export default function TalkDetailPage() {
 
       {/* 대화 */}
       <div className="flex flex-col gap-6 px-6 py-4 pt-24">
-        {talkDetail.sentences.map((chat) =>
+        {talkDetail.sentences.map((chat, index) =>
           chat.talker === "user" ? (
-            <div className="me-auto" key={chat.sentence_id}>
+            <div className="me-auto" key={index}>
               <KidChatBubble
                 userImg={talkDetail.pot.user.profile_img_url}
                 userName={talkDetail.pot.user.user_id}
@@ -128,7 +138,7 @@ export default function TalkDetailPage() {
               </KidChatBubble>
             </div>
           ) : (
-            <div className="ms-auto" key={chat.sentence_id}>
+            <div className="ms-auto" key={index}>
               <GptChatBubble>{chat.content}</GptChatBubble>
             </div>
           ),

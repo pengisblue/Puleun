@@ -32,7 +32,6 @@ export default function PotListPage() {
   // axios 요청
   useEffect(() => {
     // 전체 화분 리스트
-    // 16번 사용자로 로그인한 경우 (로그인 로직 구현 후 수정해야함)
     axios
       .get(`${API_URL}/pot/${userInfo.userId}`)
       .then((res) => {
@@ -50,7 +49,6 @@ export default function PotListPage() {
       });
 
     // 유저 리스트 (필터목록)
-    // 16번 사용자로 로그인한 경우 (로그인 로직 구현 후 수정해야함)
     axios
       .get(`${API_URL}/user/child/${userInfo.userId}`)
       .then((res) => {
