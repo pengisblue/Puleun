@@ -106,6 +106,7 @@ export class PotStateService {
 
   // 온도에 따른 상태 표시
   tempState(min: number, max: number, current: number): string{
+    if(current == 0) return '-';
     if(current < min) return '낮음';
     else if (min <= current && max >= current) '적정';
     return '높음';
@@ -113,6 +114,7 @@ export class PotStateService {
 
   // 습도에 따른 상태 표시
   moisState(min: number, max: number, current: number): string{
+    if(current == 0) return '-';
     if(current < min) return '부족';
     else if (min <= current && max >= current) '적정';
     return '초과';
