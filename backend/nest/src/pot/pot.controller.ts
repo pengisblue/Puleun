@@ -26,7 +26,7 @@ export class PotController {
     }
 
     @Get('/detail/:pot_id')
-    @ApiOperation({ summary: "화분(컬렉션) 상세 조회"})
+    @ApiOperation({ summary: "화분(컬렉션 제외) 상세 조회"})
     @ApiOkResponse({ type:PotWithStatusDto, description:'식물 정보, 주인의 정보, 현재 상태' })
     async potDetail(@Param('pot_id') pot_id: number): Promise<PotWithStatusDto>{
         return await this.potService.potDetail(pot_id);
