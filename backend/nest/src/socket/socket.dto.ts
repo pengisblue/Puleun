@@ -14,4 +14,5 @@ export class SocketLoginDto{
 export class SituationDto{
     situation_id: number;
     basic_voice: string;
+    filePath: string;
 }
