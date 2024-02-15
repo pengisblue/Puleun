@@ -27,7 +27,7 @@ export class UserService {
     async find(user_id: number): Promise<UserDetailDto>{
         const user = await this.userRepository.createQueryBuilder('user')
             .where('user.user_id= :user_id', {user_id})
-            .leftJoin('user.pots', 'pot', 'pot.user_id = user.user_id') 
+            .leftJoinAndSelect('user.pots', 'pot', 'pot.user_id = user.user_id') 
             .andWhere('pot.collection_FG = :flag', {flag: 0})
             .select(['user', 'pot.pot_id', 'pot.pot_name', 'pot.pot_species', 'pot.pot_img_url']) 
             .getOne()
