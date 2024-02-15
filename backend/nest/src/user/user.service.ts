@@ -27,16 +27,18 @@ export class UserService {
     async find(user_id: number): Promise<UserDetailDto>{
         const user = await this.userRepository.createQueryBuilder('user')
             .where('user.user_id= :user_id', {user_id})
-            .leftJoinAndSelect('user.pots', 'pot', 'pot.user_id = user.user_id') 
-            .andWhere('pot.collection_FG = :flag', {flag: 0})
-            .select(['user', 'pot.pot_id', 'pot.pot_name', 'pot.pot_species', 'pot.pot_img_url']) 
+            .leftJoinAndSelect('user.pots', 'pot', 'pot.user_id = user.user_id')
+            .select(['user', 'pot.pot_id', 'pot.pot_name', 'pot.pot_species', 'pot.pot_img_url', 'pot.collection_FG']) 
             .getOne()
-    
+      
         if (!user) throw new HttpException('Check User_Id', HttpStatus.BAD_REQUEST)
+      
+        user.pots = user.pots.filter(pot => !pot.collection_FG);
         
         return user;
-    }
-
+      }
+      
+    
     async save(data: CreateUserDto, file?: Express.Multer.File): Promise<number>{
         await this.userRepository.save(data);
         const user: User = data as User
