@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import play from "../../asset/play.svg";
 import pause from "../../asset/pause.svg";
@@ -15,12 +15,12 @@ export default function AudioPlayer({ audioFiles }) {
   useEffect(() => {
     audioRef.current = new Audio(audioFiles[0]);
     audioRef.current.onended = () => {
-      setIsPlaying(false);  // 오디오 재생이 끝나면 isPlaying 상태를 false로 변경
+      setIsPlaying(false); // 오디오 재생이 끝나면 isPlaying 상태를 false로 변경
     };
     return () => {
-      audioRef.current.onended = null;  // 컴포넌트가 언마운트되면 이벤트 핸들러를 제거
+      audioRef.current.onended = null; // 컴포넌트가 언마운트되면 이벤트 핸들러를 제거
     };
-  }, []);
+  }, [audioFiles]);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -42,12 +42,12 @@ export default function AudioPlayer({ audioFiles }) {
     setIsPlaying(false);
   };
 
-  const nextAudio = () => {
+  const nextAudio = useCallback(() => {
     if (currentFileIndex < audioFiles.length - 1) {
       audioRef.current.pause();
       setCurrentFileIndex(currentFileIndex + 1);
     }
-  };
+  }, [currentFileIndex, audioFiles.length]);
 
   const prevAudio = () => {
     if (currentFileIndex > 0) {
@@ -65,7 +65,7 @@ export default function AudioPlayer({ audioFiles }) {
     if (isPlaying) {
       playAudio();
     }
-  }, [currentFileIndex, isPlaying]);
+  }, [currentFileIndex, isPlaying, audioFiles, nextAudio]);
 
   useEffect(() => {
     if (isPlaying) {

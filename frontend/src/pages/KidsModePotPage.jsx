@@ -31,7 +31,7 @@ export default function KidsModePotPage() {
       }
     };
     getPotList();
-  }, []);
+  }, [userId]);
 
   return (
     <>

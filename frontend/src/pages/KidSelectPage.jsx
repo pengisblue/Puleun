@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
-import BaseSimpleCard from "../components/UI/BaseSimpleCard";
 import KidCard from "../components/Kids/KidCard";
 
 export default function KidSelectPage() {

@@ -24,7 +24,7 @@ export default function KidChatBubble({
     return () => {
       audioRef.current.onended = null; // 컴포넌트가 언마운트되면 이벤트 핸들러를 제거
     };
-  }, []);
+  }, [audioUrl]);
 
   useEffect(() => {
     if (audioRef.current) {

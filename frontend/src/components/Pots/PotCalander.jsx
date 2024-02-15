@@ -1,14 +1,14 @@
-import Calander from "react-calendar";
-import dayjs from "dayjs";
-import utc from "dayjs-plugin-utc";
-import waterImg from "../../asset/water.svg";
-import talkImg from "../../asset/chat-bubble.svg";
-import "react-calendar/dist/Calendar.css";
-import "./PotCalander.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import dayjs from "dayjs";
+import utc from "dayjs-plugin-utc";
+
+import Calander from "react-calendar";
+import waterImg from "../../asset/water.svg";
+import talkImg from "../../asset/chat-bubble.svg";
 import { API_URL } from "../../config/config";
-import { useParams } from "react-router-dom";
+import "react-calendar/dist/Calendar.css";
+import "./PotCalander.css";
 
 export default function PotCalander({ potId }) {
   const [wateringDayList, setWateringDayList] = useState([]);
