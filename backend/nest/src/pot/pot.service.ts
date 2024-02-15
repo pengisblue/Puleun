@@ -46,9 +46,8 @@ export class PotService {
                         'pot.moisture', 'pot.pot_img_url', 'user.user_id', 'user.nickname',
                         'user.profile_img_url'])    
             .leftJoin('pot.user', 'user', 'user.user_id = pot.user_id')
-            .where('user.user_id= :parent_id', {parent_id})
+            .where('user.user_id= :parent_id or user.parent_id= :parent_id', {parent_id})
             .andWhere('pot.collection_FG= :flag', {flag: false})
-            .orWhere('user.parent_id= :parent_id', {parent_id})                     
             .getMany()
             .then(o => plainToInstance(PotWithStatusDto, o));
         pot.forEach(arr => console.log(arr.planting_day));
@@ -204,7 +203,11 @@ export class PotService {
         console.log(await this.potRepository.findOne({where: {pot_id, collection_FG: true}}));
         if(await this.potRepository.findOne({where: {pot_id, collection_FG: true}} )) throw new HttpException('이미 컬렉션에 존재하는 식물', HttpStatus.BAD_REQUEST);
         await this.deviceService.collectionDevice(pot_id);
-        await this.potRepository.update(pot_id, {collection_FG: true});
+        const [pot] = await this.potRepository.find({where:{pot_id},take:1})
+        const now = new Date()
+        pot.together_day = Math.ceil((now.getTime() - pot.planting_day.getTime())/(1000 * 60 * 60 * 24))
+        pot.collection_FG = true
+        await this.potRepository.update(pot_id, pot);
     }
 
     async increaseHappyCnt(pot_id: number){
@@ -219,7 +222,6 @@ export class PotService {
     }
 
     async potStateSave(inputDto: CreatePotStateDto){
-
         if(inputDto.isTemp_FG) await this.potRepository.update(inputDto.pot_id, {temperature: inputDto.data});
         else await this.potRepository.update(inputDto.pot_id, {moisture: inputDto.data});
         
