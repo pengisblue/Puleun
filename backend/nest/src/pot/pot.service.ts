@@ -12,6 +12,7 @@ import { plainToInstance } from 'class-transformer';
 import { SelectCollectionDto } from './pot-res.dto';
 import { UserService } from 'src/user/user.service';
 import { SocketGateway } from 'src/socket/socket.gateway';
+import { CreatePotStateDto } from 'src/pot-state/pot-state-insert.dto';
 
 @Injectable()
 export class PotService {
@@ -64,10 +65,10 @@ export class PotService {
             let lastTalkDay = 0;
 
             if(water_calender_id == null) lastWaterDay = 0;
-            else lastWaterDay = Math.floor((now.getTime() + this.KR_TIME_DIFF - waterAndTalkDto.water_createdAt.getTime())/(1000 * 24 * 24 * 60));
+            else lastWaterDay = Math.ceil((now.getTime() + this.KR_TIME_DIFF - waterAndTalkDto.water_createdAt.getTime())/(1000 * 24 * 24 * 60));
     
             if(talk_calender_id == null) lastTalkDay = 0;
-            else lastTalkDay = Math.floor((now.getTime() + this.KR_TIME_DIFF - waterAndTalkDto.talk_createdAt.getTime())/(1000 * 24 * 24 * 60));
+            else lastTalkDay = Math.ceil((now.getTime() + this.KR_TIME_DIFF - waterAndTalkDto.talk_createdAt.getTime())/(1000 * 24 * 24 * 60));
 
             const together_day = await this.potStateService.theDayWeWereTogether(element.planting_day);
             const moisState = await this.potStateService.moisState(element.min_moisture, element.max_moisture, element.moisture);
@@ -113,10 +114,10 @@ export class PotService {
         let lastTalkDay = 0;
 
         if(water_calender_id == null) lastWaterDay = 0;
-        else lastWaterDay = Math.floor((now.getTime() + this.KR_TIME_DIFF - waterAndTalkDto.water_createdAt.getTime())/(1000 * 24 * 24 * 60));
+        else lastWaterDay = Math.ceil((now.getTime() + this.KR_TIME_DIFF - waterAndTalkDto.water_createdAt.getTime())/(1000 * 24 * 24 * 60));
 
         if(talk_calender_id == null) lastTalkDay = 0;
-        else lastTalkDay = Math.floor((now.getTime() + this.KR_TIME_DIFF- waterAndTalkDto.talk_createdAt.getTime())/(1000 * 24 * 24 * 60));
+        else lastTalkDay = Math.ceil((now.getTime() + this.KR_TIME_DIFF- waterAndTalkDto.talk_createdAt.getTime())/(1000 * 24 * 24 * 60));
 
         const together_day = this.potStateService.theDayWeWereTogether(pot.planting_day);
         const moisState = this.potStateService.moisState(pot.min_moisture, pot.max_moisture, pot.moisture);
@@ -215,5 +216,12 @@ export class PotService {
             where: {pot_id},
             select: {temperature: true, moisture: true}
         })
+    }
+
+    async potStateSave(inputDto: CreatePotStateDto){
+
+        if(inputDto.isTemp_FG) await this.potRepository.update(inputDto.pot_id, {temperature: inputDto.data});
+        else await this.potRepository.update(inputDto.pot_id, {moisture: inputDto.data});
+        
     }
 }

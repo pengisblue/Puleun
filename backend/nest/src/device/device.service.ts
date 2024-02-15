@@ -24,7 +24,6 @@ export class DeviceService {
     if (recentUpdate){ 
       const now = new Date();
       const target = new Date(now.getTime() - 1000 * 60 * 10)
-      console.log(target <= recentUpdate)
       if (target <= recentUpdate) return null
     }
     const [res] = await this.deviceRepository.find({where:{pot_id}, take:1})
@@ -53,6 +52,7 @@ export class DeviceService {
 
   async connectDevice(serial_number: string, client_id: string): Promise<string>{
     const [res] = await this.deviceRepository.find({where:{serial_number}, take:1})
+    if (!res) await this.deviceRepository.save({serial_number, client_id})
     res.client_id = client_id
     await this.deviceRepository.update(res.device_id, res)
     return "success"
@@ -60,6 +60,7 @@ export class DeviceService {
 
   async disconnectDevice(client_id: string): Promise<string>{
     const [res] = await this.deviceRepository.find({where:{client_id}, take:1})
+    if (!res) return "umm.."
     res.client_id = null
     await this.deviceRepository.update(res.device_id, res)
     return "success"

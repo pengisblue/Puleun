@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { RadioGroup } from "@headlessui/react";
 import axios from "axios";
 import Button from "../components/UI/Button";
 import Input from "../components/UI/Input";
@@ -17,6 +18,8 @@ export default function KidCreatePage() {
   const today = new Date().toISOString().split("T")[0];
   const [birthDate, setBirthDate] = useState(today);
   const [gender, setGender] = useState(null);
+
+  const [selectedGender, setSelectedGender] = useState("M");
 
   const handleInputImg = (event) => {
     const files = event.target.files;
@@ -103,24 +106,40 @@ export default function KidCreatePage() {
               />
             </section>
             <section className="mb-3">
-              <span>성별</span>
-              <br></br>
-              <button
-                className="mt-2 rounded bg-blue-200 px-2 py-1 font-semibold text-slate-800"
-                value="M"
-                onClick={handleGender}
-              >
-                남자
-              </button>
-              &nbsp;
-              <button
-                className="mt-2 rounded bg-red-200 px-2 py-1 font-semibold text-slate-800"
-                value="F"
-                onClick={handleGender}
-              >
-                여자
-              </button>
-            </section>
+            <RadioGroup
+              value={selectedGender}
+              onChange={setSelectedGender}
+              name="gender"
+            >
+              <RadioGroup.Label>성별</RadioGroup.Label>
+              <div className="flex gap-3">
+                <RadioGroup.Option
+                  value="M"
+                  className={({ checked }) =>
+                    `${
+                      checked
+                        ? "bg-blue-400 text-white ring ring-blue-400 ring-opacity-50 ring-offset-1"
+                        : "bg-blue-200 text-slate-800"
+                    } mt-2 rounded-lg px-3 py-1.5 font-semibold`
+                  }
+                >
+                  남자
+                </RadioGroup.Option>
+                <RadioGroup.Option
+                  value="F"
+                  className={({ checked }) =>
+                    `${
+                      checked
+                        ? "bg-red-400 text-white ring ring-red-400 ring-opacity-50 ring-offset-1"
+                        : "bg-red-200 text-slate-800"
+                    } mt-2 rounded-lg px-3 py-1.5 font-semibold`
+                  }
+                >
+                  여자
+                </RadioGroup.Option>
+              </div>
+            </RadioGroup>
+          </section>
             <section>
               <span>프로필 변경</span>
               <input
