@@ -105,6 +105,8 @@ export class PotService {
         .getOne()
         .then(o => plainToInstance(PotWithStatusDto, o));
 
+        if (!pot) throw new HttpException('check pot_id', HttpStatus.BAD_REQUEST)
+        
         const statusDto = new StatusDto();
 
         let lastWaterDay = 0;
@@ -116,9 +118,9 @@ export class PotService {
         if(talk_calender_id == null) lastTalkDay = 0;
         else lastTalkDay = Math.floor((now.getTime() + this.KR_TIME_DIFF- waterAndTalkDto.talk_createdAt.getTime())/(1000 * 24 * 24 * 60));
 
-        const together_day = await this.potStateService.theDayWeWereTogether(pot.planting_day);
-        const moisState = await this.potStateService.moisState(pot.min_moisture, pot.max_moisture, pot.moisture);
-        const tempState = await this.potStateService.tempState(pot.min_temperature, pot.max_temperature, pot.temperature);
+        const together_day = this.potStateService.theDayWeWereTogether(pot.planting_day);
+        const moisState = this.potStateService.moisState(pot.min_moisture, pot.max_moisture, pot.moisture);
+        const tempState = this.potStateService.tempState(pot.min_temperature, pot.max_temperature, pot.temperature);
 
         statusDto.lastTalkDay = lastTalkDay;
         statusDto.lastWaterDay = lastWaterDay;

@@ -3,12 +3,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Device } from './device.entity';
 import { IsNull, Not, Repository } from 'typeorm';
 import { DeviceCreateDto, PotInitDeviceDto, SelectDeviceDto, UserInitDeviceDto } from './device-req.dto';
+import { PotStateService } from 'src/pot-state/pot-state.service';
 
 @Injectable()
 export class DeviceService {
   constructor(
     @InjectRepository(Device)
     private readonly deviceRepository: Repository<Device>,
+    private readonly potStateService: PotStateService,
   ){}
 
   async findBySerialNumber(serial_number: string): Promise<Device>{
@@ -16,7 +18,15 @@ export class DeviceService {
     return res
   }
 
+  /** pot에 연결된 client가 없거나 10분내로 갱신된 화분이라면 null return */
   async findByPotId(pot_id: number): Promise<string>{
+    const recentUpdate = await this.potStateService.isRecent(pot_id)
+    if (recentUpdate){ 
+      const now = new Date();
+      const target = new Date(now.getTime() - 1000 * 60 * 10)
+      console.log(target <= recentUpdate)
+      if (target <= recentUpdate) return null
+    }
     const [res] = await this.deviceRepository.find({where:{pot_id}, take:1})
     if (res) return res.client_id
   }
