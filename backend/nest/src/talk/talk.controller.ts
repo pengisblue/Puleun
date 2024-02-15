@@ -36,6 +36,6 @@ export class TalkController {
     @Put('/bookmark/:talk_id')
     @ApiOperation({summary: 'update talk.bookmark', description:'true->false, false->true'})
     async updateBookmark(@Param('talk_id') talk_id:number): Promise<String>{
-        return await this.updateBookmark(talk_id);
+        return await this.talkService.bookmark(talk_id);
     }
 }
