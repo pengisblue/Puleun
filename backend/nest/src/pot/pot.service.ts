@@ -11,6 +11,7 @@ import { CalenderService } from 'src/calender/calender.service';
 import { plainToInstance } from 'class-transformer';
 import { SelectCollectionDto } from './pot-res.dto';
 import { UserService } from 'src/user/user.service';
+import { SocketGateway } from 'src/socket/socket.gateway';
 
 @Injectable()
 export class PotService {
@@ -22,7 +23,9 @@ export class PotService {
         private readonly potStateService: PotStateService,    
         private readonly calenderService: CalenderService,    
         private readonly s3Service: S3Service,       
-        private readonly userService: UserService 
+        private readonly userService: UserService,
+        @Inject(forwardRef(() => SocketGateway))
+        private readonly socketGateway: SocketGateway,
     ){}
 
     KR_TIME_DIFF = 9 * 60 * 60 * 1000;
@@ -84,6 +87,7 @@ export class PotService {
     }
 
     async potDetail(pot_id: number): Promise<PotWithStatusDto>{
+        await this.socketGateway.refresh(pot_id)
         const now = new Date();
         const waterAndTalkDto = await this.calenderService.getLastTalkAndWater(pot_id);
         const water_calender_id = waterAndTalkDto.water_calender_id;
