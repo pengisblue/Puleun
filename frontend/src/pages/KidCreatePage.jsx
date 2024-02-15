@@ -52,7 +52,7 @@ export default function KidCreatePage() {
 
     axios({
       method: "post",
-      url: `https://i10e101.p.ssafy.io/v1/user/`,
+      url: `https://i10e101.p.ssafy.io/v1/user/child`,
       headers: {
         "Content-Type": "multipart/form-data",
       },
