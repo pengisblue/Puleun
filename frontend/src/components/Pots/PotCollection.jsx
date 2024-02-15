@@ -36,7 +36,7 @@ export default function PotCollection() {
     <div>
       {collectionList.length > 0 ? (
         <div className="grid grid-cols-2">
-          {collectionList.map((pot) => (
+          {collectionList && collectionList.map((pot) => (
             <BaseSimpleCard key={pot.potId} className="w-[9.5rem]">
               <div className="overflow-hidden rounded-lg">
                 <PotProfileImage imgUrl={pot.potImg} />
