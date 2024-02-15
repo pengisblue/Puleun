@@ -61,8 +61,7 @@ export default function KidListPage() {
             <KidCard
               nickname={kid.nickname}
               profile_img_url={kid.profile_img_url}
-              className="w-40"
-              display="hidden"
+              className="w-36"
             ></KidCard>
           </div>
         ))}

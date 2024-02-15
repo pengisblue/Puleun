@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 
 import BaseSimpleCard from "../components/UI/BaseSimpleCard";
-
+import KidCard from "../components/Kids/KidCard";
 
 export default function KidSelectPage() {
   const navigate = useNavigate();
@@ -31,33 +31,20 @@ export default function KidSelectPage() {
   }, [userInfo.userId]);
 
   return (
-    <div className="px-6">
-      <div className="my-6 grid w-full grid-cols-2 place-items-center">
+    <div >
+      <h1 className="my-4 text-2xl text-center font-semibold">주인 선택하기</h1>
+      <div className="my-2 grid w-full grid-cols-2 place-items-center">
         {kidList.map((kid) => (
           <div
             key={kid.user_id}
             onClick={goKidsMode(kid.user_id)}
             className="cursor-pointer"
           >
-            <BaseSimpleCard>
-              <div className="flex h-full flex-col justify-evenly">
-                {/* 아이 사진 */}
-                <div className="mx-auto w-full overflow-hidden rounded-lg">
-                  <div className="flex aspect-square items-center overflow-hidden">
-                    <img
-                      src={kid.profile_img_url}
-                      alt="potImg"
-                      className="min-h-full min-w-full object-cover"
-                    />
-                  </div>
-                </div>
-
-                {/* 아이 이름 */}
-                <div className="flex items-center gap-2">
-                  <div className="text- basis-3/4">{kid.nickname}</div>
-                </div>
-              </div>
-            </BaseSimpleCard>
+            <KidCard
+              nickname={kid.nickname}
+              profile_img_url={kid.profile_img_url}
+              className="w-36"
+            ></KidCard>
           </div>
         ))}
       </div>
