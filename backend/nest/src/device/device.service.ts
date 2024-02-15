@@ -24,7 +24,6 @@ export class DeviceService {
     if (recentUpdate){ 
       const now = new Date();
       const target = new Date(now.getTime() - 1000 * 60 * 10)
-      console.log(target <= recentUpdate)
       if (target <= recentUpdate) return null
     }
     const [res] = await this.deviceRepository.find({where:{pot_id}, take:1})
