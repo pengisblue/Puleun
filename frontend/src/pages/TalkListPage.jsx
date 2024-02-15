@@ -31,18 +31,20 @@ export default function TalkListPage() {
   const [filteredTalks, setFilteredTalks] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
 
+  // 대화 리스트
   useEffect(() => {
-    // 대화 리스트
     axios
       .get(`${API_URL}/talk/all/${userInfo.userId}`)
       .then((res) => {
-        setTalkList(res.data);
+        setTalkList(res.data.reverse()); // 최신 대화가 위에 보이도록 설정
       })
       .catch((err) => {
         console.log(err);
       });
+  }, []);
 
-    // 유저 리스트 (필터목록)
+  // 유저 리스트 (필터목록)
+  useEffect(() => {
     axios
       .get(`${API_URL}/user/child/${userInfo.userId}`)
       .then((res) => {
