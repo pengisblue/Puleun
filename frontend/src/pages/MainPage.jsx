@@ -38,6 +38,8 @@ export const changeKeysToCamelCase = (obj) => {
   return obj;
 };
 
+
+
 export default function MainPage() {
   const navigate = useNavigate();
   const userInfo = useSelector((state) => state.auth.userInfo);
@@ -65,25 +67,43 @@ export default function MainPage() {
 
   const [talkList, setTalkList] = useState([]);
   const [potDetailList, setPotDetailList] = useState([]);
-  
 
 
   // axios - 화분 정보
   useEffect(() => {
+    const transformData = (data) => {
+      return data.map(item => ({
+          potId: item.potId,
+          userImgUrl: item.user.profileImgUrl,
+          userName: item.user.nickname,
+          potName: item.potName,
+          potImgUrl: item.potImgUrl,
+          potSpecies: item.potSpecies,
+          nowTemperature: item.temperature,
+          temperatureStatus: item.statusDto.tempState,
+          nowMoisture: item.moisture,
+          moistureStatus: item.statusDto.moisState,
+          daysSinceWatering: item.statusDto.lastWaterDay,
+          plantDate: dayjs(item.plantingDay).format("YY/MM/DD"),
+          daysSincePlanting: item.statusDto.togetherDay
+      }));
+    };
     const getPotDetailList = async () => {
       try {
         const res = await axios.get(
           `${API_URL}/pot/${userInfo.userId}`,
+          `${API_URL}/pot/${userInfo.userId}`,
         );
         const result = changeKeysToCamelCase(res.data);
-        setPotDetailList(result);
-        console.log(potDetailList)
+        // console.log(result);
+        const transformedResult = transformData(result)
+        setPotDetailList(transformedResult);
       } catch (e) {
         console.log(e);
       }
     };
     getPotDetailList();
-  }, [potDetailList]);
+  }, [userInfo.userId]);
 
 
   

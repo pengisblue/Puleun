@@ -8,8 +8,8 @@ export default function PotDetailCard({
   potName,
   potImgUrl,
   potSpecies,
-  nowTemprature,
-  tempratureStatus,
+  nowTemperature,
+  temperatureStatus,
   nowMoisture,
   moistureStatus,
   daysSinceWatering,
@@ -75,18 +75,18 @@ export default function PotDetailCard({
             품종: <span>{potSpecies}</span>
           </li>
           <li>
-            현재 온도: <span>{nowTemprature}℃</span> (
+            현재 온도: <span>{nowTemperature}℃</span> (
             <span
-              className={`${tempratureStatus === "적정" ? "text-green-700" : "text-orange-500"}`}
+              className={`${temperatureStatus === "적정" ? "text-green-700" : "text-orange-500"}`}
             >
-              {tempratureStatus}
+              {temperatureStatus}
             </span>
             )
           </li>
           <li>
             현재 습도: <span>{nowMoisture}%</span> (
             <span
-              className={`${tempratureStatus === "적정" ? "text-green-700" : "text-orange-500"}`}
+              className={`${temperatureStatus === "적정" ? "text-green-700" : "text-orange-500"}`}
             >
               {moistureStatus}
             </span>

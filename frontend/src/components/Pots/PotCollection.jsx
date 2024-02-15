@@ -36,7 +36,7 @@ export default function PotCollection() {
     <div>
       {collectionList.length > 0 ? (
         <div className="grid grid-cols-2">
-          {collectionList.map((pot) => (
+          {collectionList && collectionList.map((pot) => (
             <BaseSimpleCard key={pot.potId} className="w-[9.5rem]">
               <div className="overflow-hidden rounded-lg">
                 <PotProfileImage imgUrl={pot.potImg} />
@@ -66,7 +66,9 @@ export default function PotCollection() {
       ) : (
         <div className="mx-4 mt-6 rounded-xl bg-emerald-50 p-6 text-center text-emerald-900 shadow-md">
           <p>아직 성장을 완료한 식물이 없네요.</p>
-          <p className="font-semibold">식물을 키우고 컬렉션을 모아보세요!</p>
+          <p className="text-lg font-semibold">
+            식물을 키우고 컬렉션을 모아보세요!
+          </p>
         </div>
       )}
     </div>

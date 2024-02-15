@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import plus from "../asset/plus_slate.svg";
 import KidCard from "../components/Kids/KidCard";
-import AddDetailCard from "../components/UI/AddDetailCard";
+import AddSimpleCard from "../components/UI/AddSimpleCard";
 
 export default function KidListPage() {
   const navigate = useNavigate();
@@ -21,35 +21,14 @@ export default function KidListPage() {
     navigate("/kid/create");
   };
 
-  const handledList = () => {
-    const result = [];
-
-    for (let i = 0; i < kidList.length - 1; i++) {
-      result.push(
-        <div
-          key={kidList[i].user_id}
-          onClick={goDetailKid(kidList[i].user_id)}
-          className="cursor-pointer"
-        >
-          <KidCard
-            nickname={kidList[i].nickname}
-            profile_img_url={kidList[i].profile_img_url}
-            className="h-44 w-80"
-            display="hidden"
-          ></KidCard>
-        </div>,
-      );
-    }
-
-    return result;
-  };
-
   useEffect(() => {
     const getKids = async () => {
       try {
         const response = await axios.get(
           `https://i10e101.p.ssafy.io/v1/user/child/${userInfo.userId}`,
         );
+
+        response.data.pop();
         setKidList(response.data);
       } catch (e) {
         console.log(e);
@@ -72,10 +51,25 @@ export default function KidListPage() {
         </div>
       </header>
 
-      <div className="my-6 grid w-full grid-cols-1 place-items-center">
-        {handledList()}
+      <div className="my-6 grid w-full grid-cols-2 place-items-center">
+        {kidList.map((kid) => (
+          <div
+            key={kid.user_id}
+            onClick={goDetailKid(kid.user_id)}
+            className="cursor-pointer"
+          >
+            <KidCard
+              nickname={kid.nickname}
+              profile_img_url={kid.profile_img_url}
+              className="w-40"
+              display="hidden"
+            ></KidCard>
+          </div>
+        ))}
         <div onClick={goCreateKid} className="cursor-pointer">
-          <AddDetailCard text="아이 추가하기" className="h-44 w-80" />
+          <AddSimpleCard text={kidList.length === 0 ? <>
+            <p>아이를</p><p>추가해주세요</p>
+          </> : <><p>아이 추가하기</p></>} className="w-40" />
         </div>
       </div>
     </div>
