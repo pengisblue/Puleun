@@ -77,7 +77,7 @@ export class TalkService {
         .leftJoin('talk.pot','pot','talk.pot_id = pot.pot_id')
         .leftJoin('pot.user', 'user','pot.user_id = user.user_id')
         .where('user.user_id = :user_id or user.parent_id = :user_id',{user_id})
-        .andWhere('user.parent_id = :star_FG',{star_FG:true})
+        .andWhere('talk.star_FG = :star_FG',{star_FG:true})
         .getMany()
         .then((v)=> {
             return v.map(o=>o as unknown as TalkListDto)
