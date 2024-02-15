@@ -79,8 +79,10 @@ export class SocketGateway {
   @SubscribeMessage('hot_word')
   async hotWord( @ConnectedSocket() client: Socket, @MessageBody('pot_id') pot_id: number ): Promise<void>{
     const dto = new CalenderCreateDto()
+    if (!pot_id) client.emit('talk_id',1)
     dto.pot_id = pot_id
     dto.code = 'T'
+    this.potService.increaseHappyCnt(pot_id);
     this.calenderService.save(dto)
     const pot:Pot = await this.potService.find(pot_id)
     const fileName = pot.pot_name + '과 ' + pot.user.nickname+ '의 대화'

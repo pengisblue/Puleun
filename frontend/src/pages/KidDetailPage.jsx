@@ -63,7 +63,7 @@ export default function KidDetailPage() {
         <h1 className="text-xl font-bold">아이 정보</h1>
         <div className="grid grid-flow-row-dense grid-cols-8 gap-2">
           <div className="col-span-4">
-            <KidProfileImage imgUrl={kidImg} />
+            <KidProfileImage imgUrl={user.profile_img_url} />
           </div>
           <div className="col-span-4 flex justify-center">
             <ul className="text-base font-semibold">

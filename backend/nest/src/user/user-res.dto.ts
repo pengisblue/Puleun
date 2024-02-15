@@ -3,16 +3,16 @@ import { Exclude, Expose, Type } from "class-transformer";
 import { IsNumber, IsString, } from 'class-validator';
 import { Species } from "src/species/species.entity";
 
-@Exclude()
 export class UserListDto{
     @ApiProperty({example: 1})
     @Expose()
     user_id: number;
 
-    @ApiProperty()
+    @ApiProperty({example: '룰루랄라'})
     @Expose()
     nickname: string;
 
+    @ApiProperty()
     @Expose()
     profile_img_url?: string="";
 }

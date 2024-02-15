@@ -1,11 +1,15 @@
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import axios from "axios";
+
 import PotSwiper from "../components/Pots/PotSwiper";
 import TalkTitleCard from "../components/Talk/TalkTitleCard";
 import chevron from "../asset/chevron-right.svg";
-import { useNavigate } from "react-router-dom";
+import { API_URL } from "../config/config";
 
 // 하드코딩 테스트용 데이터
 import { potDetailList } from "../test/potList";
-import { NEW_TALK_LIST } from "../test/talkList";
 
 // 화분 상태정보 = {
 //   화분 아이디,
@@ -23,6 +27,7 @@ import { NEW_TALK_LIST } from "../test/talkList";
 
 export default function MainPage() {
   const navigate = useNavigate();
+  const userInfo = useSelector((state) => state.auth.userInfo);
 
   const goPotList = function () {
     navigate("/pot");
@@ -31,6 +36,21 @@ export default function MainPage() {
   const goTalkList = function () {
     navigate("/talk");
   };
+
+  const [talkList, setTalkList] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(
+        `${API_URL}/talk/all/${userInfo.userId}`,
+      )
+      .then((res) => {
+        setTalkList(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [userInfo.userId]);
 
   return (
     <div className="flex flex-col gap-8 px-6">
@@ -57,9 +77,9 @@ export default function MainPage() {
           <h1 className="text-title">새로운 대화</h1>
           <img src={chevron} alt="goTalkList" className="w-8 cursor-pointer" />
         </div>
-        <div className="justify-center flex flex-wrap gap-1">
-          {NEW_TALK_LIST.map((talk) => (
-            <TalkTitleCard key={talk.talkID} {...talk} />
+        <div className="flex flex-wrap justify-center gap-1">
+          {talkList.map((talk) => (
+            <TalkTitleCard key={talk.talk_id} {...talk} />
           ))}
         </div>
       </section>

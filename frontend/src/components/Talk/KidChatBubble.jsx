@@ -3,11 +3,19 @@ import play from "../../asset/play_circle.svg";
 import pause from "../../asset/pause_circle.svg";
 import { useState } from "react";
 
-export default function KidChatBubble({ children, userImg, userName }) {
+export default function KidChatBubble({
+  children,
+  userImg,
+  userName,
+  audioUrl,
+}) {
+  const audioContainer = document.querySelector("#audioContainer");
   const [playState, setPlayState] = useState(false);
   const handlePlayState = () => {
     const newPlayState = !playState;
     setPlayState(newPlayState);
+    console.log(audioUrl);
+    audioContainer.play();
   };
 
   return (
@@ -17,7 +25,11 @@ export default function KidChatBubble({ children, userImg, userName }) {
       </div>
       <div className="flex flex-col gap-1">
         <div className="flex items-center gap-2">
-          <span className="font-semibold">{userName}</span>
+          {/* <span className="font-semibold">{userName}</span> */}
+
+          <audio id="audioContainer">
+            <source id="audioSource" src={audioUrl}></source>
+          </audio>
 
           {/* 음성 재생 */}
           <img

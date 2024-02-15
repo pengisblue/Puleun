@@ -5,16 +5,13 @@ import Input from "../UI/Input";
 import Button from "../UI/Button";
 import axios from "axios";
 import { API_URL } from "../../config/config";
-import { deviceActions } from "../../store/device-slice";
+import { uiActions } from "../../store/ui-slice";
 
 export default function DeviceAddModal() {
   const dispatch = useDispatch();
+  const userInfo = useSelector((state) => state.auth.userInfo);
 
-  const isOpen = useSelector((state) => state.device.isOpen);
-
-  const closeDeviceAddModal = () => {
-    dispatch(deviceActions.modalClose());
-  };
+  const isOpen = useSelector((state) => state.ui.deviceModalIsOpen);
 
   // 시리얼 넘버
   const [serialNum, setSerialNum] = useState(null);
@@ -47,7 +44,7 @@ export default function DeviceAddModal() {
 
   // 모달창 닫기
   const handleClose = () => {
-    closeDeviceAddModal();
+    dispatch(uiActions.deviceModalClose());
     setSerialNum(null);
     setIsValidDevice(null);
     setDeviceName(null);
@@ -58,7 +55,7 @@ export default function DeviceAddModal() {
     const data = {
       serial_number: serialNum,
       device_name: deviceName,
-      user_id: JSON.parse(localStorage.getItem("userInfo")).userId,
+      user_id: userInfo.userId,
     };
 
     try {

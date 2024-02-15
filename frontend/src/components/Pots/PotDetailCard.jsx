@@ -32,24 +32,33 @@ export default function PotDetailCard({
 
   // 이름 뒤의 조사 선택
   function selectPostposition(name) {
+    if (!name) {
+      return "";
+    }
     return hasCoda(name) ? "의" : "이의";
   }
 
   const textSize = function (userName, potName) {
-    const totalLength = userName.length + selectPostposition(userName).length + potName.length
-    if (totalLength < 18) {
-      return "text-lg"
-    } else if (totalLength < 21) {
-      return "text-base"
-    } else {
-      return "text-sm"
+    if (!userName || !potName) {
+      return "";
     }
-  }
+    const totalLength =
+      userName.length + selectPostposition(userName).length + potName.length;
+    if (totalLength < 18) {
+      return "text-lg";
+    } else if (totalLength < 21) {
+      return "text-base";
+    } else {
+      return "text-sm";
+    }
+  };
 
   return (
     <BaseDetailCard className={className}>
       <div className="grid grid-cols-12 place-content-center gap-1">
-        <h1 className={`col-span-12 flex flex-wrap font-bold ${textSize(userName, potName)} ${nameDisplay}`}>
+        <h1
+          className={`col-span-12 flex flex-wrap font-bold ${textSize(userName, potName)} ${nameDisplay}`}
+        >
           <span className="me-2">
             {userName}
             {selectPostposition(userName)}
@@ -66,12 +75,22 @@ export default function PotDetailCard({
             품종: <span>{potSpecies}</span>
           </li>
           <li>
-            현재 온도: <span>{nowTemprature}℃</span>{" "}
-            <span>({tempratureStatus})</span>
+            현재 온도: <span>{nowTemprature}℃</span> (
+            <span
+              className={`${tempratureStatus === "적정" ? "text-green-700" : "text-orange-500"}`}
+            >
+              {tempratureStatus}
+            </span>
+            )
           </li>
           <li>
-            현재 습도: <span>{nowMoisture}%</span>{" "}
-            <span>({moistureStatus})</span>
+            현재 습도: <span>{nowMoisture}%</span> (
+            <span
+              className={`${tempratureStatus === "적정" ? "text-green-700" : "text-orange-500"}`}
+            >
+              {moistureStatus}
+            </span>
+            )
           </li>
           <li>
             물 준 날: <span>{daysSinceWatering}</span>일 전

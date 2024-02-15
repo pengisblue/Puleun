@@ -4,6 +4,7 @@ import { Pot } from './pot.entity';
 import { CollectionDto, CreatePotDto, PotWithStatusDto, SelectPotDto, UpdatePotDto } from './pot.dto';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { SelectCollectionDto } from './pot-res.dto';
 
 @Controller('pot')
 @ApiTags('Pot')
@@ -81,8 +82,8 @@ export class PotController {
 
     @Get('collection/:user_id')
     @ApiOperation({summary: '해당 유저의 모든 컬렉션 조회'})
-    @ApiOkResponse({ type: CollectionDto, description:'유저의 컬렉션 정보 조회' })
-    async getCollection(@Param('user_id') user_id: number): Promise<CollectionDto[]>{
+    @ApiOkResponse({ type: SelectCollectionDto, description:'유저의 컬렉션 정보 조회' })
+    async getCollection(@Param('user_id') user_id: number): Promise<SelectCollectionDto>{
         return await this.potService.findCollection(user_id);
     }
 

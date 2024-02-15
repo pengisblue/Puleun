@@ -2,13 +2,15 @@ import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Pot } from './pot.entity';
 import { Repository } from 'typeorm';
-import { CollectionDto, CreatePotDto, PotWithStatusDto, SelectPotDto, StatusDto, UpdatePotDto } from './pot.dto';
+import { CreatePotDto, PotWithStatusDto, SelectPotDto, StatusDto, UpdatePotDto } from './pot.dto';
 import { PotStateService } from 'src/pot-state/pot-state.service';
 import { join } from 'path';
 import { DeviceService } from 'src/device/device.service';
 import { S3Service } from 'src/s3/s3.service';
 import { CalenderService } from 'src/calender/calender.service';
 import { plainToInstance } from 'class-transformer';
+import { SelectCollectionDto } from './pot-res.dto';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class PotService {
@@ -19,9 +21,11 @@ export class PotService {
         @Inject(forwardRef(() => PotStateService))
         private readonly potStateService: PotStateService,    
         private readonly calenderService: CalenderService,    
-        private readonly s3Service: S3Service,        
+        private readonly s3Service: S3Service,       
+        private readonly userService: UserService 
     ){}
 
+    KR_TIME_DIFF = 9 * 60 * 60 * 1000;
     async findAllPot(): Promise<SelectPotDto[]>{
         const result = await this.potRepository.find({
             relations: {user: true}
@@ -42,6 +46,7 @@ export class PotService {
             .orWhere('user.parent_id= :parent_id', {parent_id})                     
             .getMany()
             .then(o => plainToInstance(PotWithStatusDto, o));
+        pot.forEach(arr => console.log(arr.planting_day));
 
         const statusDtos = new Array<PotWithStatusDto>();
         for(let i = 0; i < pot.length; i++){
@@ -51,15 +56,14 @@ export class PotService {
 
             const water_calender_id = waterAndTalkDto.water_calender_id;
             const talk_calender_id = waterAndTalkDto.talk_calender_id;
-
             let lastWaterDay = 0;
             let lastTalkDay = 0;
 
             if(water_calender_id == null) lastWaterDay = 0;
-            else lastWaterDay = Math.floor((now.getTime() - waterAndTalkDto.water_createdAt.getTime())/(1000 * 24 * 24 * 60));
+            else lastWaterDay = Math.floor((now.getTime() + this.KR_TIME_DIFF - waterAndTalkDto.water_createdAt.getTime())/(1000 * 24 * 24 * 60));
     
             if(talk_calender_id == null) lastTalkDay = 0;
-            else lastTalkDay = Math.floor((now.getTime() - waterAndTalkDto.talk_createdAt.getTime())/(1000 * 24 * 24 * 60));
+            else lastTalkDay = Math.floor((now.getTime() + this.KR_TIME_DIFF - waterAndTalkDto.talk_createdAt.getTime())/(1000 * 24 * 24 * 60));
 
             const together_day = await this.potStateService.theDayWeWereTogether(element.planting_day);
             const moisState = await this.potStateService.moisState(element.min_moisture, element.max_moisture, element.moisture);
@@ -67,11 +71,11 @@ export class PotService {
 
             statusDto.lastTalkDay = lastTalkDay;
             statusDto.lastWaterDay = lastWaterDay;
+            statusDto.mois_state = moisState;
+            statusDto.temp_state = tempState;
+            statusDto.together_day = together_day;
+            
             element.statusDto = statusDto;
-
-            element.mois_state = moisState;
-            element.temp_state = tempState;
-            element.together_day = together_day;
             element.statusDto = statusDto;
             statusDtos.push(element);
         }
@@ -101,10 +105,10 @@ export class PotService {
         let lastTalkDay = 0;
 
         if(water_calender_id == null) lastWaterDay = 0;
-        else lastWaterDay = Math.floor((now.getTime() - waterAndTalkDto.water_createdAt.getTime())/(1000 * 24 * 24 * 60));
+        else lastWaterDay = Math.floor((now.getTime() + this.KR_TIME_DIFF - waterAndTalkDto.water_createdAt.getTime())/(1000 * 24 * 24 * 60));
 
         if(talk_calender_id == null) lastTalkDay = 0;
-        else lastTalkDay = Math.floor((now.getTime() - waterAndTalkDto.talk_createdAt.getTime())/(1000 * 24 * 24 * 60));
+        else lastTalkDay = Math.floor((now.getTime() + this.KR_TIME_DIFF- waterAndTalkDto.talk_createdAt.getTime())/(1000 * 24 * 24 * 60));
 
         const together_day = await this.potStateService.theDayWeWereTogether(pot.planting_day);
         const moisState = await this.potStateService.moisState(pot.min_moisture, pot.max_moisture, pot.moisture);
@@ -112,9 +116,9 @@ export class PotService {
 
         statusDto.lastTalkDay = lastTalkDay;
         statusDto.lastWaterDay = lastWaterDay;
-        pot.mois_state = moisState;
-        pot.temp_state = tempState;
-        pot.together_day = together_day;
+        statusDto.mois_state = moisState;
+        statusDto.temp_state = tempState;
+        statusDto.together_day = together_day;
         pot.statusDto = statusDto;
         
         return pot;
@@ -152,7 +156,7 @@ export class PotService {
     }
 
     async delete(pot_id: number){
-        await this.potRepository.softDelete(pot_id);
+        await this.potRepository.delete(pot_id);
     }
 
     async findPotsByUserId(user_id: number): Promise<Pot[]> {
@@ -183,19 +187,17 @@ export class PotService {
         return result;
     }
 
-    async findCollection(pot_id: number): Promise<CollectionDto[]> {
-        return await this.potRepository.createQueryBuilder('pot')
-            .where({pot_id: pot_id})
-            .andWhere('pot.collection_FG= :flag', {flag: 1})
-            .leftJoinAndSelect('pot.user', 'user')
-            .select(['pot.pot_id', 'pot.pot_name', 'pot.pot_species'
-                ,'user.user_id', 'user.nickname'
-            ])
-            .getMany();
+    async findCollection(user_id: number): Promise<SelectCollectionDto> {
+        return await this.userService.findCollection(user_id);        
     }
 
     async toCollection(pot_id: number){
+        await this.potRepository.softDelete(pot_id);
         await this.potRepository.update(pot_id, {collection_FG: true});
+    }
+
+    async increaseHappyCnt(pot_id: number){
+        await this.potRepository.update(pot_id, {happy_cnt: () => 'happy_cnt + 1'})
     }
 
     async calenderWithCurrentMoisAndTemp(pot_id: number): Promise<Pot>{

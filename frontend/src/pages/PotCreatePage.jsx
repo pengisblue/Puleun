@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import DeviceChoice from "../components/Devices/DeviceChoice";
@@ -35,7 +36,9 @@ import { API_URL } from "../config/config";
 // }
 
 export default function PotCreatePage() {
-  const isOpen = useSelector((state) => state.device.isOpen);
+  const navigate = useNavigate();
+  const userInfo = useSelector((state) => state.auth.userInfo);
+  const isOpen = useSelector((state) => state.ui.deviceModalIsOpen);
 
   // 저장된 디바이스 목록 가져오기
   const [deviceList, setDeviceList] = useState([]);
@@ -44,8 +47,7 @@ export default function PotCreatePage() {
       try {
         const res = await axios({
           method: "get",
-          url: `${API_URL}/device/unMapping/${JSON.parse(localStorage.getItem("userInfo")).userId}`,
-          // 유저 아이디 받아오는 부분 리덕스로 수정해야함
+          url: `${API_URL}/device/unMapping/${userInfo.userId}`,
         });
 
         const deviceList = res.data.map((item) => ({
@@ -62,7 +64,7 @@ export default function PotCreatePage() {
       }
     };
     getDeviceList();
-  }, [isOpen]);
+  }, [isOpen, userInfo.userId]);
 
   // 유저 목록 가져오기
   const [userList, setUserList] = useState([]);
@@ -71,8 +73,7 @@ export default function PotCreatePage() {
       try {
         const res = await axios({
           method: "get",
-          url: `${API_URL}/user/child/${JSON.parse(localStorage.getItem("userInfo")).userId}`,
-          // 유저 아이디 받아오는 부분 리덕스로 수정해야함
+          url: `${API_URL}/user/child/${userInfo.userId}`,
         });
 
         const userList = res.data.map((item) => ({
@@ -87,7 +88,7 @@ export default function PotCreatePage() {
       }
     };
     getUserList();
-  }, []);
+  }, [userInfo.userId]);
 
   // 식물 목록 가져오기
   const [plantList, setPlantList] = useState([]);
@@ -199,32 +200,36 @@ export default function PotCreatePage() {
 
   // 화분 등록
   const createHandler = async () => {
-    const formData = new FormData(); // 파일 전송을 위해 FormData객체 사용
-    formData.append("device_id", selectedDevice.deviceId); // 임시로 지정
-    formData.append("user", selectedUser);
-    formData.append("pot_name", potName);
-    formData.append("pot_img", inputImg);
-    formData.append("pot_species", selectedPlant.name);
-    formData.append("min_temperature", minTemperature);
-    formData.append("max_temperature", maxTemperature);
-    formData.append("min_moisture", minMoisture);
-    formData.append("max_moisture", maxMoisture);
-    formData.append("planting_day", plantingDate);
+    const isConfirmed = window.confirm(`${potName}을 심으시겠습니까?`);
 
-    try {
-      const res = await axios({
-        method: "post",
-        url: `${API_URL}/pot`,
-        data: formData,
-        headers: {
-          // 요청 헤더에 Content-Type을 multipart/form-data로 설정
-          "Content-Type": "multipart/form-data",
-        },
-      });
+    if (isConfirmed) {
+      const formData = new FormData(); // 파일 전송을 위해 FormData객체 사용
+      formData.append("device_id", selectedDevice.deviceId); // 임시로 지정
+      formData.append("user", selectedUser);
+      formData.append("pot_name", potName);
+      formData.append("pot_img", inputImg);
+      formData.append("pot_species", selectedPlant.name);
+      formData.append("min_temperature", minTemperature);
+      formData.append("max_temperature", maxTemperature);
+      formData.append("min_moisture", minMoisture);
+      formData.append("max_moisture", maxMoisture);
+      formData.append("planting_day", plantingDate);
 
-      console.log(res.data);
-    } catch (err) {
-      console.log(err);
+      try {
+        const res = await axios({
+          method: "post",
+          url: `${API_URL}/pot`,
+          data: formData,
+          headers: {
+            // 요청 헤더에 Content-Type을 multipart/form-data로 설정
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        navigate("/pot");
+      } catch (err) {
+        console.log(err);
+      }
     }
   };
 
