@@ -27,12 +27,19 @@ export default function KidDetailPage() {
     pots: [],
   });
 
+  // 아이 화분 상세정보로 가기
   const goDetailPot = (pot_id) => {
     return () => navigate(`/pot/${pot_id}`);
   };
 
+  // 아이 컬렉션으로 가기
   const goCollection = (user_id) => {
     return () => navigate(`/collection/${user_id}`);
+  };
+
+  // 아이 대화 목록으로 가기
+  const goTalkList = (userId) => {
+    return () => navigate(`/talk?user=${userId}`);
   };
 
   const [isOpen, setIsOpen] = useState(false);
@@ -118,13 +125,16 @@ export default function KidDetailPage() {
               <li className="py-1">
                 <Button
                   onClick={goCollection(userId)}
-                  className="bg-amber-300 text-sm text-white hover:bg-amber-400"
+                  className="bg-amber-400 text-sm text-white hover:bg-amber-500"
                 >
                   컬렉션 바로가기
                 </Button>
               </li>
               <li className="py-1">
-                <Button className="bg-green-400 text-sm text-white hover:bg-green-500">
+                <Button
+                  onClick={goTalkList(userId)}
+                  className="bg-green-500 text-sm text-white hover:bg-green-600"
+                >
                   대화 바로가기
                 </Button>
               </li>

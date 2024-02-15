@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
@@ -10,11 +10,25 @@ import { API_URL } from "../config/config";
 
 export default function TalkListPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const user = queryParams.get("user");
   const userInfo = useSelector((state) => state.auth.userInfo);
+
+  const [talkList, setTalkList] = useState([]);
+  const [userList, setUserList] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [filteredTalks, setFilteredTalks] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [userName, setUserName] = useState("");
 
   // 뒤로가기
   const handleBack = () => {
-    navigate("/");
+    if (user) {
+      navigate(`/kid/${user}`);
+    } else {
+      navigate("/");
+    }
   };
 
   const [isStar, setIsStar] = useState(false);
@@ -25,23 +39,18 @@ export default function TalkListPage() {
     setIsStar(true);
   };
 
-  const [talkList, setTalkList] = useState([]);
-  const [userList, setUserList] = useState([]);
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [filteredTalks, setFilteredTalks] = useState([]);
-  const [filteredData, setFilteredData] = useState([]);
-
   // 대화 리스트
   useEffect(() => {
+    const userId = user ? user : userInfo.userId;
     axios
-      .get(`${API_URL}/talk/all/${userInfo.userId}`)
+      .get(`${API_URL}/talk/all/${userId}`)
       .then((res) => {
         setTalkList(res.data.reverse()); // 최신 대화가 위에 보이도록 설정
       })
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [userInfo.userId, user]);
 
   // 유저 리스트 (필터목록)
   useEffect(() => {
@@ -52,12 +61,18 @@ export default function TalkListPage() {
           userId: item.user_id,
           userName: item.nickname,
         }));
+
         setUserList(userList);
+
+        const foundUser = userList.find((item) => item.userId === Number(user));
+        if (foundUser) {
+          setUserName(foundUser.userName);
+        }
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [userInfo.userId, isStar]);
+  }, [userInfo.userId, user, isStar]);
 
   // 전체 보기, 즐겨찾기
   useEffect(() => {
@@ -107,6 +122,25 @@ export default function TalkListPage() {
       });
   };
 
+  // 이름이 받침으로 끝나는지 확인
+  function hasCoda(name) {
+    const lastChar = name.charAt(name.length - 1); // 이름의 마지막 글자
+    const uni = lastChar.charCodeAt(0); // 마지막 글자의 유니코드
+    // 한글의 유니코드 범위(0xAC00 ~ 0xD7A3) 내에 있고, 마지막 글자가 받침을 가지는지 확인
+    if (uni >= 0xac00 && uni <= 0xd7a3) {
+      return (uni - 0xac00) % 28 === 0;
+    }
+    return true;
+  }
+
+  // 이름 뒤의 조사 선택
+  function selectPostposition(name) {
+    if (!name) {
+      return "";
+    }
+    return hasCoda(name) ? "의" : "이의";
+  }
+
   return (
     <div className="">
       <div className="fixed top-16 w-full max-w-page bg-amber-overlay pt-2">
@@ -117,7 +151,19 @@ export default function TalkListPage() {
             alt="back"
             className="w-8 cursor-pointer"
           />
-          <h1 className="text-title">우리 대화</h1>
+          <h1 className="text-title">
+            <span className="me-3">
+              {user ? (
+                <>
+                  {userName}
+                  {selectPostposition(userName)}
+                </>
+              ) : (
+                "우리"
+              )}
+            </span>
+            대화
+          </h1>
         </div>
 
         {/* 전체 | 즐겨찾기 필터 */}
@@ -137,20 +183,24 @@ export default function TalkListPage() {
           </p>
         </div>
         {/* 주인 선택 필터 */}
-        <div className="mb-4 me-8 ms-auto w-64">
-          <Filter
-            targetList={userList}
-            filterKey="userId"
-            filterValue="userId"
-            option="userName"
-            onFilterChange={handleUserChange}
-            allTarget={true}
-          />
-        </div>
+        {!user && (
+          <div className="mb-4 me-8 ms-auto w-64">
+            <Filter
+              targetList={userList}
+              filterKey="userId"
+              filterValue="userId"
+              option="userName"
+              onFilterChange={handleUserChange}
+              allTarget={true}
+            />
+          </div>
+        )}
       </div>
 
       {/* 대화 목록 */}
-      <div className="mx-2 flex flex-wrap gap-1 px-6 pt-40">
+      <div
+        className={`mx-2 flex flex-wrap gap-1 px-6 ${user ? "pt-28" : "pt-40"}`}
+      >
         {filteredTalks.length > 0 ? (
           filteredTalks
             .filter((talk) => !isStar || talk.star_FG)
