@@ -31,6 +31,10 @@ export class TalkListDto{
     pot_id: number
 
     @ApiProperty()
+    @Type(() => Boolean)
+    star_flag: boolean
+
+    @ApiProperty()
     pot_img_url: string
 }
 
@@ -46,6 +50,10 @@ export class TalkDetailDto{
     @ApiProperty()
     @Type(()=>Date)
     talk_DT: Date
+    
+    @ApiProperty()
+    @Type(() => Boolean)
+    star_flag: boolean
     
     @ApiProperty()
     @Type(()=>Sentence)
