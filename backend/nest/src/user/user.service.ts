@@ -155,30 +155,18 @@ export class UserService {
         })
     }
 
-        async findCollection(user_id: number): Promise<SelectCollectionDto> {
-            const collection = await this.userRepository.createQueryBuilder('user').withDeleted()
+    async findCollection(user_id: number): Promise<SelectCollectionDto> {
+        const collection: SelectCollectionDto = 
+            await this.userRepository.createQueryBuilder('user')
                 .select(['user.profile_img_url', 'user.user_id', 'user.nickname',
-                        'pot.pot_id', 'pot.pot_name', 'pot.pot_species', 'pot.pot_img_url', 'pot.planting_day',
-                        'pot.deletedAt', 'pot.happy_cnt'])
-                .leftJoin('user.pots', 'pot', 'user.user_id = pot.user_id')            
-                .where({user_id}).andWhere('pot.collection_FG= :flag', {flag: true})
-                .andWhere('pot.deletedAt IS NOT NULL')
-                .getOne().then(async o => {
-                    if(o){      
-                        const data = plainToInstance(SelectCollectionDto, o, {excludeExtraneousValues: true})  
-                        data.pots.forEach(arr =>  {
-                            arr.together_day = Math.ceil((arr.deletedAt.getTime() - arr.planting_day.getTime())/(1000 * 60 * 60 * 24));
-                        })            
-                        return data;
-                    } 
-                    else {
-                        const [data] = plainToInstance(SelectCollectionDto, await this.userRepository.find({where: {user_id}}), {excludeExtraneousValues: true});
-                        data.pots = [];
-                        return data
-                    }
-                })        
-
-            return collection; 
-        }
+                        'pot.pot_id', 'pot.pot_name', 'pot.pot_species', 'pot.pot_img_url', 
+                        'pot.planting_day', 'pot.happy_cnt', 'pot.together_day'])
+                .leftJoinAndSelect('user.pots', 'pot', 'user.user_id = pot.user_id')
+                .where({user_id})
+                .andWhere('pot.collection_FG= :flag', {flag: true})
+                .getOne()
+                .then(o => o as unknown as SelectCollectionDto)
+        return collection; 
+    }
 
 }

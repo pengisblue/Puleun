@@ -65,4 +65,7 @@ export class Pot {
 
   @Column({type: 'datetime', nullable: true, default: () => 'CURRENT_TIMESTAMP', name: 'planting_day'})
   planting_day: Date;
+
+  @Column({type: Number, nullable: true, default: null})
+  together_day: number;
 }
