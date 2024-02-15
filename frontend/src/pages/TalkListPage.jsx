@@ -135,7 +135,7 @@ export default function TalkListPage() {
           </p>
         </div>
         {/* 주인 선택 필터 */}
-        <div className="mb-4 ms-auto w-72">
+        <div className="mb-4 me-8 ms-auto w-64">
           <Filter
             targetList={userList}
             filterKey="userId"
