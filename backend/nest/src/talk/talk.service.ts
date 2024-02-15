@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Talk } from './talk.entity';
 import { Repository } from 'typeorm';
-import { TalkListDto } from './talk-res.dto';
+import { TalkDetailDto, TalkListDto } from './talk-res.dto';
 import { FileService } from './../file/file.service';
 import { plainToClass, plainToInstance } from 'class-transformer';
 
@@ -27,7 +27,7 @@ export class TalkService {
     }
     
     /** find all sentence by talk_id */
-    async find(talk_id: number): Promise<TalkListDto>{
+    async find(talk_id: number): Promise<TalkDetailDto>{
         const res = await this.talkRepository.createQueryBuilder('talk')
         .select(['talk.talk_id',
         'talk.talk_title',
@@ -40,7 +40,7 @@ export class TalkService {
         .leftJoinAndSelect('talk.sentences','sentence')
         .where('talk.talk_id = :talk_id',{talk_id})
         .getOne()
-        .then((v)=> v as unknown as TalkListDto)
+        .then((v)=> v as unknown as TalkDetailDto)
         await this.talkRepository.update(talk_id, {read_FG: true});
 
         return res

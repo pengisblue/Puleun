@@ -1,11 +1,10 @@
-import { Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PotStateService } from './pot-state.service';
-import { PotState } from './pot-state.entity';
-import { MoisAndTemp, StatusResultDto } from './pot-state.dto';
+import { MoisAndTemp } from './pot-state.dto';
 
 @Controller('pot-state')
-@ApiTags('pot-state')
+@ApiTags('Pot-state')
 export class PotStateController {
     constructor(private readonly potStateService: PotStateService){};
     

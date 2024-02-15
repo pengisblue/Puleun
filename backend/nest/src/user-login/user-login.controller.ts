@@ -6,7 +6,7 @@ import { LoginUserDto } from './user-login.req.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('user-login')
-@ApiTags('user-login')
+@ApiTags('User-login')
 @ApiExtraModels(LoginUserDto)
 export class UserLoginController {
     constructor(
