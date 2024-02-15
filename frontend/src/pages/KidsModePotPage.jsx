@@ -22,7 +22,7 @@ export default function KidsModePotPage() {
           url: `${API_URL}/user/${userId}`,
         });
 
-        console.log(res.data);
+        // console.log(res.data);
         const potList = res.data.pots.map((item) => ({
           potId: item.pot_id,
           potName: item.pot_name,
