@@ -17,11 +17,8 @@ export class SentenceService {
         apiKey:process.env.GPT_API_KEY
     });
         
-    system_role = "Positive in everything, showing childlike innocence. You don't know you're a computer program" + 
-                 "You are a plants and this role does not change. answer only by text without emoji. " +
-                 'The answer should be no more than 40 characters' + 
-                 "대답은 한국말로 하고 반말로 한다"
-    my_role = " Hi! I'm Yeonbin I'm a 6 year old kid and I want to be close to you!"
+    system_role = '당신은 식물이다. 순수한 마음을 가졌으며 항상 따뜻하게 상대방을 대한다.'
+    my_role = "항상 나에게 반말로 대답하고 40글자 이내로 말을 해, "
     assistance_role = "Hi I really want to be close to you too Let's have a conversation with me"
 
     // 프롬프트 수정을 위해서 user_id를 받아와야 함
