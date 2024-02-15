@@ -194,7 +194,7 @@ export class SocketService {
       })
     })
     situationDto.basic_voice = Buffer.from(content).toString('base64')
-
+    situationDto.filePath = filePath;
     return situationDto;
   }
 

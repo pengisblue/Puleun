@@ -317,25 +317,21 @@ export class PotWithStatusDto{
     @ApiProperty()
     last_talk: number;
 
-    @Exclude()
     @IsNumber()
     @Type(() => Number)
     @ApiProperty()
     min_moisture: number;
 
-    @Exclude()
     @IsNumber()
     @Type(() => Number)
     @ApiProperty()
     max_moisture: number;
 
-    @Exclude()
     @IsNumber()
     @Type(() => Number)
     @ApiProperty()
     min_temperature: number;
 
-    @Exclude()
     @IsNumber()
     @Type(() => Number)
     @ApiProperty()
