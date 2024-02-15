@@ -44,7 +44,7 @@ export default function KidsmodeDeactivate() {
         data: loginData,
       });
 
-      console.log(res)
+      // console.log(res)
       dispatch(uiActions.kidsmodeModalClose());
       dispatch(authActions.deactivateKidsMode());
       navigate("/");

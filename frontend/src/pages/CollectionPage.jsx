@@ -28,7 +28,7 @@ export default function CollectionPage() {
           url: `${API_URL}/user/${userId}`,
         });
 
-        console.log(res.data);
+        // console.log(res.data);
         setUserName(res.data.nickname);
       } catch (err) {
         console.log(err);
@@ -55,7 +55,7 @@ export default function CollectionPage() {
 
   return (
     <div className="px-6">
-      <div className="flex gap-2">
+      <div className="mb-4 flex gap-2">
         {/* 뒤로가기 */}
         <img
           onClick={handleBack}
