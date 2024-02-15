@@ -15,6 +15,7 @@ export default function TalkListPage() {
   const queryParams = new URLSearchParams(location.search);
   const user = queryParams.get("user");
 
+  const [isStar, setIsStar] = useState(false);
   const [talkList, setTalkList] = useState([]);
   const [userList, setUserList] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -31,7 +32,6 @@ export default function TalkListPage() {
     }
   };
 
-  const [isStar, setIsStar] = useState(false);
   const handleClickAll = () => {
     setIsStar(false);
   };
@@ -216,7 +216,11 @@ export default function TalkListPage() {
             className="m-4 flex aspect-[16/5] w-80 items-center justify-center overflow-hidden rounded-lg bg-amber-50 text-xl 
               font-semibold text-amber-600 shadow-lg ring ring-amber-200 ring-offset-1 ring-offset-amber-300"
           >
-            <p>아직 새로운 대화가 없어요!</p>
+            <p>
+              {isStar
+                ? "아직 즐겨찾기한 대화가 없어요!"
+                : "아직 새로운 대화가 없어요!"}
+            </p>
           </div>
         )}
       </div>
