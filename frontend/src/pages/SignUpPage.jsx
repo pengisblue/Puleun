@@ -5,6 +5,7 @@ import axios from "axios";
 import Button from "../components/UI/Button";
 import Input from "../components/UI/Input";
 import logImg from "../asset/log.svg";
+import { API_URL } from "../config/config";
 
 export default function SignUpPage() {
   const navigate = useNavigate();
@@ -224,7 +225,7 @@ export async function action({ request }) {
   try {
     const res = await axios({
       method: request.method,
-      url: "https://i10e101.p.ssafy.io/v1/user-login/save",
+      url: `${API_URL}/user-login/save`,
       data: signUpData,
     });
 

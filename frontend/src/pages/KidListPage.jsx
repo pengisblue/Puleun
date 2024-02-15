@@ -7,6 +7,7 @@ import KidCard from "../components/Kids/KidCard";
 import AddSimpleCard from "../components/UI/AddSimpleCard";
 import chevron from "../asset/chevron-left.svg";
 import plus from "../asset/plus_slate.svg";
+import { API_URL } from "../config/config";
 
 export default function KidListPage() {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ export default function KidListPage() {
     const getKids = async () => {
       try {
         const response = await axios.get(
-          `https://i10e101.p.ssafy.io/v1/user/child/${userInfo.userId}`,
+          `${API_URL}/user/child/${userInfo.userId}`,
         );
 
         response.data.pop();

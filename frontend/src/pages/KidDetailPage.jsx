@@ -8,6 +8,7 @@ import PotSimpleCard from "../components/Pots/PotSimpleCard";
 import Button from "../components/UI/Button";
 import chevron from "../asset/chevron-left.svg";
 import cog from "../asset/cog-8-tooth.svg";
+import { API_URL } from "../config/config";
 
 export default function KidDetailPage() {
   const { userId } = useParams();
@@ -62,7 +63,7 @@ export default function KidDetailPage() {
     if (isConfirmed) {
       try {
         const response = await axios.delete(
-          `https://i10e101.p.ssafy.io/v1/user/${userId}`,
+          `${API_URL}/user/${userId}`,
         );
         // console.log(response);
         handleOpen();
@@ -79,7 +80,7 @@ export default function KidDetailPage() {
     const getUser = async () => {
       try {
         const response = await axios.get(
-          `https://i10e101.p.ssafy.io/v1/user/${id}`,
+          `${API_URL}/user/${id}`,
         );
         setUser(response.data);
       } catch (e) {

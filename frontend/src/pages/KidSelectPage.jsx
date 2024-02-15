@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 
 import KidCard from "../components/Kids/KidCard";
+import { API_URL } from "../config/config";
 
 export default function KidSelectPage() {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ export default function KidSelectPage() {
     const getKids = async () => {
       try {
         const response = await axios.get(
-          `https://i10e101.p.ssafy.io/v1/user/child/${userInfo.userId}`,
+          `${API_URL}/user/child/${userInfo.userId}`,
         );
         setKidList(response.data);
       } catch (e) {

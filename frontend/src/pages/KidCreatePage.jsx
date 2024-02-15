@@ -8,6 +8,7 @@ import Button from "../components/UI/Button";
 import Input from "../components/UI/Input";
 import KidProfileImage from "../components/Kids/KidProfileImage";
 import defaultImg from "../asset/no_profile_img.png";
+import { API_URL } from "../config/config";
 
 export default function KidCreatePage() {
   const navigate = useNavigate();
@@ -51,7 +52,7 @@ export default function KidCreatePage() {
 
     axios({
       method: "post",
-      url: `https://i10e101.p.ssafy.io/v1/user/child`,
+      url: `${API_URL}/user/child`,
       headers: {
         "Content-Type": "multipart/form-data",
       },
