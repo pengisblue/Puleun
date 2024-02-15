@@ -68,7 +68,7 @@ export default function KidListPage() {
         <div onClick={goCreateKid} className="cursor-pointer">
           <AddSimpleCard text={kidList.length === 0 ? <>
             <p>아이를</p><p>추가해주세요</p>
-          </> : <><p>아이 추가하기</p></>} className="w-40" />
+          </> : <><p>아이 추가하기</p></>} className="w-36" />
         </div>
       </div>
     </div>
