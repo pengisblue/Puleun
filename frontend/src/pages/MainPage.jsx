@@ -62,7 +62,6 @@ export default function MainPage() {
       try {
         const res = await axios.get(
           `${API_URL}/pot/${userInfo.userId}`,
-          `${API_URL}/pot/${userInfo.userId}`,
         );
         const result = changeKeysToCamelCase(res.data);
         // console.log(result);
