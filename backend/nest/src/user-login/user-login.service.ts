@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserLogin } from './user-login.entity';
 import { Repository } from 'typeorm';
@@ -40,7 +40,7 @@ export class UserLoginService {
             where: {user_email: loginDto.user_email, user_password: loginDto.user_password},       
         })
         
-        if(user == null) return null;
+        if(user == null) throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST)
         dto.user_id = user.user.user_id;
         dto.user_email = user.user_email;
         dto.profile_img_url = user.user.profile_img_url;

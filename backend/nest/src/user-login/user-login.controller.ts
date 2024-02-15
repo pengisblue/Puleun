@@ -48,7 +48,6 @@ export class UserLoginController {
     @ApiOkResponse({type:LoginReturnDto})    
     async login(@Body() loginDto: LoginDto): Promise<LoginReturnDto>{
         const result = await this.userLoginService.login(loginDto);
-        if (result == null) return null;
         return result;
     }
 
