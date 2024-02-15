@@ -43,6 +43,7 @@ export class PotService {
                         'user.profile_img_url'])    
             .leftJoin('pot.user', 'user', 'user.user_id = pot.user_id')
             .where('user.user_id= :parent_id', {parent_id})
+            .andWhere('pot.collection_FG= :flag', {flag: false})
             .orWhere('user.parent_id= :parent_id', {parent_id})                     
             .getMany()
             .then(o => plainToInstance(PotWithStatusDto, o));
@@ -96,6 +97,7 @@ export class PotService {
                  'user.profile_img_url'])                         
         .leftJoin('pot.user', 'user', 'user.user_id = pot.user_id')
         .where('pot.pot_id= :pot_id', {pot_id})
+        .andWhere('pot.collection_FG= :flag', {flag: false})
         .getOne()
         .then(o => plainToInstance(PotWithStatusDto, o));
 
