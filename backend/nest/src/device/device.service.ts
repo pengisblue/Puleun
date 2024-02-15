@@ -68,6 +68,11 @@ export class DeviceService {
   }
 
   async mappingPot(device_id: number, pot_id: number){
-    return await this.deviceRepository.update(device_id, {pot_id, empty_FG: true});
+    return await this.deviceRepository.update(device_id, {pot_id, empty_FG: false});
   }
+
+  async collectionDevice(pot_id: number){
+    return await this.deviceRepository.update({pot_id}, {pot_id: null, empty_FG: true});
+  }
+
 }

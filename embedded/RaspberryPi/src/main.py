@@ -17,6 +17,8 @@ from stt import record_wav, speech_to_text
 from hot_word.porcu import hotword
 from threading import Thread, Event
 
+current_dir = os.path.dirname(os.path.realpath(__file__))
+
 load_dotenv()
 
 sio = socketio.Client()
@@ -26,7 +28,7 @@ is_connected = False # 백과 연결 여부
 is_water = False # 백에 물 준 날 전송 여부 / day
 status_flag = False # 백에 화분 상태 전송 여부 / hour
 is_talking = False # 대화 중
-talk_id = 1 # 대화 번호
+talk_id = None # 대화 번호
 serial_number = get_serial_number() # 시리얼 번호
 # 아두이노 포트 설정
 arduino_port = 'COM6'
@@ -88,10 +90,10 @@ def owner_change(data):
     #     'name_voice': wavfile,
     # }
     is_owner = data['is_owner']
-    base64_name_voice = data['name_voice']
-    name_voice_path = "name_voice.wav"
-    save_sound(base64_name_voice, name_voice_path)
     if is_owner:
+        base64_name_voice = data['name_voice']
+        name_voice_name = "name_voice.wav"
+        save_sound(base64_name_voice, name_voice_name)
         is_owner_event.set()
         print('프로세스 실행')
     else:
@@ -102,11 +104,13 @@ def owner_change(data):
 
 # 대화 id 받기
 @sio.on('talk_id')
-def get_talk_id(talk_id):
-    global is_talking
-    talk_id = talk_id  
+def get_talk_id(data):
+    global is_talking, talk_id
+    talk_id = data['talk_id'] 
     is_talking = True
     print('talk_id:', talk_id) 
+
+    STT() # 호출어 인식 후 STT()
 
 
 # 새로고침 시 보낼 데이터
@@ -129,7 +133,7 @@ def situation(data):
     situation_id = data['situation_id']
     base64_basic_voice = data['basic_voice']
     basic_voice_path = "basic_voice.wav"
-
+    print('situation_id:', situation_id)
     # 대화 중이 아닐 경우
     if is_talking == False:
         # 효과음과 이름 음원 재생 + 멘트
@@ -150,19 +154,22 @@ def situation(data):
 # -------------------------------------------- 함수 ------------------------------------------------
 
 # 음원 저장
-def save_sound(encoded_data, file_path):
+def save_sound(encoded_data, file_name):
     file_data = base64.b64decode(encoded_data) # base64 디코딩
+
+    file_path = os.path.join(current_dir, file_name)
 
     # 파일로 저장 (ex: received_file.wav)
     with open(file_path, 'wb') as file:
         file.write(file_data)
 
-    print(f"File saved to {file_path}.")
+    print(f"File saved to {file_name}.")
     time.sleep(1)
 
 
 # 음성 재생
-def play_sound(file_path):
+def play_sound(file_name):
+    file_path = os.path.join(current_dir, file_name)
     try:
         data, fs = sf.read(file_path)  # 파일 읽기
         sd.play(data, fs)  # 소리 재생
@@ -173,8 +180,8 @@ def play_sound(file_path):
 
 # 효과음 + 이름 재생
 def start_sound():
-    effect_path = "effect_sound.wav"
-    name_voice_path = "name_voice.wav"
+    effect_path = os.path.join(current_dir, "effect_sound.wav")
+    name_voice_path = os.path.join(current_dir, "name_voice.wav")
 
     send_sig_to_arduino(ser2, "talk start")
     play_sound(effect_path)  # 효과음 재생
@@ -188,11 +195,11 @@ def keyword():
         is_owner_event.wait()
         if not is_talking:  # 대화 중이 아닐 때만 hotword 검사 실행
             print('keyword start')
+            print('talk_id:', talk_id)
             if hotword():
-                sio.emit('hot_word')  # 서버에게 hot_word 요청
                 send_sig_to_arduino(ser2, 'hotword')
+                sio.emit('hot_word', {'pot_id' : pot_id})  # 서버에게 hot_word 요청
                 print("키워드인식")
-                STT()   # 호출어 인식이 되면 STT 실행
             else:
                 # 호출어 인식 실패 시
                 pass
@@ -201,25 +208,40 @@ def keyword():
 
 # stt 텍스트, 음성파일 전송
 def STT(): 
-    global talk_id, is_talking
-    stt_voice_path = "recorded_audio.wav"
-    record_wav(stt_voice_path)
-    transcript = speech_to_text(stt_voice_path)
+    global talk_id, is_talking, encoded_wav, transcript
+
+    play_sound("effect_sound.wav")
+
+    stt_voice_name = "recorded_audio.wav"
+    record_wav(stt_voice_name)
+    transcript = speech_to_text(stt_voice_name)
 
     if transcript:
         print(transcript)
+        stt_voice_path = os.path.join(current_dir, stt_voice_name)
+        print(stt_voice_path)
         # WAV 파일을 Base64 인코딩하여 전송
-        with open(stt_voice_path, "rb") as wav_file:
-            encoded_wav = base64.b64encode(wav_file.read()).decode('utf-8')
+        try:
+            with open(stt_voice_path, "rb") as wav_file:
+                encoded_wav = base64.b64encode(wav_file.read()).decode('utf-8')
+                print('인코딩 성공')
+                
+                # 인코딩된 데이터의 일부를 출력하여 확인
+                # print('인코딩된 데이터 일부:', encoded_wav[:100])
+        except Exception as e:
+            print('인코딩 실패:', e)
+            return  # 인코딩 실패 시 함수 종료
 
         sio.emit('stt', {
-            'talk_id': talk_id, # 대화 번호
-            'text': transcript, # STT text
-            'file': encoded_wav, # wav file
+            'talk_id': talk_id,  # 대화 번호
+            'text': transcript,  # STT text
+            'file': encoded_wav,  # wav file
         })
+
     else:
         # transcript 값이 없으면 대화 종료 로직을 수행
         is_talking = False
+        send_sig_to_arduino(ser1, 0)
         return
 
 
@@ -228,12 +250,14 @@ def TTS(data):
     # lcd에 신호 보내기
     send_sig_to_arduino(ser1, 'start')
 
-    base64_tts_voice = data['base64Data']
-    tts_voice_path='tts_voice.wav'
-    save_sound(base64_tts_voice, tts_voice_path)
-    play_sound(tts_voice_path)
+    play_sound("effect_sound.wav")
 
-    send_sig_to_arduino(ser1, 0)
+    base64_tts_voice = data['base64Data']
+    tts_voice_name='tts_voice.wav'
+    save_sound(base64_tts_voice, tts_voice_name)
+    time.sleep(0.5)
+    play_sound(tts_voice_name)
+
     STT()
     
 
@@ -241,9 +265,10 @@ def TTS(data):
 def pot_state(): 
     print('start pot_state')
 
+    # 아두이노로 신호 보내기
     send_sig_to_arduino(ser2, 'get value')
     # 시간 두고 아두이노가 신호 처리 하도록
-    time.sleep(2) # 한번 측정할 정도의 시간임
+    time.sleep(3) # 한번 측정할 정도의 시간임
 
     while ser2.in_waiting > 0:
         sensor_value = ser2.readline().decode('utf-8').strip()
@@ -266,7 +291,7 @@ def pot_state():
 
 # 아두이노로 메시지 보내기
 def send_sig_to_arduino(ser, msg):
-    msg = msg + '\n'
+    msg = str(msg) + '\n'
     msg = bytes(msg, 'utf-8')
     ser.write(msg)
 
@@ -281,7 +306,7 @@ def send_sig_to_arduino(ser, msg):
 
 # Threading - Process로 만듦
 def arduino_work():
-    global is_water
+    global is_water, status_flag
     print('arduino start')
     while True:
         is_owner_event.wait()
@@ -297,8 +322,9 @@ def arduino_work():
         # 정각마다 pot_state 한 번 실행
         now = datetime.datetime.now()
         if now.minute == 0:
-            if status_flag == False:
+            if status_flag == False: # 1분 내내 보내는 걸 방지
                 pot_state()
+                sio.emit('situation', {'pot_id' : pot_id})
                 status_flag = True
             if now.hour == 0:
                 is_water = False
@@ -308,15 +334,6 @@ def arduino_work():
 if __name__ == '__main__': 
     global ser1, ser2, is_owner_event
 
-    server_url = os.getenv('SERVER_URL')
-    sio.connect(server_url)
-    
-    effect_path = "effect_sound.wav"
-    play_sound(effect_path)
-
-    # threading event
-    is_owner_event = Event()
-    
     # 시리얼 열기
     # 시리얼 통신 객체 생성
     # ser2 = serial.Serial(arduino_port, 9600)  # 아두이노와의 통신 속도에 맞게 설정 > 윈도우
@@ -324,6 +341,18 @@ if __name__ == '__main__':
     ser1 = serial.Serial(arduino_port_1, 115200)  # TFT_LCD & arduino uno
     ser2 = serial.Serial(arduino_port_2, 9600)  # arduino nano    
 
+    time.sleep(2)
+
+    server_url = os.getenv('SERVER_URL')
+    sio.connect(server_url)
+    
+    play_sound("effect_sound.wav")
+
+    # sio.emit('situation', {'pot_id' : pot_id})
+
+    # threading event
+    is_owner_event = Event()
+    
     
     # if is_owner:
     #     pot_state()
@@ -352,4 +381,3 @@ if __name__ == '__main__':
     # 시리얼 포트 닫기
     # ser.close()
     # print('serial close')
-

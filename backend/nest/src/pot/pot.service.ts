@@ -1,4 +1,4 @@
-import { Inject, Injectable, forwardRef } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Pot } from './pot.entity';
 import { Repository } from 'typeorm';
@@ -192,7 +192,9 @@ export class PotService {
     }
 
     async toCollection(pot_id: number){
-        await this.potRepository.softDelete(pot_id);
+        console.log(await this.potRepository.findOne({where: {pot_id, collection_FG: true}}));
+        if(await this.potRepository.findOne({where: {pot_id, collection_FG: true}} )) throw new HttpException('이미 컬렉션에 존재하는 식물', HttpStatus.BAD_REQUEST);
+        await this.deviceService.collectionDevice(pot_id);
         await this.potRepository.update(pot_id, {collection_FG: true});
     }
 

@@ -23,7 +23,7 @@ source venv/bin/activate
 ```
 
 2. python 실행
-
+- 무조건 src에서 실행해야함, 안그러면 effect_sound 재생오류가 뜸. system error
 
 ### 주의 사항
 

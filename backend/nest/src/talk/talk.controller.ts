@@ -21,4 +21,10 @@ export class TalkController {
         return await this.talkService.findByUserId(user_id);
     }
 
+
+    @Get('/bookmark/:user_id')
+    @ApiOperation({summary: 'get bookmarked talk list by user and child', description: '유저가 (+유저의 아이) 좋아요 표시해 둔 대화'})
+    async findBookmark(@Param('user_id') user_id: number): Promise<TalkListDto[]>{
+        return await this.talkService.findBookmark(user_id);
+    }
 }

@@ -10,7 +10,7 @@ export class Device {
   @Column({length:36, nullable: true })
   serial_number: string;
 
-  @Column({ type: 'tinyint', nullable: false, default: 0 })
+  @Column({ type: 'tinyint', nullable: false, default: 1 })
   empty_FG: boolean;
 
   @ManyToOne(() => User, (user) => user.user_id)
