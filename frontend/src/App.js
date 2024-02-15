@@ -19,10 +19,6 @@ import KidsModePotPage from "./pages/KidsModePotPage";
 import KidsModeCollectionPage from "./pages/KidsModeCollectionPage";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage, { action as signUpAction } from "./pages/SignUpPage";
-import MeassageListPage from "./pages/MessageListPage";
-import MessageCreatePage from "./pages/MessageCreatePage";
-
-// import Example from "./test/Example";
 
 const router = createBrowserRouter([
   {
@@ -33,17 +29,12 @@ const router = createBrowserRouter([
       { path: "/kids", element: <KidListPage /> },
       { path: "/pot", element: <PotListPage /> },
       { path: "/talk", element: <TalkListPage /> },
-      { path: "/message", element: <MeassageListPage /> },
       { path: "/pot/create", element: <PotCreatePage /> },
       { path: "/kid/create", element: <KidCreatePage /> },
       { path: "/pot/:potId", element: <PotDetailPage /> },
-      { path: "/kid/:userId", element: <KidDetailPage></KidDetailPage> },
+      { path: "/kid/:userId", element: <KidDetailPage /> },
       { path: "/talk/:talkId", element: <TalkDetailPage /> },
       { path: "/collection/:userId", element: <CollectionPage /> },
-      {
-        path: "/message/create",
-        element: <MessageCreatePage></MessageCreatePage>,
-      },
     ],
   },
   {
@@ -81,11 +72,6 @@ const router = createBrowserRouter([
     action: signUpAction,
   },
 
-  // 테스트용
-  // {
-  //   path: "/test",
-  //   element: <Example />,
-  // },
 ]);
 
 function App() {
