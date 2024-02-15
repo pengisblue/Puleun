@@ -11,30 +11,6 @@ import Button from "../components/UI/Button";
 import defaultImg from "../asset/no_pot_img.png";
 import { API_URL } from "../config/config";
 
-// 하드코딩 테스트용 데이터
-// import { plantList } from "../test/plantList";
-// import { deviceList } from "../test/deviceList";
-
-// 기본 화분 이미지
-
-// 화분 없는 등록된 기기 = {
-//   기기 아이디,
-//   기기 시리얼넘버,
-//   기기 별명
-// }
-// 유저 목록 = {
-//   유저 아이디,
-//   유저 이름
-// }
-// 품종 정보 = {
-//   품종 아이디,
-//   품종 이름,
-//   최고 온도,
-//   최저 온도,
-//   최고 습도,
-//   최저 습도
-// }
-
 export default function PotCreatePage() {
   const navigate = useNavigate();
   const userInfo = useSelector((state) => state.auth.userInfo);
@@ -98,10 +74,9 @@ export default function PotCreatePage() {
         const res = await axios({
           method: "get",
           url: `${API_URL}/species`,
-          // 유저 아이디 받아오는 부분 리덕스로 수정해야함
         });
 
-        // console.log(res.data)
+        console.log(res.data)
         const plantList = res.data.map((item) => ({
           speciesId: item.species_id,
           speciesName: item.species_name,
@@ -208,7 +183,7 @@ export default function PotCreatePage() {
       formData.append("user", selectedUser);
       formData.append("pot_name", potName);
       formData.append("pot_img", inputImg);
-      formData.append("pot_species", selectedPlant.name);
+      formData.append("pot_species", selectedPlant.speciesName);
       formData.append("min_temperature", minTemperature);
       formData.append("max_temperature", maxTemperature);
       formData.append("min_moisture", minMoisture);
