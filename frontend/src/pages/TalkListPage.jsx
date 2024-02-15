@@ -48,8 +48,9 @@ export default function TalkListPage() {
       .catch((err) => {
         console.log(err);
       });
-  }, [userInfo.userId]);
+  }, [userInfo.userId, isStar]);
 
+  // 전체 보기, 즐겨찾기
   useEffect(() => {
     // isStar 상태값이 변경될 때마다 필터링을 수행합니다.
     if (isStar) {
@@ -68,11 +69,33 @@ export default function TalkListPage() {
     } else {
       setFilteredTalks(filteredData);
     }
-  }, [selectedUser, filteredData]);
+  }, [selectedUser, filteredData, isStar]);
 
   // 필터링된 주인 화분만 띄우기
   const handleUserChange = (value) => {
     setSelectedUser(value);
+  };
+
+  // 대화 즐겨찾기
+  const handleStar = (talk_id) => {
+    axios({
+      method: "put",
+      url: `${API_URL}/talk/bookmark/${talk_id}`,
+    })
+      .then((res) => {
+        setTalkList(
+          talkList.map((talk) => {
+            if (talk.talk_id === talk_id) {
+              return { ...talk, star_FG: talk.star_FG === 1 ? 0 : 1 };
+            } else {
+              return talk;
+            }
+          }),
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -118,7 +141,13 @@ export default function TalkListPage() {
         {filteredTalks.length > 0 ? (
           filteredTalks
             .filter((talk) => !isStar || talk.star_FG)
-            .map((talk) => <TalkTitleCard key={talk.talk_id} {...talk} />)
+            .map((talk) => (
+              <TalkTitleCard
+                key={talk.talk_id}
+                handleStar={handleStar}
+                {...talk}
+              />
+            ))
         ) : (
           <div
             className="m-4 flex aspect-[16/5] w-80 items-center justify-center overflow-hidden rounded-lg bg-amber-50 text-xl 

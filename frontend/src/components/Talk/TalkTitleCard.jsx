@@ -15,25 +15,16 @@ export default function TalkTitleCard({
   pot,
   read_FG,
   star_FG,
+  handleStar,
 }) {
   const navigate = useNavigate();
   const location = useLocation();
 
   const [starState, setStarState] = useState(star_FG === 1 ? true : false);
-  const handleStar = () => {
+  const starAction = () => {
+    handleStar(talk_id);
     const newStarState = !starState;
-
-    axios({
-      method: "put",
-      url: `${API_URL}/talk/bookmark/${talk_id}`,
-    })
-      .then((res) => {
-        console.log(res);
-        setStarState(newStarState);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    setStarState(newStarState);
   };
 
   const [isReadState, setIsReadState] = useState(read_FG === 1 ? true : false);
@@ -60,7 +51,7 @@ export default function TalkTitleCard({
       {/* 즐겨찾기 표시 */}
       <div className="flex h-full items-center bg-orange-100">
         <Star
-          onClick={handleStar}
+          onClick={starAction}
           fill={starState ? "#FCD34D" : "#FFFFFF"}
           className="mx-1.5 w-10 cursor-pointer "
         />
