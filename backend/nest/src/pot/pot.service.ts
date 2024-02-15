@@ -46,11 +46,10 @@ export class PotService {
                         'pot.moisture', 'pot.pot_img_url', 'user.user_id', 'user.nickname',
                         'user.profile_img_url'])    
             .leftJoin('pot.user', 'user', 'user.user_id = pot.user_id')
-            .where('user.user_id= :parent_id or user.parent_id= :parent_id', {parent_id})
-            .andWhere('pot.collection_FG= :flag', {flag: false})
+            .where('(user.user_id= :parent_id and pot.collection_FG= :flag)', {parent_id, flag: false})
+            .orWhere('(user.parent_id= :parent_id and pot.collection_FG= :flag)', {parent_id, flag:false})
             .getMany()
             .then(o => plainToInstance(PotWithStatusDto, o));
-        pot.forEach(arr => console.log(arr.planting_day));
 
         const statusDtos = new Array<PotWithStatusDto>();
         for(let i = 0; i < pot.length; i++){
@@ -69,9 +68,9 @@ export class PotService {
             if(talk_calender_id == null) lastTalkDay = 0;
             else lastTalkDay = Math.floor((now.getTime() + this.KR_TIME_DIFF - waterAndTalkDto.talk_createdAt.getTime())/(1000 * 24 * 24 * 60));
 
-            const together_day = await this.potStateService.theDayWeWereTogether(element.planting_day);
-            const moisState = await this.potStateService.moisState(element.min_moisture, element.max_moisture, element.moisture);
-            const tempState = await this.potStateService.tempState(element.min_temperature, element.max_temperature, element.temperature);
+            const together_day = this.potStateService.theDayWeWereTogether(element.planting_day);
+            const moisState = this.potStateService.moisState(element.min_moisture, element.max_moisture, element.moisture);
+            const tempState = this.potStateService.tempState(element.min_temperature, element.max_temperature, element.temperature);
 
             statusDto.lastTalkDay = lastTalkDay;
             statusDto.lastWaterDay = lastWaterDay;
@@ -79,7 +78,6 @@ export class PotService {
             statusDto.temp_state = tempState;
             statusDto.together_day = together_day;
             
-            element.statusDto = statusDto;
             element.statusDto = statusDto;
             statusDtos.push(element);
         }
@@ -101,7 +99,6 @@ export class PotService {
                  'user.profile_img_url'])                         
         .leftJoin('pot.user', 'user', 'user.user_id = pot.user_id')
         .where('pot.pot_id= :pot_id', {pot_id})
-        .andWhere('pot.collection_FG= :flag', {flag: false})
         .getOne()
         .then(o => plainToInstance(PotWithStatusDto, o));
 
