@@ -18,7 +18,7 @@ import KidsModeDetailLayout from "./pages/KidsModeDetail";
 import KidsModePotPage from "./pages/KidsModePotPage";
 import KidsModeCollectionPage from "./pages/KidsModeCollectionPage";
 import LoginPage from "./pages/LoginPage";
-import SignUpPage, { action as signUpAction } from "./pages/SignUpPage";
+import SignUpPage from "./pages/SignUpPage";
 
 const router = createBrowserRouter([
   {
@@ -74,7 +74,6 @@ const router = createBrowserRouter([
   {
     path: "/signup",
     element: <SignUpPage />,
-    action: signUpAction,
   },
 ]);
 

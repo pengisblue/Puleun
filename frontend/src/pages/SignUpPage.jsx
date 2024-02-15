@@ -1,14 +1,18 @@
 import { useState } from "react";
-import { Form, NavLink, redirect, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { RadioGroup } from "@headlessui/react";
 import axios from "axios";
+
 import Button from "../components/UI/Button";
 import Input from "../components/UI/Input";
 import logImg from "../asset/log.svg";
 import { API_URL } from "../config/config";
+import { authActions } from "../store/auth-slice";
 
 export default function SignUpPage() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const goLanding = () => {
     navigate("/hello");
@@ -62,6 +66,54 @@ export default function SignUpPage() {
     nickname &&
     userPassword === confirmPassword;
 
+  // 회원가입
+  const signUp = async (event) => {
+    event.preventDefault();
+
+    const signUpData = {
+      nickname: nickname,
+      birth_DT: birthDate,
+      gender: selectedGender,
+      user_name: userName,
+      user_email: email,
+      user_password: userPassword,
+    };
+
+    try {
+      const res = await axios({
+        method: "post",
+        url: `${API_URL}/user-login/save`,
+        data: signUpData,
+      });
+
+      if (res.data === "SUCCESS") {
+        const loginData = {
+          user_email: email,
+          user_password: userPassword,
+        };
+
+        const loginRes = await axios({
+          method: "post",
+          url: `${API_URL}/user-login`,
+          data: loginData,
+        });
+
+        const { user_id, user_email, profile_img_url } = res.data;
+
+        const userInfo = {
+          userId: user_id,
+          userEmail: user_email,
+          userImgUrl: profile_img_url,
+        };
+
+        dispatch(authActions.login(userInfo));
+        navigate("/kid/create");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="px-8 py-12">
       <div>
@@ -74,7 +126,7 @@ export default function SignUpPage() {
         <h1 className="mx-2 my-4 text-title">회원가입</h1>
       </div>
 
-      <Form method="post" className="my-6 flex flex-col gap-2">
+      <form onSubmit={signUp} className="my-6 flex flex-col gap-2">
         <section className="mb-3">
           <label htmlFor="">이름</label>
           <Input
@@ -187,52 +239,25 @@ export default function SignUpPage() {
 
         <div className="mt-8 grid place-content-center">
           <Button
+            type="submit"
             isDisabled={!isFormValid}
             className="w-40 cursor-pointer bg-green-300 text-white hover:bg-green-400"
           >
             회원가입하기
           </Button>
         </div>
-      </Form>
+      </form>
 
       <p className="text-md text-center text-gray-500">
         이미 계정이 있으신가요?{" "}
-        <NavLink
+        <Link
           to="/login"
           className="font-semibold leading-6 text-green-400 hover:text-green-500
               focus-visible:outline-offset-2 focus-visible:outline-gray-300"
         >
           로그인 바로가기
-        </NavLink>
+        </Link>
       </p>
     </div>
   );
-}
-
-// signUp action
-export async function action({ request }) {
-  const data = await request.formData();
-
-  const signUpData = {
-    nickname: data.get("nickname"),
-    birth_DT: data.get("birthDate"),
-    gender: data.get("gender"),
-    user_name: data.get("userName"),
-    user_email: data.get("email"),
-    user_password: data.get("password"),
-  };
-
-  try {
-    const res = await axios({
-      method: request.method,
-      url: `${API_URL}/user-login/save`,
-      data: signUpData,
-    });
-
-    console.log(res.data);
-    return redirect("/login");
-  } catch (err) {
-    console.log(err);
-  }
-  return Response;
 }
