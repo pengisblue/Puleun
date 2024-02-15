@@ -1,17 +1,16 @@
 // import { useParams } from "react-router-dom";
 import KidChatBubble from "../components/Talk/KidChatBubble";
 import GptChatBubble from "../components/Talk/GptChatBubble";
+import AudioPlayer from "../components/Talk/AudioPlayer";
 import Star from "../components/UI/star";
 import PotProfileImage from "../components/Pots/PotProfileImage";
 import chevron from "../asset/chevron-left.svg";
-import play from "../asset/play.svg";
-import pause from "../asset/pause.svg";
-import rewind from "../asset/forward-solid_back.svg";
-import foward from "../asset/forward-solid_front.svg";
+
 import dayjs from "dayjs";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { API_URL } from "../config/config";
 
 export default function TalkDetailPage() {
   const navigate = useNavigate();
@@ -21,6 +20,7 @@ export default function TalkDetailPage() {
     talk_id: 0,
     talk_title: "",
     talk_DT: "",
+    star_FG: 0,
     sentences: [],
     pot: {
       pot_id: 0,
@@ -44,31 +44,34 @@ export default function TalkDetailPage() {
   };
 
   // 즐겨찾기
-  const isFavorite = true;
-  const [starState, setStarState] = useState(isFavorite);
+  const [starState, setStarState] = useState(0);
   const handleStar = () => {
-    const newStarState = !starState;
-    setStarState(newStarState);
+    axios({
+      method: "put",
+      url: `${API_URL}/talk/bookmark/${talkId}`,
+    })
+      .then((res) => {
+        const newStarState = !starState;
+        setStarState(newStarState);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
-  // 전체 재생
-  const [playState, setPlayState] = useState(false);
-  const handlePlayState = () => {
-    const newPlayState = !playState;
-    setPlayState(newPlayState);
-    console.log(1);
-    const audio = new Audio(talkDetail.sentences.audio);
-    audio.play();
-  };
+  // 전체 오디오 리스트
+  const [audioUrls, setAudioUrls] = useState([]);
 
+  // 대화 불러오기
   useEffect(() => {
     const getTalkDetail = async () => {
       try {
-        const response = await axios.get(
-          `https://i10e101.p.ssafy.io/v1/talk/${talkId}`,
-        );
-        setTalkDetail(response.data);
-        console.log(response.data);
+        const res = await axios.get(`${API_URL}/talk/${talkId}`);
+        const audioUrls = res.data.sentences.map((sentence) => sentence.audio);
+        setAudioUrls(audioUrls);
+        setTalkDetail(res.data);
+        setStarState(res.data.star_FG);
+        // console.log(res.data);
       } catch (e) {
         console.log(e);
       }
@@ -116,19 +119,19 @@ export default function TalkDetailPage() {
 
       {/* 대화 */}
       <div className="flex flex-col gap-6 px-6 py-4 pt-24">
-        {talkDetail.sentences.map((chat) =>
+        {talkDetail.sentences.map((chat, index) =>
           chat.talker === "user" ? (
-            <div className="me-auto" key={chat.sentence_id}>
+            <div className="me-auto" key={index}>
               <KidChatBubble
                 userImg={talkDetail.pot.user.profile_img_url}
-                userName={talkDetail.pot.user.user_id}
+                userName={talkDetail.pot.user.nickname}
                 audioUrl={chat.audio}
               >
                 {chat.content}
               </KidChatBubble>
             </div>
           ) : (
-            <div className="ms-auto" key={chat.sentence_id}>
+            <div className="ms-auto" key={index}>
               <GptChatBubble>{chat.content}</GptChatBubble>
             </div>
           ),
@@ -137,24 +140,7 @@ export default function TalkDetailPage() {
 
       {/* 재생바 */}
       <div className="fixed bottom-0 flex w-full max-w-page justify-center bg-amber-100 p-4">
-        <div className="flex w-full max-w-80 justify-between gap-4">
-          <img
-            src={rewind}
-            className="w-10 cursor-pointer"
-            alt="rewind button"
-          />
-          <img
-            onClick={() => handlePlayState()}
-            src={playState ? pause : play}
-            className="w-8 cursor-pointer"
-            alt="play button"
-          />
-          <img
-            src={foward}
-            className="w-10 cursor-pointer"
-            alt="foward button"
-          />
-        </div>
+        <AudioPlayer audioFiles={audioUrls} />
       </div>
     </div>
   );

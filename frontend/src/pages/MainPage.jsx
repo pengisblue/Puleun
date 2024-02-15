@@ -1,15 +1,44 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import axios from "axios";
-
 import PotSwiper from "../components/Pots/PotSwiper";
 import TalkTitleCard from "../components/Talk/TalkTitleCard";
 import chevron from "../asset/chevron-right.svg";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import dayjs from "dayjs";
+
 import { API_URL } from "../config/config";
 
 // 하드코딩 테스트용 데이터
-import { potDetailList } from "../test/potList";
+// import { potDetailList } from "../test/potList";
+
+// 화분 상태정보 = {
+//   화분 아이디,
+//   화분 이름,
+//   주인 이름,
+//   화분 이미지,
+//   품종,
+//   현재 온도,
+//   현재 습도,
+//   온도 상태,
+//   습도 상태,
+//   물 준 날(가장 최근),
+//   심은 날
+// }
+
+import _ from 'lodash';
+
+export const changeKeysToCamelCase = (obj) => {
+  if (_.isArray(obj)) {
+    return obj.map(value => changeKeysToCamelCase(value));
+  }
+  else if (_.isObjectLike(obj)) {
+    return _.mapValues(_.mapKeys(obj, (value, key) => _.camelCase(key)), changeKeysToCamelCase);
+  }
+  return obj;
+};
+
+
 
 export default function MainPage() {
   const navigate = useNavigate();
@@ -23,8 +52,62 @@ export default function MainPage() {
     navigate("/talk");
   };
 
-  const [talkList, setTalkList] = useState([]);
+  // parentId 로컬
+  // const [parentId, setParentId] = useState("");
 
+    // pot_id: 0,
+    // pot_name: "",
+    // pot_species: "",
+    // pot_img_url: "",
+    // temperature: 0,
+    // moisture: 0,
+    // planting_day: "",
+    // user: {},
+    // statusDto: {}
+
+  const [talkList, setTalkList] = useState([]);
+  const [potDetailList, setPotDetailList] = useState([]);
+
+
+  // axios - 화분 정보
+  useEffect(() => {
+    const transformData = (data) => {
+      return data.map(item => ({
+          potId: item.potId,
+          userImgUrl: item.user.profileImgUrl,
+          userName: item.user.nickname,
+          potName: item.potName,
+          potImgUrl: item.potImgUrl,
+          potSpecies: item.potSpecies,
+          nowTemperature: item.temperature,
+          temperatureStatus: item.statusDto.tempState,
+          nowMoisture: item.moisture,
+          moistureStatus: item.statusDto.moisState,
+          daysSinceWatering: item.statusDto.lastWaterDay,
+          plantDate: dayjs(item.plantingDay).format("YY/MM/DD"),
+          daysSincePlanting: item.statusDto.togetherDay
+      }));
+    };
+    const getPotDetailList = async () => {
+      try {
+        const res = await axios.get(
+          `${API_URL}/pot/${userInfo.userId}`,
+          `${API_URL}/pot/${userInfo.userId}`,
+        );
+        const result = changeKeysToCamelCase(res.data);
+        // console.log(result);
+        const transformedResult = transformData(result)
+        setPotDetailList(transformedResult);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getPotDetailList();
+  }, [userInfo.userId]);
+
+
+  
+  // 대화
   useEffect(() => {
     axios
       .get(`${API_URL}/talk/bookmark/${userInfo.userId}`)
@@ -35,6 +118,7 @@ export default function MainPage() {
         console.log(err);
       });
   }, [userInfo.userId]);
+
 
   return (
     <div className="flex flex-col gap-8 px-6">
