@@ -66,14 +66,13 @@ export default function CollectionPage() {
         <div>
           {userName && (
             <span className="font-semibold">
-              {collectionInfo.nickname}
-              {selectPostposition(collectionInfo.nickname)}
+              {userName}
+              {selectPostposition(userName)}
             </span>
           )}
           <h1 className="text-title">컬렉션</h1>
         </div>
       </div>
-
       {/* 컬렉션 리스트 */}
       <PotCollection />
     </div>
