@@ -12,6 +12,7 @@ import { plainToInstance } from 'class-transformer';
 import { SelectCollectionDto } from './pot-res.dto';
 import { UserService } from 'src/user/user.service';
 import { SocketGateway } from 'src/socket/socket.gateway';
+import { CreatePotStateDto } from 'src/pot-state/pot-state-insert.dto';
 
 @Injectable()
 export class PotService {
@@ -215,5 +216,12 @@ export class PotService {
             where: {pot_id},
             select: {temperature: true, moisture: true}
         })
+    }
+
+    async potStateSave(inputDto: CreatePotStateDto){
+
+        if(inputDto.isTemp_FG) await this.potRepository.update(inputDto.pot_id, {temperature: inputDto.data});
+        else await this.potRepository.update(inputDto.pot_id, {moisture: inputDto.data});
+        
     }
 }
