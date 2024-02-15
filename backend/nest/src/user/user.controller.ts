@@ -90,7 +90,7 @@ export class UserController {
 
     @Put(':user_id')
     @ApiBody( { type: UpdateUserDto } )
-    @ApiOperation({ summary: '유저 & 아이 정보 수정', description: '프로필 이미지는 profile_img로 보내기'})
+    @ApiOperation({ summary: '유저 & 아이 정보 수정', description: "이미지는 'profile_img'로 보내기"})
     @ApiOkResponse({ type: String, description:'SUCCESS'})
     @UseInterceptors(FileInterceptor('profile_img'))
     async update(
