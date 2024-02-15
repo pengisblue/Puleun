@@ -63,7 +63,6 @@ export class SocketService {
     const sentenceDto = new SentenceCreateDto()
     sentenceDto.content = text
     sentenceDto.audio = await this.s3Service.uploadBuffer(decodedBuffer, saveFilePath)
-    sentenceDto.sentence_DTN = today as unknown as Date
     sentenceDto.talker = "user"
     sentenceDto.talk_id = talk_id
     await this.sentenceService.save(sentenceDto)
@@ -91,7 +90,6 @@ export class SocketService {
     const sentenceDto2 = new SentenceCreateDto()
     sentenceDto2.content = answerText
     sentenceDto2.audio = await this.s3Service.uploadBuffer(content, uploadFilePath)
-    sentenceDto.sentence_DTN = today as unknown as Date
     sentenceDto2.talker = "ai"
     sentenceDto2.talk_id = talk_id
     await this.sentenceService.save(sentenceDto2)
