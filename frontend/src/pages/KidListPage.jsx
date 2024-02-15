@@ -35,7 +35,7 @@ export default function KidListPage() {
       }
     };
     getKids();
-  }, [userInfo.userId]);
+  }, [userInfo.userId, kidList]);
 
   return (
     <div className="px-6">
