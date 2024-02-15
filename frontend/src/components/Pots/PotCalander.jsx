@@ -24,7 +24,6 @@ export default function PotCalander({ potId }) {
 
         const convertedData = res.data.reduce(
           (acc, item) => {
-            // 날짜 확인하고 수정 필요할지도
             dayjs.extend(utc);
             const date = dayjs.utc(item.createdAt).format("YYYY-MM-DD");
 
@@ -38,6 +37,10 @@ export default function PotCalander({ potId }) {
           },
           { talkDayList: [], wateringDayList: [] },
         );
+
+        // 맨 처음 등록된 내용은 생성시에 만들어지는 거라 제거
+        convertedData.wateringDayList.shift();
+        convertedData.talkDayList.shift();
 
         setWateringDayList(convertedData.wateringDayList);
         setTalkDayList(convertedData.talkDayList);
