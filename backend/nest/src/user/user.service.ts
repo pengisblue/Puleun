@@ -95,13 +95,9 @@ export class UserService {
         }
     }
 
-    async delete(user_id: number): Promise<number>{
-        try {
-            await this.userRepository.delete(user_id)
-            return 1;
-        }catch(e){
-            throw new HttpException('Bad_REQUEST', HttpStatus.BAD_REQUEST)
-        }
+    async delete(user_id: number): Promise<void>{
+        if(!await this.userRepository.findOne({where: {user_id}})) throw new HttpException('존재하지 않는 유저', HttpStatus.BAD_REQUEST)
+        await this.userRepository.delete(user_id);
     }
 
     async findPot(user_id: number): Promise<User>{
