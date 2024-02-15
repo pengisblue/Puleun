@@ -38,7 +38,7 @@ export class UserController {
 
     @Post()
     @ApiBody( { type: CreateUserDto } )
-    @ApiOperation({ summary: '유저 등록', description: '파일은 profile_img로 보내기'})
+    @ApiOperation({ summary: '유저 등록', description: "이미지는 'profile_img'로 보내기"})
     @ApiOkResponse({ type: String, description:'SUCCESS' })
     @ApiNotFoundResponse({ description:'wrong data request' })
     @UseInterceptors(FileInterceptor('profile_img'))
@@ -64,7 +64,7 @@ export class UserController {
 
     @Post('child')
     @ApiBody( { type: ChildSaveDto } )
-    @ApiOperation({ summary: '아이 등록', description: '프로필 이미지는 profile_img로 보내기'})
+    @ApiOperation({ summary: '아이 등록', description: "이미지는 'profile_img'로 보내기"})
     @ApiOkResponse({ type:String, description:'SUCCESS' })
     @ApiNotFoundResponse({ description:'wrong data request' })
     @UseInterceptors(FileInterceptor('profile_img'))
@@ -90,7 +90,7 @@ export class UserController {
 
     @Put(':user_id')
     @ApiBody( { type: UpdateUserDto } )
-    @ApiOperation({ summary: '유저 & 아이 정보 수정', description: '프로필 이미지는 profile_img로 보내기'})
+    @ApiOperation({ summary: '유저 & 아이 정보 수정', description: "이미지는 'profile_img'로 보내기"})
     @ApiOkResponse({ type: String, description:'SUCCESS'})
     @UseInterceptors(FileInterceptor('profile_img'))
     async update(
@@ -122,10 +122,4 @@ export class UserController {
     async unMappingUser(@Param('user_id') user_id: number): Promise<UserListDto[]>{
         return await this.userService.unMappingUser(user_id);
     }   
-
-    @Get('byParent/:parent_id')
-    @ApiOperation({summary: '부모의 아이에 대한 간단 출력'})
-    async simpleUserList(@Param('parent_id') parent_id: number){
-        return await this.userService.simpleUserList(parent_id);
-    }
 }

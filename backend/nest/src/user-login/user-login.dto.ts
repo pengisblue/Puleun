@@ -65,11 +65,14 @@ export class AllUserDto{
 
 export class LoginReturnDto{
     @Expose()    
+    @ApiProperty({example: 2})
     user_id: number;
 
     @Expose()
+    @ApiProperty({example: 'test2@test.com'})
     user_email: string;
 
     @Expose()
+    @ApiProperty({example: '1234'})
     profile_img_url: string;
 }

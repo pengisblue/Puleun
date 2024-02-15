@@ -34,7 +34,7 @@ export default function KidDetailPage() {
       const response = await axios.delete(
         `https://i10e101.p.ssafy.io/v1/user/${userId}`,
       );
-      console.log(response);
+      // console.log(response);
     } catch (e) {
       console.log(e);
     } finally {
@@ -54,8 +54,7 @@ export default function KidDetailPage() {
       }
     };
     getUser();
-    console.log(user);
-  }, [userId, user]);
+  }, [userId]);
 
   return (
     <div className="px-6">

@@ -10,8 +10,7 @@ import axios from "axios";
 import { API_URL } from "../../config/config";
 import { useParams } from "react-router-dom";
 
-export default function PotCalander() {
-  const { potId } = useParams();
+export default function PotCalander({ potId }) {
   const [wateringDayList, setWateringDayList] = useState([]);
   const [talkDayList, setTalkDayList] = useState([]);
 
@@ -26,7 +25,7 @@ export default function PotCalander() {
         const convertedData = res.data.reduce(
           (acc, item) => {
             // 날짜 확인하고 수정 필요할지도
-            dayjs.extend(utc)
+            dayjs.extend(utc);
             const date = dayjs.utc(item.createdAt).format("YYYY-MM-DD");
 
             if (item.code === "T") {

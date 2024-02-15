@@ -1,21 +1,52 @@
 import { useEffect, useState } from "react";
 import BaseDetailCard from "../UI/BaseDetailCard";
 import PotProfileImage from "./PotProfileImage";
+import axios from "axios";
+import { API_URL } from "../../config/config";
+import dayjs from "dayjs";
 
-export default function PotKidsModeCard({
-  // 화분 정보
-  potName,
-  potImgUrl,
-  potSpecies,
-  tempratureStatus,
-  moistureStatus,
-  daysSinceWatering,
-  plantDate,
-  daysSincePlanting,
-  // css 정보
-  className,
-}) {
+export default function PotKidsModeCard({ potId, className }) {
+  const [potInfo, setPotInfo] = useState({});
   const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    // 화분 정보 받아오기
+    const getPotInfo = async () => {
+      try {
+        const res = await axios({
+          method: "get",
+          url: `${API_URL}/pot/detail/${potId}`,
+        });
+
+        const potInfo = {
+          // potId: potId,
+          potImgUrl: res.data.pot_img_url,
+          potSpecies: res.data.pot_species,
+          tempratureStatus: res.data.statusDto.temp_state,
+          moistureStatus: res.data.statusDto.mois_state,
+          daysSinceWatering: res.data.statusDto.lastWaterDay,
+          plantDate: dayjs(res.data.planting_day).format("YY/MM/DD"),
+          daysSincePlanting: res.data.statusDto.together_day,
+        };
+
+        setPotInfo(potInfo);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    getPotInfo();
+  });
+
+  const {
+    potImgUrl,
+    potSpecies,
+    tempratureStatus,
+    moistureStatus,
+    daysSinceWatering,
+    plantDate,
+    daysSincePlanting,
+  } = potInfo;
 
   useEffect(() => {
     let newMessages = [];
@@ -36,8 +67,6 @@ export default function PotKidsModeCard({
   return (
     <BaseDetailCard className={className}>
       <div className="grid grid-cols-12 place-content-center gap-1">
-        <h1 className={`col-span-12 flex flex-wrap font-bold `}>{potName}</h1>
-
         <div className="col-span-5 place-self-center overflow-hidden rounded-xl">
           <PotProfileImage imgUrl={potImgUrl} />
         </div>
@@ -56,7 +85,9 @@ export default function PotKidsModeCard({
             <span>지금은, </span>
             <span>
               {messages.map((message, index) => (
-                <p className="text-base font-bold text-blue-900" key={index}>{message}</p>
+                <p className="text-base font-bold text-blue-900" key={index}>
+                  {message}
+                </p>
               ))}
             </span>
           </li>

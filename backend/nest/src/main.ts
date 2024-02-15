@@ -19,7 +19,11 @@ async function bootstrap() {
     .addTag('Pot')
     .addTag('Device')
     .addTag('Calender')
-    .addTag('Alarm')
+    .addTag('Pot-state')
+    .addTag('Talk')
+    .addTag('sentence')
+    .addTag('Species')
+    .addTag('User-login')
     .build();
   
   app.useGlobalPipes(new ValidationPipe());

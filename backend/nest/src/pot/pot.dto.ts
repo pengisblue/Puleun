@@ -260,29 +260,37 @@ export class StatusDto{
 export class PotWithStatusDto{
     @IsNumber()
     @Type(()=>Number)
+    @ApiProperty()
     pot_id: number;
 
     @IsString()
+    @ApiProperty()
     pot_name: string;
 
     @IsString()
+    @ApiProperty()
     pot_img_url: string;
 
     @IsString()
+    @ApiProperty()
     pot_species: string;
 
     @IsNumber()
     @Type(()=>Number)
+    @ApiProperty()
     parent_id: number;
 
     @IsNumber()
     @Type(()=>Number)
+    @ApiProperty()
     user_id: number;
 
     @IsString()
+    @ApiProperty()
     profile_img_url: string;
 
     @IsString()
+    @ApiProperty()
     nickname: string;
 
     @IsNumber()
@@ -291,41 +299,50 @@ export class PotWithStatusDto{
 
     @IsNumber()
     @Type(()=>Number)
+    @ApiProperty()
     moisture: number;
 
     @IsNumber()
     @Type(()=>Number)
+    @ApiProperty()
     last_water: number;
 
     @IsString()
     @Type(()=>Date)
+    @ApiProperty()
     planting_day: Date;
 
     @IsNumber()
     @Type(()=>Number)
+    @ApiProperty()
     last_talk: number;
 
     @Exclude()
     @IsNumber()
     @Type(() => Number)
+    @ApiProperty()
     min_moisture: number;
 
     @Exclude()
     @IsNumber()
     @Type(() => Number)
+    @ApiProperty()
     max_moisture: number;
 
     @Exclude()
     @IsNumber()
     @Type(() => Number)
+    @ApiProperty()
     min_temperature: number;
 
     @Exclude()
     @IsNumber()
     @Type(() => Number)
+    @ApiProperty()
     max_temperature: number;
 
     @Type(() => StatusDto)
+    @ApiProperty()
     statusDto: StatusDto;
 }
 
