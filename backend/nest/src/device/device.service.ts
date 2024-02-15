@@ -15,6 +15,11 @@ export class DeviceService {
     const [res] = await this.deviceRepository.find({where:{serial_number}, take:1})
     return res
   }
+
+  async findByPotId(pot_id: number): Promise<string>{
+    const [res] = await this.deviceRepository.find({where:{pot_id}, take:1})
+    if (res) return res.client_id
+  }
   
   async save(device: DeviceCreateDto): Promise<number>{
     this.deviceRepository.save(device)
@@ -24,7 +29,7 @@ export class DeviceService {
   /** 유저의 디바이스 중 식물이 없는 디바이스 출력 */
   async unMappingDevice(user_id: number): Promise<SelectDeviceDto[]>{
     return this.deviceRepository.find({
-      where: {user_id, pot_id: IsNull() },
+      where: {user_id, pot_id: IsNull()},
       select: {device_id: true, serial_number: true, device_name: true}
     })
   }

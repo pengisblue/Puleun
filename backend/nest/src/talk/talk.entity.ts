@@ -23,7 +23,7 @@ export class Talk {
   @Column({type: 'int'})
   pot_id: number;
   
-  @Column({type: 'tinyint'})
+  @Column({type: 'tinyint', default: false})
   star_FG: boolean;
 
   @OneToMany(() => Sentence, (sentence) => sentence.talk)

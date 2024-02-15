@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common';
 import * as fs from 'fs';
 import { DeviceService } from './../device/device.service';
 import { SituationDto, SocketLoginDto } from './socket.dto';
@@ -17,6 +17,7 @@ export class SocketService {
     private readonly sentenceService: SentenceService,
     private readonly ttsService: TtsService,
     private readonly fileService: FileService,
+    @Inject(forwardRef(() => PotService))
     private readonly potService: PotService,
     private readonly s3Service: S3Service,
   ){}

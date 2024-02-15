@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { CreatePotStateDto } from 'src/pot-state/pot-state-insert.dto';
@@ -10,7 +10,6 @@ import { TalkService } from 'src/talk/talk.service';
 import { DeviceService } from 'src/device/device.service';
 import { PotService } from 'src/pot/pot.service';
 import { Pot } from 'src/pot/pot.entity';
-import { join } from 'path';
 
 @WebSocketGateway(7080, {
   cors: { origin: "*",},
@@ -28,6 +27,7 @@ export class SocketGateway {
     private readonly calenderService: CalenderService,
     private readonly talkService: TalkService,
     private readonly deviceService: DeviceService,
+    @Inject(forwardRef(() => PotService))
     private readonly potService: PotService,
   ){}
 
@@ -90,8 +90,9 @@ export class SocketGateway {
     client.emit('talk_id',{talk_id})
   }
 
-  async refresh( clientId: string): Promise<void>{
-    this.server.to(clientId).emit('refresh')
+  async refresh( pot_id: number ): Promise<void>{
+    const clientId = await this.deviceService.findByPotId(pot_id)
+    if (clientId) this.server.to(clientId).emit('refresh')
   }
 
   @SubscribeMessage('situation')

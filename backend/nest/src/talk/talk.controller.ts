@@ -1,4 +1,4 @@
-import { Controller, Get, Param, } from '@nestjs/common';
+import { Controller, Get, Param, Put, } from '@nestjs/common';
 import { TalkService } from './talk.service';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { TalkDetailDto, TalkListDto } from './talk-res.dto';
@@ -21,10 +21,21 @@ export class TalkController {
         return await this.talkService.findByUserId(user_id);
     }
 
-
     @Get('/bookmark/:user_id')
     @ApiOperation({summary: 'get bookmarked talk list by user and child', description: '유저가 (+유저의 아이) 좋아요 표시해 둔 대화'})
     async findBookmark(@Param('user_id') user_id: number): Promise<TalkListDto[]>{
         return await this.talkService.findBookmark(user_id);
+    }
+
+    @Get('/read/:user_id')
+    @ApiOperation({summary: 'get never read talk lis by user and child'})
+    async findNoRead(@Param('user_id') user_id:number):Promise<TalkListDto[]>{
+        return await this.talkService.findNoRead(user_id);
+    }
+
+    @Put('/bookmark/:talk_id')
+    @ApiOperation({summary: 'update talk.bookmark', description:'true->false, false->true'})
+    async updateBookmark(@Param('talk_id') talk_id:number): Promise<String>{
+        return await this.talkService.bookmark(talk_id);
     }
 }

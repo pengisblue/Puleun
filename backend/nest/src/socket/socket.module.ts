@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { SocketGateway } from './socket.gateway';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PotState } from 'src/pot-state/pot-state.entity';
@@ -15,7 +15,7 @@ import { S3Module } from 'src/s3/s3.module';
 
 @Module({
   imports: [ TypeOrmModule.forFeature([PotState]), PotStateModule, FileModule, TalkModule,
-  DeviceModule, SentenceModule, CalenderModule, TtsModule, PotModule, S3Module],
+  DeviceModule, SentenceModule, CalenderModule, TtsModule, forwardRef(() =>PotModule), S3Module],
   providers:[SocketGateway, SocketService],
   exports:[SocketGateway]})
 export class SocketModule {
