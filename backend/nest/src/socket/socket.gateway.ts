@@ -92,7 +92,7 @@ export class SocketGateway {
 
   async refresh( pot_id: number ): Promise<void>{
     const clientId = await this.deviceService.findByPotId(pot_id)
-    this.server.to(clientId).emit('refresh')
+    if (clientId) this.server.to(clientId).emit('refresh')
   }
 
   @SubscribeMessage('situation')
