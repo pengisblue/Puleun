@@ -17,7 +17,7 @@ export default function KidsModeDetailLayout() {
           url: `${API_URL}/user/${userId}`,
         });
 
-        console.log(res.data);
+        // console.log(res.data);
         setUserName(res.data.nickname);
       } catch (err) {
         console.log(err);
