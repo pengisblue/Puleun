@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 
 import PotSimpleCard from "../components/Pots/PotSimpleCard";
-import PotAddSimpleCard from "../components/Pots/PotAddSimpleCard";
+import AddSimpleCard from "../components/UI/AddSimpleCard";
 import Filter from "../components/UI/Filter";
 import plus from "../asset/plus_slate.svg";
 import cog from "../asset/cog-8-tooth.svg";
@@ -114,11 +114,25 @@ export default function PotListPage() {
             onClick={goPotDetail(pot.potId)}
             className="cursor-pointer"
           >
-            <PotSimpleCard {...pot} className="w-36" />
+            <PotSimpleCard {...pot} className="w-40" />
           </div>
         ))}
         <div onClick={goCreatPot} className="cursor-pointer">
-          <PotAddSimpleCard className="w-36" />
+          <AddSimpleCard
+            className="w-40"
+            text={
+              filteredPots.length === 0 ? (
+                <>
+                  <p>화분을</p>
+                  <p>추가해주세요</p>
+                </>
+              ) : (
+                <>
+                  <p>화분 추가하기</p>
+                </>
+              )
+            }
+          />
         </div>
       </div>
     </div>
