@@ -11,20 +11,6 @@ import { API_URL } from "../config/config";
 // 하드코딩 테스트용 데이터
 import { potDetailList } from "../test/potList";
 
-// 화분 상태정보 = {
-//   화분 아이디,
-//   화분 이름,
-//   주인 이름,
-//   화분 이미지,
-//   품종,
-//   현재 온도,
-//   현재 습도,
-//   온도 상태,
-//   습도 상태,
-//   물 준 날(가장 최근),
-//   심은 날
-// }
-
 export default function MainPage() {
   const navigate = useNavigate();
   const userInfo = useSelector((state) => state.auth.userInfo);
@@ -41,9 +27,7 @@ export default function MainPage() {
 
   useEffect(() => {
     axios
-      .get(
-        `${API_URL}/talk/all/${userInfo.userId}`,
-      )
+      .get(`${API_URL}/talk/bookmark/${userInfo.userId}`)
       .then((res) => {
         setTalkList(res.data);
       })
@@ -56,12 +40,14 @@ export default function MainPage() {
     <div className="flex flex-col gap-8 px-6">
       {/* 화분 상태 요약 */}
       <section>
-        <div
-          onClick={goPotList}
-          className="mb-3 flex cursor-pointer items-center justify-between"
-        >
+        <div className="mb-3 flex cursor-pointer items-center justify-between">
           <h1 className="text-title">우리 화분</h1>
-          <img src={chevron} alt="goPotList" className="w-8 cursor-pointer" />
+          <img
+            src={chevron}
+            onClick={goPotList}
+            alt="goPotList"
+            className="w-8 cursor-pointer"
+          />
         </div>
         <div className="flex items-center">
           <PotSwiper potList={potDetailList} />
@@ -70,17 +56,28 @@ export default function MainPage() {
 
       {/* 새로운 대화 */}
       <section>
-        <div
-          onClick={goTalkList}
-          className="mb-3 flex cursor-pointer items-center justify-between"
-        >
+        <div className="mb-3 flex cursor-pointer items-center justify-between">
           <h1 className="text-title">새로운 대화</h1>
-          <img src={chevron} alt="goTalkList" className="w-8 cursor-pointer" />
+          <img
+            src={chevron}
+            onClick={goTalkList}
+            alt="goTalkList"
+            className="w-8 cursor-pointer"
+          />
         </div>
-        <div className="flex flex-wrap justify-center gap-1">
-          {talkList.map((talk) => (
-            <TalkTitleCard key={talk.talk_id} {...talk} />
-          ))}
+        <div className="flex flex-wrap mt-4 justify-center gap-1">
+          {talkList.length > 0 ? (
+            talkList.map((talk) => (
+              <TalkTitleCard key={talk.talk_id} {...talk} />
+            ))
+          ) : (
+            <div
+              className="m-4 flex aspect-[16/5] w-80 items-center justify-center overflow-hidden rounded-lg bg-amber-50 text-xl 
+              font-semibold text-amber-600 shadow-lg ring ring-amber-200 ring-offset-1 ring-offset-amber-300"
+            >
+              <p>아직 새로운 대화가 없어요!</p>
+            </div>
+          )}
         </div>
       </section>
     </div>

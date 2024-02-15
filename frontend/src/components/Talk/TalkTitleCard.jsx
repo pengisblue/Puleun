@@ -5,6 +5,8 @@ import wateringCan from "../../asset/watering_can.svg";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
+import axios from "axios";
+import { API_URL } from "../../config/config";
 
 export default function TalkTitleCard({
   talk_id,
@@ -12,18 +14,29 @@ export default function TalkTitleCard({
   talk_title,
   pot,
   read_FG,
-  isFavorite,
+  star_FG,
 }) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [starState, setStarState] = useState(isFavorite);
+  const [starState, setStarState] = useState(star_FG === 1 ? true : false);
   const handleStar = () => {
     const newStarState = !starState;
-    setStarState(newStarState);
+
+    axios({
+      method: "put",
+      url: `${API_URL}/talk/bookmark/${talk_id}`,
+    })
+      .then((res) => {
+        console.log(res);
+        setStarState(newStarState);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
-  const [isReadState, setIsReadState] = useState(read_FG === 0 ? true : false);
+  const [isReadState, setIsReadState] = useState(read_FG === 1 ? true : false);
   const handleRead = () => {
     if (!isReadState) {
       setIsReadState(true);
@@ -63,7 +76,9 @@ export default function TalkTitleCard({
             <div className="w-7 overflow-hidden rounded-full border border-amber-500 outline outline-1 outline-amber-500">
               <UserProfileImage imgUrl={pot.user.profile_img_url} />
             </div>
+
             <img src={wateringCan} alt="wateringCan" className="w-6" />
+
             <div className="w-7 overflow-hidden rounded-full border border-green-500 outline outline-1 outline-green-500">
               <PotProfileImage imgUrl={pot.pot_img_url} />
             </div>

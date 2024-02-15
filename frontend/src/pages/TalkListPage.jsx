@@ -4,6 +4,8 @@ import axios from "axios";
 
 import TalkTitleCard from "../components/Talk/TalkTitleCard";
 import cog from "../asset/cog-8-tooth.svg";
+import Filter from "../components/UI/Filter";
+import { API_URL } from "../config/config";
 
 export default function TalkListPage() {
   const userInfo = useSelector((state) => state.auth.userInfo);
@@ -15,20 +17,63 @@ export default function TalkListPage() {
   const handleClickFavorite = () => {
     setIsStar(true);
   };
+
   const [talkList, setTalkList] = useState([]);
+  const [userList, setUserList] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [filteredTalks, setFilteredTalks] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
 
   useEffect(() => {
+    // 대화 리스트
     axios
-      .get(
-        `https://i10e101.p.ssafy.io/v1/talk/all/${userInfo.userId}`,
-      )
+      .get(`${API_URL}/talk/all/${userInfo.userId}`)
       .then((res) => {
         setTalkList(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
+
+    // 유저 리스트 (필터목록)
+    axios
+      .get(`${API_URL}/user/child/${userInfo.userId}`)
+      .then((res) => {
+        const userList = res.data.map((item) => ({
+          userId: item.user_id,
+          userName: item.nickname,
+        }));
+        setUserList(userList);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, [userInfo.userId]);
+
+  useEffect(() => {
+    // isStar 상태값이 변경될 때마다 필터링을 수행합니다.
+    if (isStar) {
+      setFilteredData(talkList.filter((item) => item.star_FG === 1)); // isStar가 true일 때, star_FG가 1인 데이터만 필터링
+    } else {
+      setFilteredData(talkList); // isStar가 false일 때, 모든 데이터를 표시
+    }
+  }, [isStar, talkList]);
+
+  // 주인 필터링 확인
+  useEffect(() => {
+    if (selectedUser) {
+      setFilteredTalks(
+        filteredData.filter((talk) => talk.pot.user.user_id === selectedUser),
+      );
+    } else {
+      setFilteredTalks(filteredData);
+    }
+  }, [selectedUser, filteredData]);
+
+  // 필터링된 주인 화분만 띄우기
+  const handleUserChange = (value) => {
+    setSelectedUser(value);
+  };
 
   return (
     <div className="">
@@ -56,13 +101,32 @@ export default function TalkListPage() {
         </div>
       </div>
 
+      {/* 주인 선택 필터 */}
+      <div className="ms-auto w-60 px-6 pt-28">
+        <Filter
+          targetList={userList}
+          filterKey="userId"
+          filterValue="userId"
+          option="userName"
+          onFilterChange={handleUserChange}
+          allTarget={true}
+        />
+      </div>
+
       {/* 대화 목록 */}
-      <div className="mx-2 flex flex-wrap gap-1 px-6 pt-28">
-        {talkList
-          .filter((talk) => !isStar || talk.isFavorite)
-          .map((talk) => (
-            <TalkTitleCard key={talk.talk_id} {...talk} />
-          ))}
+      <div className="mx-2 flex flex-wrap gap-1 px-6 pt-8">
+        {filteredTalks.length > 0 ? (
+          filteredTalks
+            .filter((talk) => !isStar || talk.star_FG)
+            .map((talk) => <TalkTitleCard key={talk.talk_id} {...talk} />)
+        ) : (
+          <div
+            className="m-4 flex aspect-[16/5] w-80 items-center justify-center overflow-hidden rounded-lg bg-amber-50 text-xl 
+              font-semibold text-amber-600 shadow-lg ring ring-amber-200 ring-offset-1 ring-offset-amber-300"
+          >
+            <p>아직 새로운 대화가 없어요!</p>
+          </div>
+        )}
       </div>
     </div>
   );
