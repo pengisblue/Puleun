@@ -1,7 +1,8 @@
+import { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import UserProfileImage from "../Users/UserProfileImage";
 import play from "../../asset/play_circle.svg";
 import pause from "../../asset/pause_circle.svg";
-import { useState } from "react";
 
 export default function KidChatBubble({
   children,
@@ -9,14 +10,51 @@ export default function KidChatBubble({
   userName,
   audioUrl,
 }) {
-  const audioContainer = document.querySelector("#audioContainer");
-  const [playState, setPlayState] = useState(false);
-  const handlePlayState = () => {
-    const newPlayState = !playState;
-    setPlayState(newPlayState);
-    console.log(audioUrl);
-    audioContainer.play();
+  const location = useLocation();
+
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef(new Audio(audioUrl));
+
+  useEffect(() => {
+    audioRef.current = new Audio(audioUrl);
+    audioRef.current.onended = () => {
+      setIsPlaying(false); // 오디오 재생이 끝나면 isPlaying 상태를 false로 변경
+    };
+    return () => {
+      audioRef.current.onended = null; // 컴포넌트가 언마운트되면 이벤트 핸들러를 제거
+    };
+  }, []);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      pauseAudio();
+    }
+  }, [location.pathname]);
+
+  const playAudio = async () => {
+    try {
+      await audioRef.current.play();
+      setIsPlaying(true);
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  const pauseAudio = () => {
+    if (audioRef.current) {
+      // audioRef.current가 null인지 확인
+      audioRef.current.pause();
+    }
+    setIsPlaying(false);
+  };
+
+  useEffect(() => {
+    if (isPlaying) {
+      playAudio();
+    } else {
+      pauseAudio();
+    }
+  }, [isPlaying]);
 
   return (
     <div className="flex items-start gap-2">
@@ -25,7 +63,7 @@ export default function KidChatBubble({
       </div>
       <div className="flex flex-col gap-1">
         <div className="flex items-center gap-2">
-          {/* <span className="font-semibold">{userName}</span> */}
+          <span className="font-semibold">{userName}</span>
 
           <audio id="audioContainer">
             <source id="audioSource" src={audioUrl}></source>
@@ -33,8 +71,8 @@ export default function KidChatBubble({
 
           {/* 음성 재생 */}
           <img
-            onClick={handlePlayState}
-            src={playState ? pause : play}
+            onClick={() => setIsPlaying(!isPlaying)}
+            src={isPlaying ? pause : play}
             className="w-6 cursor-pointer"
             alt="play button"
           />
