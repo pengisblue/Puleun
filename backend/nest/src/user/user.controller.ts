@@ -17,13 +17,14 @@ export class UserController {
 
     @Get()
     @ApiOperation({summary: '모든 유저 조회'})
+    @ApiOkResponse({type:User})
     async findAllUser(): Promise<User[]>{
         return await this.userService.findAllUser();
     }
 
     @Get('child/:user_id')
-    @ApiOperation({ summary: '아이 전체 조회'})
-    @ApiOkResponse({ type:UserListDto, description: 'user_id를 부모로하는 아이들 조회' })
+    @ApiOperation({ summary: '부모의 아이 모두 조회'})
+    @ApiOkResponse({ type:UserListDto, description: '자기자신을 제외한 user_id를 부모로하는 아이들 조회' })
     async findAll(@Param('user_id') user_id:number):Promise<UserListDto[]>{
         return this.userService.findByParent(user_id)
     }
@@ -37,8 +38,8 @@ export class UserController {
 
     @Post()
     @ApiBody( { type: CreateUserDto } )
-    @ApiOperation({ summary: '유저 등록'})
-    @ApiOkResponse({ type:'1', description:'1 for SUCCESS' })
+    @ApiOperation({ summary: '유저 등록', description: "이미지는 'profile_img'로 보내기"})
+    @ApiOkResponse({ type: String, description:'SUCCESS' })
     @ApiNotFoundResponse({ description:'wrong data request' })
     @UseInterceptors(FileInterceptor('profile_img'))
     async save(
@@ -63,8 +64,8 @@ export class UserController {
 
     @Post('child')
     @ApiBody( { type: ChildSaveDto } )
-    @ApiOperation({ summary: '아이 등록'})
-    @ApiOkResponse({ type:'1', description:'1 for SUCCESS' })
+    @ApiOperation({ summary: '아이 등록', description: "이미지는 'profile_img'로 보내기"})
+    @ApiOkResponse({ type:String, description:'SUCCESS' })
     @ApiNotFoundResponse({ description:'wrong data request' })
     @UseInterceptors(FileInterceptor('profile_img'))
     async saveChild(
@@ -89,8 +90,8 @@ export class UserController {
 
     @Put(':user_id')
     @ApiBody( { type: UpdateUserDto } )
-    @ApiOperation({ summary: '유저 & 아이 정보 수정'})
-    @ApiOkResponse({ type:'1', description:'1 for SUCCESS'})
+    @ApiOperation({ summary: '유저 & 아이 정보 수정', description: "이미지는 'profile_img'로 보내기"})
+    @ApiOkResponse({ type: String, description:'SUCCESS'})
     @UseInterceptors(FileInterceptor('profile_img'))
     async update(
         @Param('user_id') user_id:number, @Body('user') user:UpdateUserDto,
@@ -109,20 +110,16 @@ export class UserController {
     
     @Delete(':user_id')
     @ApiOperation({ summary: '유저 정보 삭제'})
-    @ApiOkResponse({ type:'1', description:'1 for SUCCESS'})
-    async delete(@Param('user_id') user_id:number): Promise<number>{
-        return this.userService.delete(user_id)
+    @ApiOkResponse({ type: String, description:'SUCCESS'})
+    async delete(@Param('user_id') user_id:number): Promise<String>{
+        await this.userService.delete(user_id);
+        return 'SUCCESS';
     }
 
     @Get('create/:user_id')
-    @ApiOperation({summary: '부모가 화분 등록시 화분 매핑이 되어있지 않는 아이 출력'})
+    @ApiOperation({summary: '부모가 화분 등록시 화분 매핑이 되어있지 않는 아이 출력', description:'화분에 유저를 연결할때 출력해주기 위한 API'})
+    @ApiOkResponse({type: UserListDto})
     async unMappingUser(@Param('user_id') user_id: number): Promise<UserListDto[]>{
         return await this.userService.unMappingUser(user_id);
     }   
-
-    @Get('byParent/:parent_id')
-    @ApiOperation({summary: '부모의 아이에 대한 간단 출력'})
-    async simpleUserList(@Param('parent_id') parent_id: number){
-        return await this.userService.simpleUserList(parent_id);
-    }
 }

@@ -1,19 +1,22 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import axios from "axios";
 import Button from "../components/UI/Button";
 import Input from "../components/UI/Input";
 import KidProfileImage from "../components/Kids/KidProfileImage";
 import defaultImg from "../asset/no_profile_img.png";
-import { useNavigate } from "react-router-dom";
 
 export default function KidCreatePage() {
+  const navigate = useNavigate();
+  const userInfo = useSelector((state) => state.auth.userInfo);
+
   const [preview, setPreview] = useState(defaultImg);
   const [inputImg, setInputImg] = useState(null);
   const [nickname, setNickname] = useState(null);
   const today = new Date().toISOString().split("T")[0];
   const [birthDate, setBirthDate] = useState(today);
   const [gender, setGender] = useState(null);
-  const navigate = useNavigate();
 
   const handleInputImg = (event) => {
     const files = event.target.files;
@@ -22,7 +25,7 @@ export default function KidCreatePage() {
       const reader = new FileReader();
       reader.onload = () => {
         setPreview(reader.result);
-        setInputImg(reader.result);
+        setInputImg(file);
       };
       reader.readAsDataURL(file);
     }
@@ -44,25 +47,28 @@ export default function KidCreatePage() {
   };
 
   const handleCreate = async () => {
-    console.log(localStorage.getItem("userInfo").userId);
+    const formData = new FormData();
+    formData.append("nickname", nickname);
+    formData.append("birth_DT", birthDate);
+    formData.append("gender", gender);
+    formData.append("parent_id", userInfo.userId);
+    formData.append("profile_img", inputImg);
 
-    try {
-      const response = await axios.post(
-        "https://i10e101.p.ssafy.io/v1/user/child",
-        {
-          nickname: nickname,
-          birth_DT: birthDate,
-          gender: gender,
-          parent_id: JSON.parse(localStorage.getItem("userInfo")).userId,
-        },
-      );
-
-      console.log(response);
-    } catch (e) {
-      console.log(e);
-    } finally {
-      navigate("/kids");
-    }
+    axios({
+      method: "post",
+      url: `https://i10e101.p.ssafy.io/v1/user/`,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      data: formData,
+    })
+      .then((res) => {
+        console.log(res);
+        navigate("/kids");
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
 
   return (

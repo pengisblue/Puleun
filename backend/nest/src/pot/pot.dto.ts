@@ -1,4 +1,4 @@
-import { ApiOperation, ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from "@nestjs/swagger";
 import { IsDate, IsInt, IsOptional, IsString, Length, IsNumber } from "class-validator";
 import { Exclude, Expose, Type } from "class-transformer";
 import { User } from "src/user/user.entity";
@@ -7,6 +7,7 @@ import { User } from "src/user/user.entity";
 export class PotUserDto{
     @IsInt()
     @ApiProperty({example: 3})
+    @Type(()=>Number)
     user_id: number;
 
     @IsString()
@@ -21,11 +22,6 @@ export class CreatePotDto {
     @Type(() => Number)
     device_id: number;
 
-    // @IsNumber()
-    // @ApiProperty({example: 1})
-    // @Type(() => Number)
-    // pot_id: number;
-
     @IsString()
     @Length(1,10)
     @ApiProperty({example: '푸른', required: true})
@@ -39,21 +35,25 @@ export class CreatePotDto {
     @IsInt()
     @IsOptional()
     @ApiProperty({required: false})
+    @Type(()=>Number)
     min_temperature?: number;
 
     @IsInt()
     @IsOptional()
     @ApiProperty({required: false})
+    @Type(()=>Number)
     max_temperature: number;
 
     @IsInt()
     @IsOptional()
     @ApiProperty({required: false})
+    @Type(()=>Number)
     min_moisture: number;
 
     @IsInt()
     @IsOptional()
     @ApiProperty({required: false})
+    @Type(()=>Number)
     max_moisture: number;
 
     @IsString()
@@ -63,11 +63,13 @@ export class CreatePotDto {
     @IsNumber()
     @IsOptional()
     @ApiProperty({example: 10.5, description: '현재 화분의 온도'})
+    @Type(()=>Number)
     temperature: number;
 
     @IsOptional()
     @IsNumber()
     @ApiProperty({example: 10.5, description: '현재 화분의 습도'})
+    @Type(()=>Number)
     moisture: number;
 
     @IsOptional()
@@ -91,21 +93,25 @@ export class UpdatePotDto{
     @IsInt()
     @IsOptional()
     @ApiProperty({required: false})
+    @Type(()=>Number)
     min_temperature?: number;
 
     @IsInt()
     @IsOptional()
     @ApiProperty({required: false})
+    @Type(()=>Number)
     max_temperature: number;
 
     @IsInt()
     @IsOptional()
     @ApiProperty({required: false})
+    @Type(()=>Number)
     min_moisture: number;
 
     @IsInt()
     @IsOptional()
     @ApiProperty({required: false})
+    @Type(()=>Number)
     max_moisture: number;
 
     @IsString()
@@ -117,6 +123,7 @@ export class UpdatePotDto{
 export class SelectPotDto{
     @IsNumber()
     @Expose()
+    @Type(()=>Number)
     pot_id: number;
 
     @IsString()
@@ -135,12 +142,14 @@ export class SelectPotDto{
     @IsOptional()
     @ApiProperty()
     @Expose()
+    @Type(()=>Date)
     createdAt ? : Date
 
     @IsDate()
     @IsOptional()
     @ApiProperty()
     @Expose()
+    @Type(()=>Date)
     updatedAt ? : Date
     
     @IsInt()
@@ -153,18 +162,21 @@ export class SelectPotDto{
     @IsOptional()
     @ApiProperty()
     @Expose()
+    @Type(()=>Number)
     max_temperature: number;
 
     @IsInt()
     @IsOptional()
     @ApiProperty()
     @Expose()
+    @Type(()=>Number)
     min_moisture: number;
 
     @IsInt()
     @IsOptional()
     @ApiProperty()
     @Expose()
+    @Type(()=>Number)
     max_moisture: number;
 
     @IsString()
@@ -201,11 +213,13 @@ export class CollectionDto{
     @IsDate()
     @IsOptional()
     @ApiProperty()
+    @Type(()=>Date)
     createdAt ? : Date
 
     @IsDate()
     @IsOptional()
     @ApiProperty()
+    @Type(()=>Date)
     deletedAt ? : Date
 
     @IsString()
@@ -216,58 +230,122 @@ export class CollectionDto{
     @IsInt()
     @IsOptional()
     @ApiProperty()
+    @Type(()=>Number)
     happy_cnt ? : number;
 }
 
-
-export class PotWithStatusDto{
+export class StatusDto{
+    @ApiProperty()
     @IsNumber()
-    pot_id: number;
+    lastWaterDay: number;
 
-    @IsString()
-    pot_name: string;
-
-    @IsString()
-    pot_img_url: string;
-
-    @IsString()
-    pot_species: string;
-
+    @ApiProperty()
     @IsNumber()
-    parent_id: number;
+    lastTalkDay: number;
 
-    @IsNumber()
-    user_id: number;
-
-    @IsString()
-    profile_img_url: string;
-
-    @IsString()
-    nickname: string;
-
-    @IsNumber()
-    temperature: number;
-
-    @IsNumber()
-    moisture: number;
-
+    @ApiProperty()
     @IsString()
     temp_state: string;
 
+    @ApiProperty()
     @IsString()
     mois_state: string;
 
+    @ApiProperty()
     @IsNumber()
+    @Type(()=>Number)
+    together_day: number;
+}
+
+export class PotWithStatusDto{
+    @IsNumber()
+    @Type(()=>Number)
+    @ApiProperty()
+    pot_id: number;
+
+    @IsString()
+    @ApiProperty()
+    pot_name: string;
+
+    @IsString()
+    @ApiProperty()
+    pot_img_url: string;
+
+    @IsString()
+    @ApiProperty()
+    pot_species: string;
+
+    @IsNumber()
+    @Type(()=>Number)
+    @ApiProperty()
+    parent_id: number;
+
+    @IsNumber()
+    @Type(()=>Number)
+    @ApiProperty()
+    user_id: number;
+
+    @IsString()
+    @ApiProperty()
+    profile_img_url: string;
+
+    @IsString()
+    @ApiProperty()
+    nickname: string;
+
+    @IsNumber()
+    @Type(()=>Number)
+    temperature: number;
+
+    @IsNumber()
+    @Type(()=>Number)
+    @ApiProperty()
+    moisture: number;
+
+    @IsNumber()
+    @Type(()=>Number)
+    @ApiProperty()
     last_water: number;
 
     @IsString()
+    @Type(()=>Date)
+    @ApiProperty()
     planting_day: Date;
 
     @IsNumber()
-    together_day: number;
-
-    @IsNumber()
+    @Type(()=>Number)
+    @ApiProperty()
     last_talk: number;
+
+    @Exclude()
+    @IsNumber()
+    @Type(() => Number)
+    @ApiProperty()
+    min_moisture: number;
+
+    @Exclude()
+    @IsNumber()
+    @Type(() => Number)
+    @ApiProperty()
+    max_moisture: number;
+
+    @Exclude()
+    @IsNumber()
+    @Type(() => Number)
+    @ApiProperty()
+    min_temperature: number;
+
+    @Exclude()
+    @IsNumber()
+    @Type(() => Number)
+    @ApiProperty()
+    max_temperature: number;
+
+    @Type(() => StatusDto)
+    @ApiProperty()
+    statusDto: StatusDto;
 }
+
+
 
 

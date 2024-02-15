@@ -1,14 +1,18 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import axios from "axios";
+
 import BaseSimpleCard from "../components/UI/BaseSimpleCard";
 
 // 하드코딩용
 import kidImg from "../test/kid1.png";
 
 export default function KidSelectPage() {
-  const [kidList, setKidList] = useState([]);
   const navigate = useNavigate();
+  const userInfo = useSelector((state) => state.auth.userInfo);
+
+  const [kidList, setKidList] = useState([]);
 
   const goKidsMode = (id) => {
     return () => navigate(`/kidsmode/${id}`);
@@ -18,7 +22,7 @@ export default function KidSelectPage() {
     const getKids = async () => {
       try {
         const response = await axios.get(
-          `https://i10e101.p.ssafy.io/v1/user/child/${JSON.parse(localStorage.getItem("userInfo")).userId}`,
+          `https://i10e101.p.ssafy.io/v1/user/child/${userInfo.userId}`,
         );
         setKidList(response.data);
       } catch (e) {
@@ -26,7 +30,7 @@ export default function KidSelectPage() {
       }
     };
     getKids();
-  }, []);
+  }, [userInfo.userId]);
 
   return (
     <div className="px-6">

@@ -2,20 +2,20 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { User } from './user.entity';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ChildSaveDto, CreateUserDto, UpdateUserDto, UserWithUserLoginDto } from './user-req.dto';
+import { ChildSaveDto, CreateUserDto, UpdateUserDto } from './user-req.dto';
 import { SimpleUserListDto, UserDetailDto, UserListDto } from './user-res.dto';
 import { plainToInstance } from 'class-transformer';
 import { AllUserDto } from 'src/user-login/user-login.dto';
 import { Pot } from 'src/pot/pot.entity';
-import { UserWithAlarmDto } from 'src/alarm/alarm-res.dto';
-import * as fs from 'fs';
-import { join } from 'path';
+import { S3Service } from './../s3/s3.service';
+import { SelectCollectionDto } from 'src/pot/pot-res.dto';
 
 @Injectable()
 export class UserService {
     constructor(
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
+        private readonly s3Service: S3Service
     ){}
 
     async findByParent(user_id: number):Promise<UserListDto[]>{
@@ -28,7 +28,7 @@ export class UserService {
         const user = await this.userRepository.createQueryBuilder('user')
             .where('user.user_id= :user_id', {user_id})
             .leftJoinAndSelect('user.pots', 'pot', 'pot.user_id = user.user_id')
-            .select(['user', 'pot.pot_id', 'pot.pot_name', 'pot.pot_species'])
+            .select(['user', 'pot.pot_id', 'pot.pot_name', 'pot.pot_species', 'pot.pot_img_url'])
             .getOne()
         
         if (!user) throw new HttpException('Check User_Id', HttpStatus.BAD_REQUEST)
@@ -38,16 +38,16 @@ export class UserService {
 
     async save(data: CreateUserDto, file?: Express.Multer.File): Promise<number>{
         await this.userRepository.save(data);
-        const filePath = join(process.cwd(), '/upload/profile/')
         const user: User = data as User
         try{
             const split = file.originalname.split('.')
             const extension = split[split.length -1]
+            const filePath = 'upload/profile/'
             const fileName = user.user_id + '.' + extension
-            fs.writeFileSync(filePath+fileName, file.buffer);
-            user.profile_img_url = filePath+fileName
+            user.profile_img_url = await this.s3Service.upload(file, filePath+fileName)
         } catch (e){
-            user.profile_img_url = join(process.cwd(), '/upload/profile/noImg.png')
+            console.log(e)
+            user.profile_img_url = 'https://puroon.s3.ap-northeast-2.amazonaws.com/upload/profile/noImg.png'
         }
         await this.userRepository.update(user.user_id,{...user})
         return user.user_id;
@@ -56,17 +56,17 @@ export class UserService {
     async saveChild(data: ChildSaveDto, file?: Express.Multer.File): Promise<number>{   
         const child = this.userRepository.create(data);
         try{            
-            await this.userRepository.save(data)            
+            await this.userRepository.save(child)
             try{
                 const split = file.originalname.split('.')
                 const extension = split[split.length -1]
-                const filePath = join(process.cwd(), '/upload/profile/')
+                const filePath = 'upload/profile/'
                 const fileName = child.user_id + '.' + extension
-                fs.writeFileSync(filePath+fileName, file.buffer);
-                data.profile_img_url = filePath+fileName
+                child.profile_img_url = await this.s3Service.upload(file, filePath+fileName)
             } catch (e){
-                data.profile_img_url = join(process.cwd(), '/upload/profile/noImg.png')
+                child.profile_img_url = 'https://puroon.s3.ap-northeast-2.amazonaws.com/upload/profile/noImg.png'
             }
+            await this.userRepository.update(child.user_id,{...child})
             return 1;
         }catch(e){
             throw new HttpException('Bad_REQUEST', HttpStatus.BAD_REQUEST)
@@ -81,12 +81,11 @@ export class UserService {
         try{
             const split = file.originalname.split('.')
             const extension = split[split.length -1]
-            const filePath = join(process.cwd(), '/upload/profile/')
+            const filePath = 'upload/profile/'
             const fileName = user.user_id + '.' + extension
-            fs.writeFileSync(filePath+fileName, file.buffer);
-            data.profile_img_url = filePath+fileName
+            data.profile_img_url = await this.s3Service.upload(file, filePath+fileName)
         } catch (e){
-            data.profile_img_url = join(process.cwd(), '/upload/profile/noImg.png')
+            data.profile_img_url = 'https://puroon.s3.ap-northeast-2.amazonaws.com/upload/profile/noImg.png'
         }
         try{
             this.userRepository.update(user_id, {...data})
@@ -155,72 +154,30 @@ export class UserService {
         })
     }
 
-    async simpleUserList(user_id: number): Promise<SimpleUserListDto[]>{
-        const dtos = new Array<SimpleUserListDto>();
-        const dto = await this.userRepository.createQueryBuilder('user')
-            .select(['user.user_id', 'user.nickname', 'user.profile_img_url',
-                    'pot.pot_id', 'pot.pot_name', 'pot.pot_img_url', 'user.parent_id'])
-            .leftJoin('user.pots', 'pot', 'user.user_id = pot.user_id')
-            .where('user.user_id= :user_id', {user_id})
-            .orWhere('user.parent_id= :user_id', {user_id})
-            .getMany();
+        async findCollection(user_id: number): Promise<SelectCollectionDto> {
+            const collection = await this.userRepository.createQueryBuilder('user').withDeleted()
+                .select(['user.profile_img_url', 'user.user_id', 'user.nickname',
+                        'pot.pot_id', 'pot.pot_name', 'pot.pot_species', 'pot.pot_img_url', 'pot.planting_day',
+                        'pot.deletedAt', 'pot.happy_cnt'])
+                .leftJoin('user.pots', 'pot', 'user.user_id = pot.user_id')            
+                .where({user_id}).andWhere('pot.collection_FG= :flag', {flag: true})
+                .andWhere('pot.deletedAt IS NOT NULL')
+                .getOne().then(async o => {
+                    if(o){      
+                        const data = plainToInstance(SelectCollectionDto, o, {excludeExtraneousValues: true})  
+                        data.pots.forEach(arr =>  {
+                            arr.together_day = Math.ceil((arr.deletedAt.getTime() - arr.planting_day.getTime())/(1000 * 60 * 60 * 24));
+                        })            
+                        return data;
+                    } 
+                    else {
+                        const [data] = plainToInstance(SelectCollectionDto, await this.userRepository.find({where: {user_id}}), {excludeExtraneousValues: true});
+                        data.pots = [];
+                        return data
+                    }
+                })        
 
-        for(let i = 0; i < dto.length; i++){
-            const tempDto = new SimpleUserListDto();
-            const element = dto[i];
-
-            element.pots.forEach(pot => {
-                tempDto.pot_id = pot.pot_id;
-                tempDto.pot_img_url = pot.pot_img_url;
-                tempDto.pot_name = pot.pot_name;
-            });
-
-            tempDto.user_id = element.user_id;
-            tempDto.nickname = element.nickname;
-            tempDto.profile_img_url = element.profile_img_url;
-            tempDto.parent_id = element.parent_id;
-            dtos.push(tempDto);
+            return collection; 
         }
-        return dtos;
-    }
 
-
-    // user의 모든 알람을 표시
-    // alarm controller에서 사용중
-    async allAlarmOfUser(user_id: number): Promise<UserWithAlarmDto[]>{
-        const dtos = new Array<UserWithAlarmDto>();
-        const result = await this.userRepository.createQueryBuilder('user')
-            .where('user.user_id= :user_id', {user_id})
-            .orWhere('user.parent_id= :user_id', {user_id})
-            .leftJoin('user.pots', 'pot', 'user.user_id=pot.user_id')
-            .leftJoinAndSelect('pot.alarm', 'alarm', 'pot.pot_id=alarm.pot_id')
-            .select(['user', 'pot', 'alarm'])
-            .getMany();
-
-        // result.forEach(arr => {
-        //     const dto = new UserWithAlarmDto();
-        //     dto.user_id = arr.user_id;
-        //     dto.nickname = arr.nickname;            
-        //     arr.pots.forEach(pot =>{
-        //         dto.pot_id = pot.pot_id;
-        //         dto.pot_name = pot.pot_name;
-        //         pot.alarm.forEach(alarm => {
-        //             dto.alarm_id = alarm.alarm_id
-        //             dto.alarm_name = alarm.alarm_name
-        //             dto.alarm_content = alarm.alarm_content
-        //             dto.active_FG = alarm.active_FG
-        //             dto.alarm_date = alarm.alarm_date
-        //             dto.routine = alarm.routine
-        //         })
-        //     });
-        //     dtos.push(dto);
-        // })
-
-        result.forEach(arr => {
-            const userDto = plainToInstance(UserWithAlarmDto, arr, {excludeExtraneousValues: true});
-            dtos.push(userDto);
-        })
-
-        return dtos;
-    }
 }

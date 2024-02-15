@@ -1,24 +1,30 @@
 import { Controller, Get, Param, } from '@nestjs/common';
 import { TalkService } from './talk.service';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { TalkListDto } from './talk-res.dto';
+import { TalkDetailDto, TalkListDto } from './talk-res.dto';
 
 @Controller('talk')
-@ApiTags('talk')
+@ApiTags('Talk')
 export class TalkController {
     constructor(private readonly talkService: TalkService){}
 
     @Get('/:talk_id')
-    @ApiOperation({summary: 'get talk detail (all sentence)', description:' talk.sentence.audio는 음성파일의 경로'})
-    @ApiOkResponse({type:TalkListDto})
-    async find(@Param('talk_id') talk_id: number): Promise<TalkListDto>{
+    @ApiOperation({summary: 'get talk detail with sentences', description:'talk.sentence.audio는 음성파일의 경로'})
+    @ApiOkResponse({type:TalkDetailDto})
+    async find(@Param('talk_id') talk_id: number): Promise<TalkDetailDto>{
         return await this.talkService.find(talk_id);
     }
 
     @Get('/all/:user_id')
-    @ApiOperation({summary: 'get all talk list by user_id', description: '읽지않았다면 read_FG = 0, 읽었다면 read_FG = 1'})
+    @ApiOperation({summary: 'get talk list by user and child', description: '읽지않았다면 read_FG = 0, 읽었다면 read_FG = 1'})
     async findByUserId(@Param('user_id') user_id: number): Promise<TalkListDto[]>{
         return await this.talkService.findByUserId(user_id);
     }
 
+
+    @Get('/bookmark/:user_id')
+    @ApiOperation({summary: 'get bookmarked talk list by user and child', description: '유저가 (+유저의 아이) 좋아요 표시해 둔 대화'})
+    async findBookmark(@Param('user_id') user_id: number): Promise<TalkListDto[]>{
+        return await this.talkService.findBookmark(user_id);
+    }
 }

@@ -1,21 +1,39 @@
-import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Dialog, Transition } from "@headlessui/react";
 import Input from "../UI/Input";
 import Button from "../UI/Button";
+import axios from "axios";
+import { API_URL } from "../../config/config";
+import { uiActions } from "../../store/ui-slice";
 
-export default function DeviceAddModal({ isOpen, closeModal }) {
+export default function DeviceAddModal() {
+  const dispatch = useDispatch();
+  const userInfo = useSelector((state) => state.auth.userInfo);
+
+  const isOpen = useSelector((state) => state.ui.deviceModalIsOpen);
+
+  // 시리얼 넘버
   const [serialNum, setSerialNum] = useState(null);
   const handleSerialNum = (event) => {
     setSerialNum(event.target.value);
+    if (isValidDevice) {
+      setIsValidDevice(false);
+    }
   };
 
   // 유효한 시리얼 넘버인지 확인
   const [isValidDevice, setIsValidDevice] = useState(null);
-  const isValid = (serialNum) => {
-    if (serialNum === "1234") {
-      setIsValidDevice(true);
-    } else {
-      setIsValidDevice(false);
+  const isValid = async (serialNum) => {
+    try {
+      const res = await axios({
+        method: "get",
+        url: `${API_URL}/device/check/${serialNum}`,
+      });
+
+      setIsValidDevice(res.data);
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -24,9 +42,39 @@ export default function DeviceAddModal({ isOpen, closeModal }) {
     setDeviceName(event.target.value);
   };
 
+  // 모달창 닫기
+  const handleClose = () => {
+    dispatch(uiActions.deviceModalClose());
+    setSerialNum(null);
+    setIsValidDevice(null);
+    setDeviceName(null);
+  };
+
+  // 기기에 유저 매핑하기
+  const mappingDevice = async () => {
+    const data = {
+      serial_number: serialNum,
+      device_name: deviceName,
+      user_id: userInfo.userId,
+    };
+
+    try {
+      const res = await axios({
+        method: "put",
+        url: `${API_URL}/device/user`,
+        data: data,
+      });
+
+      handleClose();
+
+      console.log(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <Transition appear show={isOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-30" onClose={closeModal}>
+      <Dialog as="div" className="relative z-30" onClose={handleClose}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -108,7 +156,7 @@ export default function DeviceAddModal({ isOpen, closeModal }) {
 
                 <div className="mt-6 flex">
                   <Button
-                    onClick={closeModal}
+                    onClick={mappingDevice}
                     className="ms-auto bg-amber-100 text-amber-800 shadow-md shadow-amber-100 
                     hover:bg-amber-300 hover:shadow-amber-400 disabled:shadow-none"
                     isDisabled={!isValidDevice || !deviceName}

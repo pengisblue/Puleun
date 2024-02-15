@@ -3,33 +3,37 @@ import { Exclude, Expose, Type } from "class-transformer";
 import { IsNumber, IsString, } from 'class-validator';
 import { Species } from "src/species/species.entity";
 
-@Exclude()
 export class UserListDto{
-    @ApiProperty()
+    @ApiProperty({example: 1})
     @Expose()
     user_id: number;
 
-    @ApiProperty()
+    @ApiProperty({example: '룰루랄라'})
     @Expose()
     nickname: string;
 
+    @ApiProperty({example: 'https://puroon.s3.ap-northeast-2.amazonaws.com/upload/profile/noImg.png'})
     @Expose()
-    profile_img_url?: string="";
+    profile_img_url?: string="https://puroon.s3.ap-northeast-2.amazonaws.com/upload/profile/noImg.png";
 }
 
 export class UserDetailDto{
-    @ApiProperty()
+    @ApiProperty({example: 1})
+    @Expose()
     user_id: number;
 
-    @ApiProperty()
+    @ApiProperty({example: '김푸른'})
+    @Expose()
     nickname: string;
 
     @ApiProperty({example:'1990-01-01'})
     birth_DT: Date;
 
-    @ApiProperty()
+    @ApiProperty({example: 'M'})
     gender: string;
 
+    @ApiProperty({example: 'https://puroon.s3.ap-northeast-2.amazonaws.com/upload/profile/noImg.png'})
+    @Expose()
     profile_img_url?: string="";
 }
 

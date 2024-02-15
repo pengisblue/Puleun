@@ -34,6 +34,7 @@ export default function KidDetailPage() {
       const response = await axios.delete(
         `https://i10e101.p.ssafy.io/v1/user/${userId}`,
       );
+      // console.log(response);
     } catch (e) {
       console.log(e);
     } finally {
@@ -53,8 +54,7 @@ export default function KidDetailPage() {
       }
     };
     getUser();
-    console.log(user);
-  }, [userId, user]);
+  }, [userId]);
 
   return (
     <div className="px-6">
@@ -62,7 +62,7 @@ export default function KidDetailPage() {
         <h1 className="text-xl font-bold">아이 정보</h1>
         <div className="grid grid-flow-row-dense grid-cols-8 gap-2">
           <div className="col-span-4">
-            <KidProfileImage imgUrl={kidImg} />
+            <KidProfileImage imgUrl={user.profile_img_url} />
           </div>
           <div className="col-span-4 flex justify-center">
             <ul className="text-base font-semibold">

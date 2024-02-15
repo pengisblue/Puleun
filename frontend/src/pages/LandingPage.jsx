@@ -1,9 +1,25 @@
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import Button from "../components/UI/Button";
 import log from "../asset/log_icon.svg";
+import { useEffect } from "react";
 
 export default function LandingPage() {
   const navigate = useNavigate();
+
+  const isAuth = useSelector((state) => state.auth.isAuth);
+  const isKidsMode = useSelector((state) => state.auth.isKidsMode);
+
+  // 로그인 상태에서 메인 페이지로 이동
+  useEffect(() => {
+    if (isAuth) {
+      if (!isKidsMode) {
+        navigate("/");
+      } else {
+        navigate("/kidsmode");
+      }
+    }
+  }, [isAuth, isKidsMode, navigate]);
 
   const goSignUp = () => {
     navigate("/signup");

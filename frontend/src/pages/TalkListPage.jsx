@@ -1,12 +1,13 @@
-import TalkTitleCard from "../components/Talk/TalkTitleCard";
-import cog from "../asset/cog-8-tooth.svg";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import axios from "axios";
 
-// 테스트 데이터
-import { TALK_LIST } from "../test/talkList";
+import TalkTitleCard from "../components/Talk/TalkTitleCard";
+import cog from "../asset/cog-8-tooth.svg";
 
 export default function TalkListPage() {
+  const userInfo = useSelector((state) => state.auth.userInfo);
+
   const [isStar, setIsStar] = useState(false);
   const handleClickAll = () => {
     setIsStar(false);
@@ -14,23 +15,20 @@ export default function TalkListPage() {
   const handleClickFavorite = () => {
     setIsStar(true);
   };
-
   const [talkList, setTalkList] = useState([]);
 
   useEffect(() => {
-    const getTalkList = async () => {
-      try {
-        const response = await axios.get(
-          `https://i10e101.p.ssafy.io/v1/talk/all/${JSON.parse(localStorage.getItem("userInfo")).userId}`,
-        );
-        setTalkList(response.data);
-      } catch (e) {
-        console.log(e);
-      }
-    };
-
-    getTalkList();
-  }, []);
+    axios
+      .get(
+        `https://i10e101.p.ssafy.io/v1/talk/all/${userInfo.userId}`,
+      )
+      .then((res) => {
+        setTalkList(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [userInfo.userId]);
 
   return (
     <div className="">

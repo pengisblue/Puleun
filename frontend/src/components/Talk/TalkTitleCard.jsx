@@ -10,9 +10,8 @@ export default function TalkTitleCard({
   talk_id,
   created_DT,
   talk_title,
-  profile_img_url,
-  pot_img_url,
-  isRead,
+  pot,
+  read_FG,
   isFavorite,
 }) {
   const navigate = useNavigate();
@@ -24,7 +23,7 @@ export default function TalkTitleCard({
     setStarState(newStarState);
   };
 
-  const [isReadState, setIsReadState] = useState(isRead);
+  const [isReadState, setIsReadState] = useState(read_FG === 0 ? true : false);
   const handleRead = () => {
     if (!isReadState) {
       setIsReadState(true);
@@ -62,11 +61,11 @@ export default function TalkTitleCard({
         <div className="flex flex-wrap justify-between">
           <div className="flex items-center gap-1">
             <div className="w-7 overflow-hidden rounded-full border border-amber-500 outline outline-1 outline-amber-500">
-              <UserProfileImage imgUrl={profile_img_url} />
+              <UserProfileImage imgUrl={pot.user.profile_img_url} />
             </div>
             <img src={wateringCan} alt="wateringCan" className="w-6" />
             <div className="w-7 overflow-hidden rounded-full border border-green-500 outline outline-1 outline-green-500">
-              <PotProfileImage imgUrl={pot_img_url} />
+              <PotProfileImage imgUrl={pot.pot_img_url} />
             </div>
           </div>
           <p className="text-xs">{createdAt}</p>

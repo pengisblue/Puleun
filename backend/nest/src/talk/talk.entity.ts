@@ -23,6 +23,9 @@ export class Talk {
   @Column({type: 'int'})
   pot_id: number;
   
+  @Column({type: 'tinyint'})
+  star_FG: boolean;
+
   @OneToMany(() => Sentence, (sentence) => sentence.talk)
   @JoinColumn({name: 'sentence_id'})
   sentences: Sentence[];

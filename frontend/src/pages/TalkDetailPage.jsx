@@ -9,29 +9,30 @@ import pause from "../asset/pause.svg";
 import rewind from "../asset/forward-solid_back.svg";
 import foward from "../asset/forward-solid_front.svg";
 import dayjs from "dayjs";
-import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-
-// 임시
-import { TALK_DETAIL } from "../test/talkList";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 export default function TalkDetailPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  // const params = useParams();
+  const { talkId } = useParams();
+  const [talkDetail, setTalkDetail] = useState({
+    talk_id: 0,
+    talk_title: "",
+    talk_DT: "",
+    sentences: [],
+    pot: {
+      pot_id: 0,
+      pot_img_url: "",
+      user: {
+        user_id: 0,
+        profile_img_url: "",
+      },
+    },
+  });
 
-  // 하드코딩용
-  const {
-    created_DT,
-    isFavorite,
-    sentence,
-    potImg,
-    // talkID,
-    talkTitle,
-    userImg,
-    userName,
-  } = TALK_DETAIL;
-  const createdAt = dayjs(created_DT).format("YYYY/MM/DD");
+  // const createdAt = dayjs(created_DT).format("YYYY/MM/DD");
 
   // 뒤로가기
   const handleBack = () => {
@@ -43,6 +44,7 @@ export default function TalkDetailPage() {
   };
 
   // 즐겨찾기
+  const isFavorite = true;
   const [starState, setStarState] = useState(isFavorite);
   const handleStar = () => {
     const newStarState = !starState;
@@ -54,7 +56,25 @@ export default function TalkDetailPage() {
   const handlePlayState = () => {
     const newPlayState = !playState;
     setPlayState(newPlayState);
+    console.log(1);
+    const audio = new Audio(talkDetail.sentences.audio);
+    audio.play();
   };
+
+  useEffect(() => {
+    const getTalkDetail = async () => {
+      try {
+        const response = await axios.get(
+          `https://i10e101.p.ssafy.io/v1/talk/${talkId}`,
+        );
+        setTalkDetail(response.data);
+        console.log(response.data);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getTalkDetail();
+  }, [talkId]);
 
   return (
     <div>
@@ -71,11 +91,18 @@ export default function TalkDetailPage() {
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
             <div className="w-6 overflow-hidden rounded-full">
-              <PotProfileImage imgUrl={potImg} alt="pot" />
+              <PotProfileImage
+                imgUrl={talkDetail.pot.user.profile_img_url}
+                alt="pot"
+              />
             </div>
-            <h1 className="max-w-52 truncate text-xl">{talkTitle}</h1>
+            <h1 className="max-w-52 truncate text-xl">
+              {talkDetail.talk_title}
+            </h1>
           </div>
-          <p className="ms-auto text-xs">{createdAt}</p>
+          <p className="ms-auto text-xs">
+            {dayjs(talkDetail.talk_DT).format("YYYY/MM/DD")}
+          </p>
         </div>
         {/* 즐겨찾기 */}
         <div className="p-1">
@@ -88,16 +115,20 @@ export default function TalkDetailPage() {
       </div>
 
       {/* 대화 */}
-      <div className="flex flex-col gap-6 px-6 pt-24 py-4">
-        {sentence.map((chat) =>
-          chat.talker === "kid" ? (
-            <div className="me-auto" key={chat.id}>
-              <KidChatBubble userImg={userImg} userName={userName}>
+      <div className="flex flex-col gap-6 px-6 py-4 pt-24">
+        {talkDetail.sentences.map((chat) =>
+          chat.talker === "user" ? (
+            <div className="me-auto" key={chat.sentence_id}>
+              <KidChatBubble
+                userImg={talkDetail.pot.user.profile_img_url}
+                userName={talkDetail.pot.user.user_id}
+                audioUrl={chat.audio}
+              >
                 {chat.content}
               </KidChatBubble>
             </div>
           ) : (
-            <div className="ms-auto" key={chat.id}>
+            <div className="ms-auto" key={chat.sentence_id}>
               <GptChatBubble>{chat.content}</GptChatBubble>
             </div>
           ),
@@ -113,7 +144,7 @@ export default function TalkDetailPage() {
             alt="rewind button"
           />
           <img
-            onClick={handlePlayState}
+            onClick={() => handlePlayState()}
             src={playState ? pause : play}
             className="w-8 cursor-pointer"
             alt="play button"
