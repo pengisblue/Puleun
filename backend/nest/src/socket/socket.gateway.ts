@@ -96,8 +96,8 @@ export class SocketGateway {
   }
 
   @SubscribeMessage('situation')
-  async situation(@ConnectedSocket() client: Socket, @MessageBody('pot_id') pot_id: number){
-    const situationDto = await this.socketService.situation(pot_id);
+  async situation(@ConnectedSocket() client: Socket, @MessageBody('pot_id') pot_id: number, @MessageBody('inject_situation_id') inject_situation_id: number){
+    const situationDto = await this.socketService.situation(pot_id, inject_situation_id);
     client.emit('situation', situationDto);
   }
 
