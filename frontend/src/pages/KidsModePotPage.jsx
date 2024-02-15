@@ -64,8 +64,8 @@ export default function KidsModePotPage() {
 
                 {/* 캘린더 */}
                 <section>
-                  <h2 className="mb-2 text-section">함께 한 기록</h2>
-                  <div className="max-w-[30rem] overflow-hidden rounded-xl border shadow-md">
+                  <h2 className="mx-2 mb-2 mt-6 text-section">함께 한 기록</h2>
+                  <div className="max-w-[30rem] overflow-hidden rounded-xl border bg-white shadow-md">
                     <PotCalander potId={pot.potId} />
                   </div>
                 </section>
@@ -73,12 +73,12 @@ export default function KidsModePotPage() {
             ))}
           </Tab.Panels>
         </Tab.Group>
-      ) :
-      <div className="mx-4 mt-6 rounded-xl bg-emerald-50 p-6 text-center text-emerald-900 shadow-md">
-          <p className="font-semibold text-lg">아직 성장 중인 식물이 없어요.</p>
+      ) : (
+        <div className="mx-4 mt-6 rounded-xl bg-emerald-50 p-6 text-center text-emerald-900 shadow-md">
+          <p className="text-lg font-semibold">아직 성장 중인 식물이 없어요.</p>
           <p>식물을 키우고 컬렉션을 모아보세요!</p>
         </div>
-      }
+      )}
     </>
   );
 }

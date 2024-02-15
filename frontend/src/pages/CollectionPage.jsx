@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+
 import PotCollection from "../components/Pots/PotCollection";
 import chevron from "../asset/chevron-left.svg";
 import { API_URL } from "../config/config";

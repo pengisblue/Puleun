@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import BaseSimpleCard from "../UI/BaseSimpleCard";
-import PotProfileImage from "./PotProfileImage";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+
+import BaseSimpleCard from "../UI/BaseSimpleCard";
+import PotProfileImage from "./PotProfileImage";
 import { API_URL } from "../../config/config";
 
 export default function PotCollection() {
@@ -36,32 +37,33 @@ export default function PotCollection() {
     <div>
       {collectionList.length > 0 ? (
         <div className="grid grid-cols-2">
-          {collectionList && collectionList.map((pot) => (
-            <BaseSimpleCard key={pot.potId} className="w-[9.5rem]">
-              <div className="overflow-hidden rounded-lg">
-                <PotProfileImage imgUrl={pot.potImg} />
-              </div>
-              <ul className="mt-2">
-                <li>
-                  <p className="font-semibold">{pot.potName}</p>
-                </li>
-                <li>
-                  <span className="me-2">함께한 날:</span>
-                  <span className="me-0.5 text-xl font-bold text-emerald-600">
-                    {pot.togetherDay}
-                  </span>
-                  <span>일</span>
-                </li>
-                <li>
-                  <span className="me-2">행복한 날:</span>
-                  <span className="me-0.5 text-xl font-bold text-emerald-600">
-                    {pot.happyCnt}
-                  </span>
-                  <span>일</span>
-                </li>
-              </ul>
-            </BaseSimpleCard>
-          ))}
+          {collectionList &&
+            collectionList.map((pot) => (
+              <BaseSimpleCard key={pot.potId} className="w-[9.5rem]">
+                <div className="overflow-hidden rounded-lg">
+                  <PotProfileImage imgUrl={pot.potImg} />
+                </div>
+                <ul className="mt-2">
+                  <li>
+                    <p className="font-semibold">{pot.potName}</p>
+                  </li>
+                  <li>
+                    <span className="me-2">함께한 날:</span>
+                    <span className="me-0.5 text-xl font-bold text-emerald-600">
+                      {pot.togetherDay}
+                    </span>
+                    <span>일</span>
+                  </li>
+                  <li>
+                    <span className="me-2">행복한 날:</span>
+                    <span className="me-0.5 text-xl font-bold text-emerald-600">
+                      {pot.happyCnt}
+                    </span>
+                    <span>일</span>
+                  </li>
+                </ul>
+              </BaseSimpleCard>
+            ))}
         </div>
       ) : (
         <div className="mx-4 mt-6 rounded-xl bg-emerald-50 p-6 text-center text-emerald-900 shadow-md">

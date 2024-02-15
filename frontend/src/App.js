@@ -26,14 +26,18 @@ const router = createBrowserRouter([
     element: <RootLayout />,
     children: [
       { path: "/", element: <MainPage /> },
+
       { path: "/kids", element: <KidListPage /> },
-      { path: "/pot", element: <PotListPage /> },
-      { path: "/talk", element: <TalkListPage /> },
-      { path: "/pot/create", element: <PotCreatePage /> },
       { path: "/kid/create", element: <KidCreatePage /> },
-      { path: "/pot/:potId", element: <PotDetailPage /> },
       { path: "/kid/:userId", element: <KidDetailPage /> },
+
+      { path: "/pot", element: <PotListPage /> },
+      { path: "/pot/create", element: <PotCreatePage /> },
+      { path: "/pot/:potId", element: <PotDetailPage /> },
+
+      { path: "/talk", element: <TalkListPage /> },
       { path: "/talk/:talkId", element: <TalkDetailPage /> },
+
       { path: "/collection/:userId", element: <CollectionPage /> },
     ],
   },
@@ -71,7 +75,6 @@ const router = createBrowserRouter([
     element: <SignUpPage />,
     action: signUpAction,
   },
-
 ]);
 
 function App() {

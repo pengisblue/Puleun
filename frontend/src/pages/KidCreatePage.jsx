@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RadioGroup } from "@headlessui/react";
 import axios from "axios";
+
 import Button from "../components/UI/Button";
 import Input from "../components/UI/Input";
 import KidProfileImage from "../components/Kids/KidProfileImage";
@@ -17,8 +18,6 @@ export default function KidCreatePage() {
   const [nickname, setNickname] = useState(null);
   const today = new Date().toISOString().split("T")[0];
   const [birthDate, setBirthDate] = useState(today);
-  const [gender, setGender] = useState(null);
-
   const [selectedGender, setSelectedGender] = useState("M");
 
   const handleInputImg = (event) => {
@@ -37,16 +36,10 @@ export default function KidCreatePage() {
 
   const handleNickname = (event) => {
     setNickname(event.target.value);
-    console.log(nickname);
   };
 
   const handleBirthDate = (event) => {
     setBirthDate(event.target.value);
-  };
-
-  const handleGender = (event) => {
-    setGender(event.target.value);
-    console.log(gender);
   };
 
   const handleCreate = async () => {
@@ -66,7 +59,6 @@ export default function KidCreatePage() {
       data: formData,
     })
       .then((res) => {
-        console.log(res);
         navigate("/kids");
       })
       .catch((e) => {

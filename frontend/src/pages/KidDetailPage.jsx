@@ -1,15 +1,15 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+
 import KidProfileImage from "../components/Kids/KidProfileImage";
 import PotSimpleCard from "../components/Pots/PotSimpleCard";
 import Button from "../components/UI/Button";
 
-// 하드코딩용
-import kidImg from "../test/kid1.png";
-
 export default function KidDetailPage() {
   const { userId } = useParams();
+  const navigate = useNavigate();
+  
   const [user, setUser] = useState({
     user_id: userId,
     profile_img_url: "",
@@ -19,7 +19,6 @@ export default function KidDetailPage() {
     parent_id: 0,
     pots: [],
   });
-  const navigate = useNavigate();
 
   const goDetailPot = (pot_id) => {
     return () => navigate(`/pot/${pot_id}`);
