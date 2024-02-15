@@ -1,4 +1,4 @@
-import { Inject, Injectable, forwardRef } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Pot } from './pot.entity';
 import { Repository } from 'typeorm';
@@ -192,7 +192,7 @@ export class PotService {
     }
 
     async toCollection(pot_id: number){
-        await this.potRepository.softDelete(pot_id);
+        if(await this.potRepository.find({where: {pot_id}})) throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST)
         await this.potRepository.update(pot_id, {collection_FG: true});
     }
 
