@@ -164,7 +164,10 @@ export class PotService {
     }
 
     async delete(pot_id: number){
-        await this.potRepository.delete(pot_id);
+        const pot = await this.potRepository.findOne({where: {pot_id}});
+        console.log(pot);
+        if(!pot) throw new HttpException('존재하지 않는 화분', HttpStatus.BAD_REQUEST); 
+        await this.potRepository.softDelete(pot_id);
     }
 
     async findPotsByUserId(user_id: number): Promise<Pot[]> {
