@@ -46,9 +46,8 @@ export class PotService {
                         'pot.moisture', 'pot.pot_img_url', 'user.user_id', 'user.nickname',
                         'user.profile_img_url'])    
             .leftJoin('pot.user', 'user', 'user.user_id = pot.user_id')
-            .where('user.user_id= :parent_id', {parent_id})
+            .where('user.user_id= :parent_id or user.parent_id= :parent_id', {parent_id})
             .andWhere('pot.collection_FG= :flag', {flag: false})
-            .orWhere('user.parent_id= :parent_id', {parent_id})                     
             .getMany()
             .then(o => plainToInstance(PotWithStatusDto, o));
         pot.forEach(arr => console.log(arr.planting_day));
