@@ -10,7 +10,7 @@ import wateringCan from "../../asset/watering_can.svg";
 
 export default function TalkTitleCard({
   talk_id,
-  created_DT,
+  talk_DT,
   talk_title,
   pot,
   read_FG,
@@ -41,7 +41,7 @@ export default function TalkTitleCard({
     };
   };
 
-  const createdAt = dayjs(created_DT).format("YY/MM/DD");
+  const createdAt = dayjs(talk_DT).format("YY/MM/DD");
 
   return (
     <div
