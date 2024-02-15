@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Talk } from './talk.entity';
 import { Repository } from 'typeorm';
@@ -78,6 +78,30 @@ export class TalkService {
         .leftJoin('pot.user', 'user','pot.user_id = user.user_id')
         .where('user.user_id = :user_id or user.parent_id = :user_id',{user_id})
         .andWhere('user.parent_id = :star_FG',{star_FG:true})
+        .getMany()
+        .then((v)=> {
+            return v.map(o=>o as unknown as TalkListDto)
+        })
+        return res;
+    }
+    async bookmark(talk_id: number): Promise<String>{
+        if (!talk_id) throw new HttpException('please talk_id',HttpStatus.BAD_REQUEST)
+        await this.talkRepository.update(talk_id, {star_FG: () => '!star_FG'})
+        return "SUCCESS"
+    }
+
+    async findNoRead(user_id: number): Promise<TalkListDto[]>{
+        const res = await this.talkRepository.createQueryBuilder('talk')
+        .select(['talk.talk_id',
+        'talk.talk_title',
+        'talk.talk_DT',
+        'talk.read_FG', 'talk.star_FG',
+        'user.user_id', 'user.profile_img_url',
+        'pot.pot_id', 'pot.pot_img_url'])
+        .leftJoin('talk.pot','pot','talk.pot_id = pot.pot_id')
+        .leftJoin('pot.user', 'user','pot.user_id = user.user_id')
+        .where('user.user_id = :user_id or user.parent_id = :user_id',{user_id})
+        .andWhere('user.parent_id = :read_FG',{read_FG:true})
         .getMany()
         .then((v)=> {
             return v.map(o=>o as unknown as TalkListDto)
