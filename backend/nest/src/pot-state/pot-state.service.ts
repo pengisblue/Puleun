@@ -26,7 +26,8 @@ export class PotStateService {
       console.log("find pot_id")
       return -1;
     }
-    this.potStateRepository.save(inputDto)
+    await this.potService.potStateSave(inputDto);
+    await this.potStateRepository.save(inputDto)
     
     return 1
   }
