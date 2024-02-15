@@ -36,7 +36,7 @@ export default function PotCollection() {
   return (
     <div>
       {collectionList.length > 0 ? (
-        <div className="grid grid-cols-2">
+        <div className="grid grid-cols-2 rounded-lg border border-emerald-100/70 bg-emerald-50 p-0.5 shadow-sm">
           {collectionList &&
             collectionList.map((pot) => (
               <BaseSimpleCard key={pot.potId} className="w-[9.5rem]">
@@ -50,7 +50,7 @@ export default function PotCollection() {
                   <li>
                     <span className="me-2">함께한 날:</span>
                     <span className="me-0.5 text-xl font-bold text-emerald-600">
-                      {pot.togetherDay}
+                      {pot.togetherDay ? pot.togetherDay + 1 : 1}
                     </span>
                     <span>일</span>
                   </li>

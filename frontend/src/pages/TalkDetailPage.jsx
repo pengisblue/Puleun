@@ -1,20 +1,18 @@
-// import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import dayjs from "dayjs";
+
 import KidChatBubble from "../components/Talk/KidChatBubble";
 import GptChatBubble from "../components/Talk/GptChatBubble";
 import AudioPlayer from "../components/Talk/AudioPlayer";
-import Star from "../components/UI/star";
 import PotProfileImage from "../components/Pots/PotProfileImage";
+import Star from "../components/UI/star";
 import chevron from "../asset/chevron-left.svg";
-
-import dayjs from "dayjs";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { API_URL } from "../config/config";
 
 export default function TalkDetailPage() {
   const navigate = useNavigate();
-  const location = useLocation();
   const { talkId } = useParams();
   const [talkDetail, setTalkDetail] = useState({
     talk_id: 0,
@@ -36,11 +34,7 @@ export default function TalkDetailPage() {
 
   // 뒤로가기
   const handleBack = () => {
-    if (location.state?.from) {
-      navigate(-1);
-    } else {
-      navigate("/talk");
-    }
+    navigate("/talk");
   };
 
   // 즐겨찾기

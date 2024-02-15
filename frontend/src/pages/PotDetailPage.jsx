@@ -1,16 +1,23 @@
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import dayjs from "dayjs";
+
 import PotDetailCard from "../components/Pots/PotDetailCard";
 import PotCalander from "../components/Pots/PotCalander";
 import PotChart from "../components/Pots/PotChart";
 import Button from "../components/UI/Button";
-import axios from "axios";
-import dayjs from "dayjs";
-import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import chevron from "../asset/chevron-left.svg";
 import { API_URL } from "../config/config";
 
 export default function PotDetailPage() {
   const { potId } = useParams();
   const navigate = useNavigate();
+
+  // 뒤로가기
+  const handleBack = () => {
+    navigate("/pot");
+  };
 
   // params가 숫자인지 확인
   const [potInfo, setPotInfo] = useState({});
@@ -123,86 +130,96 @@ export default function PotDetailPage() {
   };
 
   return (
-    <div className="flex flex-col gap-4 px-6">
-      <h1 className="mt-2 text-xl font-bold">
-        <span className="me-2">
-          {potInfo.userName}
-          {selectPostposition(potInfo.userName)}
-        </span>
-        <span>{potInfo.potName}</span>
-      </h1>
-      {/* 화분 상태 정보 */}
-      <div className="flex justify-center">
-        <PotDetailCard
-          {...potInfo}
-          className="h-44 w-80"
-          nameDisplay="hidden"
+    <>
+      <div className="mb-2 mt-2 flex items-center gap-1 px-6">
+        <img
+          onClick={handleBack}
+          src={chevron}
+          alt="back"
+          className="w-6 cursor-pointer"
         />
+        <h1 className="text-2xl font-bold">
+          <span className="me-2">
+            {potInfo.userName}
+            {selectPostposition(potInfo.userName)}
+          </span>
+          <span>{potInfo.potName}</span>
+        </h1>
       </div>
-
-      {/* 캘린더 */}
-      <section>
-        <h2 className="mb-2 text-section">함께 한 기록</h2>
-        <div className="max-w-[30rem] overflow-hidden rounded-xl border bg-white shadow-md">
-          <PotCalander potId={potId}  />
+      <div className="flex flex-col gap-4 px-6">
+        {/* 화분 상태 정보 */}
+        <div className="flex justify-center">
+          <PotDetailCard
+            {...potInfo}
+            className="h-44 w-80"
+            nameDisplay="hidden"
+          />
         </div>
-      </section>
 
-      {/* 온,습도 그래프 */}
-      <section>
-        <div className="mb-4">
-          <h2 className="mb-2 text-section">어제의 온도</h2>
-          <div className="flex w-full justify-center rounded-xl border bg-white shadow-md">
-            {potStatus.temperature.length > 0 ? (
-              <div className="w-11/12  overflow-auto">
-                <div className="h-96 min-w-[48rem] bg-white">
-                  <PotChart
-                    potData={potStatus.temperature}
-                    id="온도"
-                    scheme="pastel1"
-                    type="temperature"
-                  />
-                </div>
-              </div>
-            ) : (
-              <div className="te flex w-full justify-center p-4">
-                <p>내일이 되면 오늘의 기록을 볼 수 있어요!</p>
-              </div>
-            )}
+        {/* 캘린더 */}
+        <section>
+          <h2 className="mb-2 text-section">함께 한 기록</h2>
+          <div className="max-w-[30rem] overflow-hidden rounded-xl border bg-white shadow-md">
+            <PotCalander potId={potId} />
           </div>
-        </div>
-        <div>
-          <h2 className="mb-2 text-section">어제의 습도</h2>
-          <div className="flex w-full justify-center rounded-xl border bg-white shadow-md">
-            {potStatus.temperature.length > 0 ? (
-              <div className="w-11/12  overflow-auto">
-                <div className="h-96 min-w-[48rem] bg-white">
-                  <PotChart
-                    potData={potStatus.moisture}
-                    id="습도"
-                    scheme="paired"
-                    type="moisture"
-                  />
-                </div>
-              </div>
-            ) : (
-              <div className="te flex w-full justify-center p-4">
-                <p>내일이 되면 오늘의 기록을 볼 수 있어요!</p>
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
+        </section>
 
-      {/* 성장완료 버튼 */}
-      <div className="mt-6 grid place-items-center">
-        <Button
-          onClick={growthComplete}
-          className="w-32 bg-amber-300 text-white hover:bg-amber-400"
-        >
-          성장완료
-        </Button>
+        {/* 온,습도 그래프 */}
+        <section>
+          <div className="mb-4">
+            <h2 className="mb-2 text-section">어제의 온도</h2>
+            <div className="flex w-full justify-center rounded-xl border bg-white shadow-md">
+              {potStatus.temperature.length > 0 ? (
+                <div className="w-11/12  overflow-auto">
+                  <div className="h-96 min-w-[48rem] bg-white">
+                    <PotChart
+                      potData={potStatus.temperature}
+                      id="온도"
+                      scheme="pastel1"
+                      type="temperature"
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="te flex w-full justify-center p-4">
+                  <p>내일이 되면 오늘의 기록을 볼 수 있어요!</p>
+                </div>
+              )}
+            </div>
+          </div>
+          <div>
+            <h2 className="mb-2 text-section">어제의 습도</h2>
+            <div className="flex w-full justify-center rounded-xl border bg-white shadow-md">
+              {potStatus.temperature.length > 0 ? (
+                <div className="w-11/12  overflow-auto">
+                  <div className="h-96 min-w-[48rem] bg-white">
+                    <PotChart
+                      potData={potStatus.moisture}
+                      id="습도"
+                      scheme="paired"
+                      type="moisture"
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="te flex w-full justify-center p-4">
+                  <p>내일이 되면 오늘의 기록을 볼 수 있어요!</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* 성장완료 버튼 */}
+        <div className="mt-6 grid place-items-center">
+          <Button
+            onClick={growthComplete}
+            className="w-32 bg-amber-300 text-white hover:bg-amber-400"
+          >
+            성장완료
+          </Button>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -32,7 +32,7 @@ export default function KidSelectPage() {
 
   return (
     <div >
-      <h1 className="my-4 text-2xl text-center font-semibold">주인 선택하기</h1>
+      <h1 className="my-4 text-title text-center ">화단 찾아가기</h1>
       <div className="my-2 grid w-full grid-cols-2 place-items-center">
         {kidList.map((kid) => (
           <div

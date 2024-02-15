@@ -1,12 +1,20 @@
 import { useEffect, useState } from "react";
-import { Outlet, useParams } from "react-router-dom";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 import KidsModeNavigation from "../components/KidsModeNavigation";
+import chevron from "../asset/chevron-left.svg";
 import { API_URL } from "../config/config";
 
 export default function KidsModeDetailLayout() {
+  const navigate = useNavigate();
   const { userId } = useParams();
+
+  // 뒤로가기
+  const handleBack = () => {
+    navigate("/kidsmode");
+  };
+
   // 아이 이름
   const [userName, setUserName] = useState("");
   useEffect(() => {
@@ -44,7 +52,21 @@ export default function KidsModeDetailLayout() {
 
   return (
     <>
-      <h1 className="text-title">{userName}{selectPostposition(userName)} 화분</h1>
+      <div className="mb-6 mt-3 flex items-center gap-1">
+        <img
+          onClick={handleBack}
+          src={chevron}
+          alt="back"
+          className="w-8 cursor-pointer"
+        />
+        <h1 className="text-title">
+          <span className="me-3">
+            {userName}
+            {selectPostposition(userName)}
+          </span>
+          <span>화분</span>
+        </h1>
+      </div>
       <KidsModeNavigation />
       <Outlet />
     </>

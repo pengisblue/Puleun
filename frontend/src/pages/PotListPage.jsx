@@ -7,12 +7,17 @@ import PotSimpleCard from "../components/Pots/PotSimpleCard";
 import AddSimpleCard from "../components/UI/AddSimpleCard";
 import Filter from "../components/UI/Filter";
 import plus from "../asset/plus_slate.svg";
-import cog from "../asset/cog-8-tooth.svg";
+import chevron from "../asset/chevron-left.svg";
 import { API_URL } from "../config/config";
 
 export default function PotListPage() {
   const navigate = useNavigate();
   const userInfo = useSelector((state) => state.auth.userInfo);
+
+  // 뒤로가기
+  const handleBack = () => {
+    navigate("/");
+  };
 
   const [potList, setPotList] = useState([]);
   const [userList, setUserList] = useState([]);
@@ -79,8 +84,16 @@ export default function PotListPage() {
 
   return (
     <div className="px-6">
-      <header className="m-2 flex items-center justify-between">
-        <h1 className="text-title">화분 목록</h1>
+      <header className="me-2 mt-2 flex items-center justify-between">
+        <div className="flex items-center gap-1">
+          <img
+            onClick={handleBack}
+            src={chevron}
+            alt="back"
+            className="w-7 cursor-pointer"
+          />
+          <h1 className="text-title">화분 목록</h1>
+        </div>
         <div className="flex gap-2">
           <img
             src={plus}
@@ -88,7 +101,6 @@ export default function PotListPage() {
             className="w-7 hover:cursor-pointer"
             onClick={goCreatPot}
           />
-          <img src={cog} alt="cog" className="w-7 hover:cursor-pointer" />
         </div>
       </header>
 

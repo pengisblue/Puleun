@@ -7,9 +7,9 @@ import axios from "axios";
 import Button from "../UI/Button";
 import Input from "../UI/Input";
 import logImg from "../../asset/log_icon.svg";
-import { API_URL } from "../../config/config";
 import { authActions } from "../../store/auth-slice";
 import { uiActions } from "../../store/ui-slice";
+import { API_URL } from "../../config/config";
 
 export default function KidsmodeDeactivate() {
   const navigate = useNavigate();

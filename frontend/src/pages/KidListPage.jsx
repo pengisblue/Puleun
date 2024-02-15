@@ -3,13 +3,19 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import axios from "axios";
-import plus from "../asset/plus_slate.svg";
 import KidCard from "../components/Kids/KidCard";
 import AddSimpleCard from "../components/UI/AddSimpleCard";
+import chevron from "../asset/chevron-left.svg";
+import plus from "../asset/plus_slate.svg";
 
 export default function KidListPage() {
   const navigate = useNavigate();
   const userInfo = useSelector((state) => state.auth.userInfo);
+
+  // 뒤로가기
+  const handleBack = () => {
+    navigate("/");
+  };
 
   const [kidList, setKidList] = useState([]);
 
@@ -39,8 +45,16 @@ export default function KidListPage() {
 
   return (
     <div className="px-6">
-      <header className="m-2 flex items-center justify-between">
-        <h1 className="text-title">아이 목록</h1>
+      <header className="me-2 mt-2 flex items-center justify-between">
+        <div className="flex items-center gap-1">
+          <img
+            onClick={handleBack}
+            src={chevron}
+            alt="back"
+            className="w-7 cursor-pointer"
+          />
+          <h1 className="text-title">아이 목록</h1>
+        </div>
         <div className="flex gap-2">
           <img
             src={plus}
@@ -66,9 +80,21 @@ export default function KidListPage() {
           </div>
         ))}
         <div onClick={goCreateKid} className="cursor-pointer">
-          <AddSimpleCard text={kidList.length === 0 ? <>
-            <p>아이를</p><p>추가해주세요</p>
-          </> : <><p>아이 추가하기</p></>} className="w-36" />
+          <AddSimpleCard
+            text={
+              kidList.length === 0 ? (
+                <>
+                  <p>아이를</p>
+                  <p>추가해주세요</p>
+                </>
+              ) : (
+                <>
+                  <p>아이 추가하기</p>
+                </>
+              )
+            }
+            className="w-36"
+          />
         </div>
       </div>
     </div>

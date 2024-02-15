@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Tab } from "@headlessui/react";
+import axios from "axios";
+
 import PotKidsModeCard from "../components/Pots/PotKidsModeCard";
 import PotCalander from "../components/Pots/PotCalander";
-
-// 하드코딩용
-import { potDetailList } from "../test/potList";
-import axios from "axios";
 import { API_URL } from "../config/config";
 
 export default function KidsModePotPage() {

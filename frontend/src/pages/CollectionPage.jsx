@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 import PotCollection from "../components/Pots/PotCollection";
@@ -8,15 +8,10 @@ import { API_URL } from "../config/config";
 
 export default function CollectionPage() {
   const navigate = useNavigate();
-  const location = useLocation();
   const { userId } = useParams();
 
   const handleBack = () => {
-    if (location.state?.from) {
-      navigate(-1);
-    } else {
-      navigate(`/kid/${userId}`);
-    }
+    navigate(`/kid/${userId}`);
   };
 
   // 아이 이름
@@ -29,7 +24,6 @@ export default function CollectionPage() {
           url: `${API_URL}/user/${userId}`,
         });
 
-        // console.log(res.data);
         setUserName(res.data.nickname);
       } catch (err) {
         console.log(err);

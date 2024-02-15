@@ -3,7 +3,6 @@ import PotProfileImage from "./PotProfileImage";
 
 export default function PotDetailCard({
   // 화분 정보
-  potId,
   userName,
   potName,
   potImgUrl,

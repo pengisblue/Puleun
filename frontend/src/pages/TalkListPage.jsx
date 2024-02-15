@@ -1,14 +1,21 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
 import TalkTitleCard from "../components/Talk/TalkTitleCard";
-import cog from "../asset/cog-8-tooth.svg";
 import Filter from "../components/UI/Filter";
+import chevron from "../asset/chevron-left.svg";
 import { API_URL } from "../config/config";
 
 export default function TalkListPage() {
+  const navigate = useNavigate();
   const userInfo = useSelector((state) => state.auth.userInfo);
+
+  // 뒤로가기
+  const handleBack = () => {
+    navigate("/");
+  };
 
   const [isStar, setIsStar] = useState(false);
   const handleClickAll = () => {
@@ -101,9 +108,14 @@ export default function TalkListPage() {
   return (
     <div className="">
       <div className="fixed top-16 w-full max-w-page bg-amber-overlay pt-2">
-        <div className="left-0 m-2 flex items-center justify-between px-6">
+        <div className="flex items-center gap-1 px-6 pt-4">
+          <img
+            onClick={handleBack}
+            src={chevron}
+            alt="back"
+            className="w-8 cursor-pointer"
+          />
           <h1 className="text-title">우리 대화</h1>
-          <img src={cog} alt="cog" className="w-7 cursor-pointer" />
         </div>
 
         {/* 전체 | 즐겨찾기 필터 */}
@@ -122,22 +134,21 @@ export default function TalkListPage() {
             즐겨찾기
           </p>
         </div>
-      </div>
-
-      {/* 주인 선택 필터 */}
-      <div className="ms-auto w-60 px-6 pt-28">
-        <Filter
-          targetList={userList}
-          filterKey="userId"
-          filterValue="userId"
-          option="userName"
-          onFilterChange={handleUserChange}
-          allTarget={true}
-        />
+        {/* 주인 선택 필터 */}
+        <div className="mb-4 ms-auto w-72">
+          <Filter
+            targetList={userList}
+            filterKey="userId"
+            filterValue="userId"
+            option="userName"
+            onFilterChange={handleUserChange}
+            allTarget={true}
+          />
+        </div>
       </div>
 
       {/* 대화 목록 */}
-      <div className="mx-2 flex flex-wrap gap-1 px-6 pt-8">
+      <div className="mx-2 flex flex-wrap gap-1 px-6 pt-40">
         {filteredTalks.length > 0 ? (
           filteredTalks
             .filter((talk) => !isStar || talk.star_FG)

@@ -1,8 +1,9 @@
-import PotDetailCard from "./PotDetailCard";
-import AddDetailCard from "../UI/AddDetailCard";
 import { useNavigate } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
+
+import PotDetailCard from "./PotDetailCard";
+import AddDetailCard from "../UI/AddDetailCard";
 
 export default function PotSwiper({ potList }) {
   const navigate = useNavigate();

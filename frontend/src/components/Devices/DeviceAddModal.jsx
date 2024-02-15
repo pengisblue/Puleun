@@ -1,11 +1,12 @@
 import { Fragment, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Dialog, Transition } from "@headlessui/react";
+import axios from "axios";
+
 import Input from "../UI/Input";
 import Button from "../UI/Button";
-import axios from "axios";
-import { API_URL } from "../../config/config";
 import { uiActions } from "../../store/ui-slice";
+import { API_URL } from "../../config/config";
 
 export default function DeviceAddModal() {
   const dispatch = useDispatch();
@@ -66,8 +67,6 @@ export default function DeviceAddModal() {
       });
 
       handleClose();
-
-      console.log(res.data);
     } catch (err) {
       console.log(err);
     }

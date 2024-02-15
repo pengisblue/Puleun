@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import play from "../../asset/play.svg";
 import pause from "../../asset/pause.svg";
 import rewind from "../../asset/forward-solid_back.svg";
 import foward from "../../asset/forward-solid_front.svg";
-import { useLocation } from "react-router-dom";
 
 export default function AudioPlayer({ audioFiles }) {
   const location = useLocation();

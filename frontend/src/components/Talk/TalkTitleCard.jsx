@@ -1,12 +1,12 @@
+import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
+
 import UserProfileImage from "../Users/UserProfileImage";
 import PotProfileImage from "../Pots/PotProfileImage";
 import Star from "../UI/star";
 import wateringCan from "../../asset/watering_can.svg";
-import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import dayjs from "dayjs";
-import axios from "axios";
-import { API_URL } from "../../config/config";
+
 
 export default function TalkTitleCard({
   talk_id,

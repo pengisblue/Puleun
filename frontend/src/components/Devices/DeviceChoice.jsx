@@ -1,15 +1,16 @@
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { RadioGroup } from "@headlessui/react";
+import "swiper/css";
+
 import DeviceCard from "./DeviceCard";
 import DeviceBaseCard from "./DeviceBaseCard";
 import DeviceAddCard from "./DeviceAddCard";
 import DeviceAddModal from "./DeviceAddModal";
 import radioOff from "../../asset/radio_off.svg";
 import radioOn from "../../asset/radio_on.svg";
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { RadioGroup } from "@headlessui/react";
 import { uiActions } from "../../store/ui-slice";
-import "swiper/css";
 
 export default function DeviceChoice({ deviceList, onSelect }) {
   const dispatch = useDispatch();

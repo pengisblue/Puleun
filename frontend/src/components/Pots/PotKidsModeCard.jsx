@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
+import dayjs from "dayjs";
+
 import BaseDetailCard from "../UI/BaseDetailCard";
 import PotProfileImage from "./PotProfileImage";
-import axios from "axios";
 import { API_URL } from "../../config/config";
-import dayjs from "dayjs";
 
 export default function PotKidsModeCard({ potId, className }) {
   const [potInfo, setPotInfo] = useState({});
