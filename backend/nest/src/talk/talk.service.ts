@@ -34,7 +34,7 @@ export class TalkService {
         'talk.talk_DT',
         'talk.read_FG', 'talk.star_FG',
         'user.user_id', 'user.profile_img_url',
-        'pot.pot_id', 'pot.pot_img_url'])
+        'pot.pot_id', 'pot.pot_img_url', 'user.nickname'])
         .leftJoin('talk.pot','pot','talk.pot_id = pot.pot_id')
         .leftJoin('pot.user', 'user','pot.user_id = user.user_id')
         .leftJoinAndSelect('talk.sentences','sentence')

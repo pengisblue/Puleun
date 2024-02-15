@@ -1,4 +1,4 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiOperation, ApiProperty } from "@nestjs/swagger";
 import { Exclude, Type } from "class-transformer";
 import { Sentence } from "src/sentence/sentence.entity";
 
@@ -65,6 +65,9 @@ export class TalkDetailDto{
 
     @ApiProperty()
     user_profile_img_url: string
+
+    @ApiProperty()
+    nickname: string;
 
     @ApiProperty()
     @Type(() => Number)
