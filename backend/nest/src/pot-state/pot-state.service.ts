@@ -101,7 +101,7 @@ export class PotStateService {
   // 현재 시간과 식물을 심은날을 day로 계산
   theDayWeWereTogether(startDay: Date): number{
     const now = new Date();
-    return Math.floor((now.getTime() + this.KR_TIME_DIFF - startDay.getTime())/ (1000 * 60 * 60 * 24));
+    return Math.ceil((now.getTime() + this.KR_TIME_DIFF - startDay.getTime())/ (1000 * 60 * 60 * 24));
   }
 
   // 온도에 따른 상태 표시
