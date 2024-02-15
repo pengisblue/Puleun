@@ -11,9 +11,9 @@ import { authActions } from "../store/auth-slice";
 import { uiActions } from "../store/ui-slice";
 
 const navigation = [
-  { name: "화분 관리", href: "/pot", current: false },
-  { name: "아이 관리", href: "/kids", current: false },
-  { name: "대화 관리", href: "/talk", current: false },
+  { name: "화분 목록", href: "/pot", current: false },
+  { name: "아이 목록", href: "/kids", current: false },
+  { name: "대화 목록", href: "/talk", current: false },
 ];
 
 function classNames(...classes) {
