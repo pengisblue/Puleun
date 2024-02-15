@@ -21,7 +21,6 @@ async function bootstrap() {
     .addTag('Calender')
     .addTag('Pot-state')
     .addTag('Talk')
-    .addTag('sentence')
     .addTag('Species')
     .addTag('User-login')
     .build();
