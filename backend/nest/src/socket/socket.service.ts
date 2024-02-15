@@ -104,44 +104,84 @@ export class SocketService {
   7. 온도 높아
   8. 모두 만족
   */
-  async situation(pot_id: number): Promise<SituationDto>{
+  async situation(pot_id: number, inject_situation_id: number): Promise<SituationDto>{
     const situationDto = new SituationDto();
     const status = await this.potService.potDetail(pot_id);
     let filePath = "./basic_ment/";
-    // 대화 부족
-    if(status.last_talk > 3){
-      situationDto.situation_id = 1;
-      filePath += 'boring/' + this.getRandomIntegerWav(1, 5);
-    }
-    // 물 그만줘
-    else if (status.statusDto.mois_state == '초과'){
-      situationDto.situation_id = 2;
-      filePath += 'water_stop/' + this.getRandomIntegerWav(1, 3);
-    }
-    
-    // 물 적절해
-    else if(status.statusDto.mois_state == '적정') {
-      situationDto.situation_id = 3;
-      filePath += 'water_good/' + this.getRandomIntegerWav(1, 4);
-    }
-    // 물 부족해
-    else if(status.statusDto.mois_state == '부족') {
-      situationDto.situation_id = 4;
-      filePath += 'water_more/' + this.getRandomIntegerWav(1, 3);
-     }
-    // 알람 도착: 동적 알람 매핑문제가 해결되면 추가할 예정
 
-    else if(status.statusDto.temp_state == '낮음') {
-      situationDto.situation_id = 6;
-      filePath += 'cold/' + this.getRandomIntegerWav(1, 3);
-     }
-    else if(status.statusDto.temp_state == '높음') {
-      situationDto.situation_id = 7;
-      filePath += 'hot/' + this.getRandomIntegerWav(1, 3);
-    } 
-    else {
-      situationDto.situation_id = 8;
-      filePath += 'happy/' + this.getRandomIntegerWav(1, 6);
+    if(inject_situation_id == undefined){
+      // 대화 부족
+      if(status.last_talk > 3){
+        situationDto.situation_id = 1;
+        filePath += 'boring/' + this.getRandomIntegerWav(1, 5);
+      }
+      // 물 그만줘
+      else if (status.statusDto.mois_state == '초과'){
+        situationDto.situation_id = 2;
+        filePath += 'water_stop/' + this.getRandomIntegerWav(1, 3);
+      }
+      
+      // 물 적절해
+      else if(status.statusDto.mois_state == '적정') {
+        situationDto.situation_id = 3;
+        filePath += 'water_good/' + this.getRandomIntegerWav(1, 4);
+      }
+      // 물 부족해
+      else if(status.statusDto.mois_state == '부족') {
+        situationDto.situation_id = 4;
+        filePath += 'water_more/' + this.getRandomIntegerWav(1, 3);
+      }
+      // 알람 도착: 동적 알람 매핑문제가 해결되면 추가할 예정
+
+      else if(status.statusDto.temp_state == '낮음') {
+        situationDto.situation_id = 6;
+        filePath += 'cold/' + this.getRandomIntegerWav(1, 3);
+      }
+      else if(status.statusDto.temp_state == '높음') {
+        situationDto.situation_id = 7;
+        filePath += 'hot/' + this.getRandomIntegerWav(1, 3);
+      } 
+      else {
+        situationDto.situation_id = 8;
+        filePath += 'happy/' + this.getRandomIntegerWav(1, 6);
+      }
+    }
+    else{
+       // 대화 부족
+       if(inject_situation_id == 1){
+        situationDto.situation_id = 1;
+        filePath += 'boring/' + this.getRandomIntegerWav(1, 5);
+      }
+      // 물 그만줘
+      else if (inject_situation_id == 2){
+        situationDto.situation_id = 2;
+        filePath += 'water_stop/' + this.getRandomIntegerWav(1, 3);
+      }
+      
+      // 물 적절해
+      else if(inject_situation_id == 3) {
+        situationDto.situation_id = 3;
+        filePath += 'water_good/' + this.getRandomIntegerWav(1, 4);
+      }
+      // 물 부족해
+      else if(inject_situation_id == 4 ) {
+        situationDto.situation_id = 4;
+        filePath += 'water_more/' + this.getRandomIntegerWav(1, 3);
+      }
+      // 알람 도착: 동적 알람 매핑문제가 해결되면 추가할 예정
+
+      else if(inject_situation_id == 6) {
+        situationDto.situation_id = 6;
+        filePath += 'cold/' + this.getRandomIntegerWav(1, 3);
+      }
+      else if(inject_situation_id == 7) {
+        situationDto.situation_id = 7;
+        filePath += 'hot/' + this.getRandomIntegerWav(1, 3);
+      } 
+      else {
+        situationDto.situation_id = 8;
+        filePath += 'happy/' + this.getRandomIntegerWav(1, 6);
+      }
     }
     
     const content = await new Promise<Buffer>((resolve, reject) => {

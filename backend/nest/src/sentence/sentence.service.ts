@@ -18,8 +18,8 @@ export class SentenceService {
     });
         
     system_role = '당신은 식물이다. 순수한 마음을 가졌으며 항상 따뜻하게 상대방을 대한다.'
-    my_role = "항상 나에게 반말로 대답하고 40글자 이내로 말을 해, "
-    assistance_role = "Hi I really want to be close to you too Let's have a conversation with me"
+    my_role = "항상 나에게 반말로 대답하고 40글자 이내로 말을 해, 너는 식물이야"
+    assistance_role = "난 이제부터 너에게 반말로 대답할거고 마치 어린아이처럼 너를 대할거야"
 
     // 프롬프트 수정을 위해서 user_id를 받아와야 함
     async answer(sentence: string): Promise<string> {
