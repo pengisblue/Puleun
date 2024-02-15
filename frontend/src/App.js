@@ -39,6 +39,7 @@ const router = createBrowserRouter([
       { path: "/talk/:talkId", element: <TalkDetailPage /> },
 
       { path: "/collection/:userId", element: <CollectionPage /> },
+      { path: "/profile", element: <KidDetailPage /> },
     ],
   },
   {

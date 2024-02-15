@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 import axios from "axios";
 
 import KidProfileImage from "../components/Kids/KidProfileImage";
@@ -11,10 +12,17 @@ import cog from "../asset/cog-8-tooth.svg";
 export default function KidDetailPage() {
   const { userId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const userInfo = useSelector((state) => state.auth.userInfo);
+  const now = location.pathname;
 
   // 뒤로가기
   const handleBack = () => {
-    navigate("/kids");
+    if (now === "/profile") {
+      navigate("/");
+    } else {
+      navigate("/kids");
+    }
   };
 
   const [user, setUser] = useState({
@@ -67,10 +75,11 @@ export default function KidDetailPage() {
   };
 
   useEffect(() => {
+    const id = now === "/profile" ? userInfo.userId : userId;
     const getUser = async () => {
       try {
         const response = await axios.get(
-          `https://i10e101.p.ssafy.io/v1/user/${userId}`,
+          `https://i10e101.p.ssafy.io/v1/user/${id}`,
         );
         setUser(response.data);
       } catch (e) {
@@ -91,14 +100,18 @@ export default function KidDetailPage() {
               alt="back"
               className="w-6 cursor-pointer"
             />
-            <h1 className="text-2xl font-bold">우리 아이</h1>
+            <h1 className="text-2xl font-bold">
+              {now === "/profile" ? "내 프로필" : "우리 아이"}
+            </h1>
           </div>
-          <img
-            onClick={handleOpen}
-            src={cog}
-            alt="cog"
-            className="w-7 cursor-pointer"
-          />
+          {now !== "/profile" && (
+            <img
+              onClick={handleOpen}
+              src={cog}
+              alt="cog"
+              className="w-7 cursor-pointer"
+            />
+          )}
           <ul
             className={`absolute right-1 top-9 z-10 w-32 overflow-hidden rounded-xl border bg-white ${isOpen ? "" : "hidden"}`}
           >
@@ -130,14 +143,16 @@ export default function KidDetailPage() {
                   컬렉션 바로가기
                 </Button>
               </li>
-              <li className="py-1">
-                <Button
-                  onClick={goTalkList(userId)}
-                  className="bg-green-500 text-sm text-white hover:bg-green-600"
-                >
-                  대화 바로가기
-                </Button>
-              </li>
+              {now !== "/profile" && (
+                <li className="py-1">
+                  <Button
+                    onClick={goTalkList(userId)}
+                    className="bg-green-500 text-sm text-white hover:bg-green-600"
+                  >
+                    대화 바로가기
+                  </Button>
+                </li>
+              )}
             </ul>
           </div>
         </div>

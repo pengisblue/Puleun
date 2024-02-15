@@ -11,9 +11,9 @@ import { API_URL } from "../config/config";
 export default function TalkListPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const userInfo = useSelector((state) => state.auth.userInfo);
   const queryParams = new URLSearchParams(location.search);
   const user = queryParams.get("user");
-  const userInfo = useSelector((state) => state.auth.userInfo);
 
   const [talkList, setTalkList] = useState([]);
   const [userList, setUserList] = useState([]);
