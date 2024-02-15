@@ -192,7 +192,9 @@ export class PotService {
     }
 
     async toCollection(pot_id: number){
-        if(await this.potRepository.find({where: {pot_id}})) throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST)
+        console.log(await this.potRepository.findOne({where: {pot_id, collection_FG: true}}));
+        if(await this.potRepository.findOne({where: {pot_id, collection_FG: true}} )) throw new HttpException('이미 컬렉션에 존재하는 식물', HttpStatus.BAD_REQUEST);
+        await this.deviceService.collectionDevice(pot_id);
         await this.potRepository.update(pot_id, {collection_FG: true});
     }
 
