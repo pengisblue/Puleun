@@ -40,14 +40,12 @@ export default function MainPage() {
     <div className="flex flex-col gap-8 px-6">
       {/* 화분 상태 요약 */}
       <section>
-        <div className="mb-3 flex cursor-pointer items-center justify-between">
+        <div
+          onClick={goPotList}
+          className="mb-3 flex cursor-pointer items-center justify-between"
+        >
           <h1 className="text-title">우리 화분</h1>
-          <img
-            src={chevron}
-            onClick={goPotList}
-            alt="goPotList"
-            className="w-8 cursor-pointer"
-          />
+          <img src={chevron} alt="goPotList" className="w-8 cursor-pointer" />
         </div>
         <div className="flex items-center">
           <PotSwiper potList={potDetailList} />
@@ -56,16 +54,14 @@ export default function MainPage() {
 
       {/* 새로운 대화 */}
       <section>
-        <div className="mb-3 flex cursor-pointer items-center justify-between">
+        <div
+          onClick={goTalkList}
+          className="mb-3 flex cursor-pointer items-center justify-between"
+        >
           <h1 className="text-title">새로운 대화</h1>
-          <img
-            src={chevron}
-            onClick={goTalkList}
-            alt="goTalkList"
-            className="w-8 cursor-pointer"
-          />
+          <img src={chevron} alt="goTalkList" className="w-8 cursor-pointer" />
         </div>
-        <div className="flex flex-wrap mt-4 justify-center gap-1">
+        <div className="mt-4 flex flex-wrap justify-center gap-1">
           {talkList.length > 0 ? (
             talkList.map((talk) => (
               <TalkTitleCard key={talk.talk_id} {...talk} />

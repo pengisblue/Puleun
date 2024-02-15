@@ -120,6 +120,16 @@ export class PotStateService {
     return '초과';
   }
 
+  async isRecent(pot_id: number):Promise<Date>{
+    const [temp] = await this.potStateRepository.find({
+        select: {measure_DT: true},
+        where: {pot_id:pot_id},
+        order: {measure_DT: 'DESC'},
+        take: 1
+    })
+    if (temp == null) return (null)
+    return temp.measure_DT;
+}
   // 어제와 오늘의 온습도 출력
   // async getCompareData(pot_id: number): Promise<CompareDataDto>{
   //   const dto = new CompareDataDto();
