@@ -5,8 +5,6 @@ import axios from "axios";
 
 import BaseSimpleCard from "../components/UI/BaseSimpleCard";
 
-// 하드코딩용
-import kidImg from "../test/kid1.png";
 
 export default function KidSelectPage() {
   const navigate = useNavigate();
@@ -47,7 +45,7 @@ export default function KidSelectPage() {
                 <div className="mx-auto w-full overflow-hidden rounded-lg">
                   <div className="flex aspect-square items-center overflow-hidden">
                     <img
-                      src={kidImg}
+                      src={kid.profile_img_url}
                       alt="potImg"
                       className="min-h-full min-w-full object-cover"
                     />
