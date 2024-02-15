@@ -17,7 +17,7 @@ export default function PotSwiper({ potList }) {
 
   return (
     <Swiper slidesPerView={"auto"} loop={false}>
-      {potList.map((pot) => (
+      {potList && potList.map((pot) => (
         <SwiperSlide key={pot.potId} className="me-2 w-auto-important">
           <div onClick={goPotDetail(pot.potId)} className="cursor-pointer">
             <PotDetailCard {...pot} className="w-80 h-48" />
