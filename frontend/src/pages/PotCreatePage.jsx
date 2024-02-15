@@ -76,7 +76,6 @@ export default function PotCreatePage() {
           url: `${API_URL}/species`,
         });
 
-        console.log(res.data)
         const plantList = res.data.map((item) => ({
           speciesId: item.species_id,
           speciesName: item.species_name,

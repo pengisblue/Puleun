@@ -25,10 +25,10 @@ export default function KidCreatePage() {
     const files = event.target.files;
     if (files.length > 0) {
       const file = files[0];
+      setInputImg(file);
       const reader = new FileReader();
       reader.onload = () => {
         setPreview(reader.result);
-        setInputImg(file);
       };
       reader.readAsDataURL(file);
     }
@@ -53,7 +53,7 @@ export default function KidCreatePage() {
     const formData = new FormData();
     formData.append("nickname", nickname);
     formData.append("birth_DT", birthDate);
-    formData.append("gender", gender);
+    formData.append("gender", selectedGender);
     formData.append("parent_id", userInfo.userId);
     formData.append("profile_img", inputImg);
 
@@ -106,40 +106,40 @@ export default function KidCreatePage() {
               />
             </section>
             <section className="mb-3">
-            <RadioGroup
-              value={selectedGender}
-              onChange={setSelectedGender}
-              name="gender"
-            >
-              <RadioGroup.Label>성별</RadioGroup.Label>
-              <div className="flex gap-3">
-                <RadioGroup.Option
-                  value="M"
-                  className={({ checked }) =>
-                    `${
-                      checked
-                        ? "bg-blue-400 text-white ring ring-blue-400 ring-opacity-50 ring-offset-1"
-                        : "bg-blue-200 text-slate-800"
-                    } mt-2 rounded-lg px-3 py-1.5 font-semibold`
-                  }
-                >
-                  남자
-                </RadioGroup.Option>
-                <RadioGroup.Option
-                  value="F"
-                  className={({ checked }) =>
-                    `${
-                      checked
-                        ? "bg-red-400 text-white ring ring-red-400 ring-opacity-50 ring-offset-1"
-                        : "bg-red-200 text-slate-800"
-                    } mt-2 rounded-lg px-3 py-1.5 font-semibold`
-                  }
-                >
-                  여자
-                </RadioGroup.Option>
-              </div>
-            </RadioGroup>
-          </section>
+              <RadioGroup
+                value={selectedGender}
+                onChange={setSelectedGender}
+                name="gender"
+              >
+                <RadioGroup.Label>성별</RadioGroup.Label>
+                <div className="flex gap-3">
+                  <RadioGroup.Option
+                    value="M"
+                    className={({ checked }) =>
+                      `${
+                        checked
+                          ? "bg-blue-400 text-white ring ring-blue-400 ring-opacity-50 ring-offset-1"
+                          : "bg-blue-200 text-slate-800"
+                      } mt-2 rounded-lg px-3 py-1.5 font-semibold`
+                    }
+                  >
+                    남자
+                  </RadioGroup.Option>
+                  <RadioGroup.Option
+                    value="F"
+                    className={({ checked }) =>
+                      `${
+                        checked
+                          ? "bg-red-400 text-white ring ring-red-400 ring-opacity-50 ring-offset-1"
+                          : "bg-red-200 text-slate-800"
+                      } mt-2 rounded-lg px-3 py-1.5 font-semibold`
+                    }
+                  >
+                    여자
+                  </RadioGroup.Option>
+                </div>
+              </RadioGroup>
+            </section>
             <section>
               <span>프로필 변경</span>
               <input
