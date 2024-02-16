@@ -107,6 +107,7 @@ export default function SignUpPage() {
         };
 
         dispatch(authActions.login(userInfo));
+        dispatch(authActions.deactivateKidsMode());
         navigate("/kid/create");
       }
     } catch (err) {
