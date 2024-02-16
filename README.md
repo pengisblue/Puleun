@@ -81,3 +81,16 @@
 <img alt="mysql" src ="https://img.shields.io/badge/mysql-3776AB.svg?&style=for-the-badge&logo=mysql&logoColor=blue&color=lightblue"/>
 
 <img alt="swagger" src ="https://img.shields.io/badge/swagger-3776AB.svg?&style=for-the-badge&logo=swagger&logoColor=white&swagger=blue"/>
+
+Arduino IDE: 2.2.1
+        - Raspberrypi 4
+        - RealVNC Viewer
+        - VS Code: 1.85.1
+
+### 📱 Embedded
+
+<img alt="python" src ="https://img.shields.io/badge/python-3776AB.svg?&style=for-the-badge&logo=python&logoColor=white&color=blue"/>
+
+<img alt="raspberrypi" src ="https://img.shields.io/badge/raspberrypi-3776AB.svg?&style=for-the-badge&logo=raspberrypi&logoColor=white&color=blue"/>
+
+<img alt="RealVNC" src ="https://img.shields.io/badge/RealVNC-3776AB.svg?&style=for-the-badge&logo=RealVNC&logoColor=white&color=blue"/>
