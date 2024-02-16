@@ -62,7 +62,15 @@
 
 <img alt="nginx" src ="https://img.shields.io/badge/nginx-3776AB.svg?&style=for-the-badge&logo=nginx&logoColor=white&color=green"/>
 
-### 🔑 FrontEnd
+### 🥽 Embedded
+
+<img alt="python" src ="https://img.shields.io/badge/python-3776AB.svg?&style=for-the-badge&logo=python&logoColor=white&color=blue"/>
+
+<img alt="raspberrypi" src ="https://img.shields.io/badge/raspberrypi-3776AB.svg?&style=for-the-badge&logo=raspberrypi&logoColor=white&color=blue"/>
+
+<img alt="RealVNC" src ="https://img.shields.io/badge/RealVNC-3776AB.svg?&style=for-the-badge&logo=RealVNC&logoColor=white&color=blue"/>
+
+### 📱 FrontEnd
 
 <img alt="react" src ="https://img.shields.io/badge/react-3776AB.svg?&style=for-the-badge&logo=react&logoColor=white&color=blue"/>
 
@@ -70,7 +78,7 @@
 
 <img alt="tailwind" src ="https://img.shields.io/badge/tailwind-3776AB.svg?&style=for-the-badge&logo=tailwind css&logoColor=white&color=blue"/>
 
-### 📱 BackEnd
+### 📋 BackEnd
 
 <img alt="nodejs" src ="https://img.shields.io/badge/nodejs-3776AB.svg?&style=for-the-badge&logo=Node.js&logoColor=white&color=darkgreen"/>
 
@@ -81,16 +89,3 @@
 <img alt="mysql" src ="https://img.shields.io/badge/mysql-3776AB.svg?&style=for-the-badge&logo=mysql&logoColor=blue&color=lightblue"/>
 
 <img alt="swagger" src ="https://img.shields.io/badge/swagger-3776AB.svg?&style=for-the-badge&logo=swagger&logoColor=white&swagger=blue"/>
-
-Arduino IDE: 2.2.1
-        - Raspberrypi 4
-        - RealVNC Viewer
-        - VS Code: 1.85.1
-
-### 📱 Embedded
-
-<img alt="python" src ="https://img.shields.io/badge/python-3776AB.svg?&style=for-the-badge&logo=python&logoColor=white&color=blue"/>
-
-<img alt="raspberrypi" src ="https://img.shields.io/badge/raspberrypi-3776AB.svg?&style=for-the-badge&logo=raspberrypi&logoColor=white&color=blue"/>
-
-<img alt="RealVNC" src ="https://img.shields.io/badge/RealVNC-3776AB.svg?&style=for-the-badge&logo=RealVNC&logoColor=white&color=blue"/>
