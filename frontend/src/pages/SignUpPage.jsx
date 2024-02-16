@@ -98,7 +98,7 @@ export default function SignUpPage() {
           data: loginData,
         });
 
-        const { user_id, user_email, profile_img_url } = res.data;
+        const { user_id, user_email, profile_img_url } = loginRes.data;
 
         const userInfo = {
           userId: user_id,
