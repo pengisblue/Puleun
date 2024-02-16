@@ -37,3 +37,47 @@
 |chore|빌드 업무 수정, 패키지 매니저 수정, 패키지 관리자 구성 등 업데이트, <br/>Production Code 변경 없음|
 |rename|파일 혹은 폴더명을 수정하거나 옮기는 작업만 수행한 경우|
 |remove|파일을 삭제하는 작업만 수행한 경우|
+
+ ### ⚙ Management Tool
+<img alt="Jira" src ="https://img.shields.io/badge/jira-3776AB.svg?&style=for-the-badge&logo=jira&logoColor=white"/>
+
+<img alt="Gitlab" src ="https://img.shields.io/badge/gitlab-3776AB.svg?&style=for-the-badge&logo=gitlab&logoColor=white&color=orange"/>
+
+<img alt="Mattermost" src ="https://img.shields.io/badge/Mattermost-3776AB.svg?&style=for-the-badge&logo=Mattermost&logoColor=white"/>
+
+<img alt="figma" src ="https://img.shields.io/badge/figma-3776AB.svg?&style=for-the-badge&logo=figma&logoColor=white&color=red"/>
+
+<img alt="notion" src ="https://img.shields.io/badge/notion-3776AB.svg?&style=for-the-badge&logo=notion&logoColor=white&color=black"/>
+
+### 💻 IDE
+
+<img alt="vscode" src ="https://img.shields.io/badge/vscode-3776AB.svg?&style=for-the-badge&logo=visualstudiocode&logoColor=white&"/>
+
+### 🔑 Infra
+<img alt="amazonAWS" src ="https://img.shields.io/badge/amazon aws-3776AB.svg?&style=for-the-badge&logo=amazonAWS&logoColor=white&color=black"/>
+
+<img alt="Static Badge" src="https://img.shields.io/badge/jenkins-3776AB.svg?&style=for-the-badge&logo=jenkins&logoColor=white& color=red"/>
+
+<img alt="docker" src ="https://img.shields.io/badge/docker-3776AB.svg?&style=for-the-badge&logo=docker&logoColor=white&color=blue"/>
+
+<img alt="nginx" src ="https://img.shields.io/badge/nginx-3776AB.svg?&style=for-the-badge&logo=nginx&logoColor=white&color=green"/>
+
+### 🔑 FrontEnd
+
+<img alt="react" src ="https://img.shields.io/badge/react-3776AB.svg?&style=for-the-badge&logo=react&logoColor=white&color=blue"/>
+
+<img alt="css" src ="https://img.shields.io/badge/css-3776AB.svg?&style=for-the-badge&logo=css3&logoColor=white&color=blue"/>
+
+<img alt="tailwind" src ="https://img.shields.io/badge/tailwind-3776AB.svg?&style=for-the-badge&logo=tailwind css&logoColor=white&color=blue"/>
+
+### 📱 BackEnd
+
+<img alt="nodejs" src ="https://img.shields.io/badge/nodejs-3776AB.svg?&style=for-the-badge&logo=Node.js&logoColor=white&color=darkgreen"/>
+
+<img alt="nestjs" src ="https://img.shields.io/badge/nestjs-3776AB.svg?&style=for-the-badge&logo=nest.js&logoColor=white&color=blue"/>
+
+<img alt="typeorm" src ="https://img.shields.io/badge/typeorm-3776AB.svg?&style=for-the-badge&logo=typeorm&logoColor=white&color=blue"/>
+
+<img alt="mysql" src ="https://img.shields.io/badge/mysql-3776AB.svg?&style=for-the-badge&logo=mysql&logoColor=blue&color=lightblue"/>
+
+<img alt="swagger" src ="https://img.shields.io/badge/swagger-3776AB.svg?&style=for-the-badge&logo=swagger&logoColor=white&swagger=blue"/>
