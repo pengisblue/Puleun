@@ -169,8 +169,11 @@
     화분 추가 → 버튼눌러주기, 등록하기를 누를건가? (등록하기 할거니까 미리 생각해두자) > 목록으로 돌아오면 애기별 조회 가능(우리가 추가한 주인으로 보여주자)
     
     ![image](https://github.com/cJinu/CS/assets/38110757/af2702da-35a9-4f00-b7ec-7d367e77f28d)
+
+    ![image](https://github.com/cJinu/CS/assets/95911613/7af67289-7046-4486-aad4-1c2067efea7b)
     
     화분추가
+
     
     ![image](https://github.com/cJinu/CS/assets/38110757/077ffe1c-103c-473f-bc51-9c64f18c03d2)
     
