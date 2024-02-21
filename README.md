@@ -76,11 +76,13 @@
 
 ### 📱 FrontEnd
 
-<img alt="react" src ="https://img.shields.io/badge/react-3776AB.svg?&style=for-the-badge&logo=react&logoColor=white&color=61DAFB"/>
+<img alt="react" src ="https://img.shields.io/badge/react-3776AB.svg?&style=for-the-badge&logo=react&logoColor=black&color=61DAFB"/>
 
 <img alt="css" src ="https://img.shields.io/badge/css-3776AB.svg?&style=for-the-badge&logo=css3&logoColor=white&color=1572B6"/>
 
 <img alt="tailwind" src ="https://img.shields.io/badge/tailwind-3776AB.svg?&style=for-the-badge&logo=tailwind css&logoColor=white&color=06B6D4"/>
+
+<img alt="redux" src ="https://img.shields.io/badge/redux-3776AB.svg?&style=for-the-badge&logo=redux&logoColor=white&color=764ABC"/>
 
 ### 📋 BackEnd
 
