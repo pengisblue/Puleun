@@ -22,11 +22,11 @@
 ## 카테고리
 | Application | Domain | Language | Framework |
 | ---- | ---- | ---- | ---- |
-| :white_check_mark: Desktop Web | :black_square_button: AI | :white_check_mark: JavaScript | :black_square_button: Vue.js |
-| :black_square_button: Mobile Web | :black_square_button: Big Data | :black_square_button: TypeScript | :white_check_mark: React |
-| :white_check_mark: Responsive Web | :black_square_button: Blockchain | :black_square_button: C/C++ | :black_square_button: Angular |
+| :black_square_button: Desktop Web | :black_square_button: AI | :white_check_mark: JavaScript | :black_square_button: Vue.js |
+| :white_check_mark: Mobile Web | :black_square_button: Big Data | :black_square_button: TypeScript | :white_check_mark: React |
+| :black_square_button: Responsive Web | :black_square_button: Blockchain | :white_check_mark: C/C++ | :black_square_button: Angular |
 | :black_square_button: Android App | :white_check_mark: IoT | :black_square_button: C# | :white_check_mark: Node.js |
-| :black_square_button: iOS App | :black_square_button: AR/VR/Metaverse | :black_square_button: ​Python | :black_square_button: Flask/Django |
+| :black_square_button: iOS App | :black_square_button: AR/VR/Metaverse | :white_check_mark: ​Python | :black_square_button: Flask/Django |
 | :black_square_button: Desktop App | :black_square_button: Game | :black_square_button: Java | :black_square_button: Spring/Springboot |
 | | | :black_square_button: Kotlin | |
 
@@ -56,3 +56,61 @@
 |chore|빌드 업무 수정, 패키지 매니저 수정, 패키지 관리자 구성 등 업데이트, <br/>Production Code 변경 없음|
 |rename|파일 혹은 폴더명을 수정하거나 옮기는 작업만 수행한 경우|
 |remove|파일을 삭제하는 작업만 수행한 경우|
+
+ ### ⚙ Management Tool
+<img alt="Jira" src ="https://img.shields.io/badge/jira-3776AB.svg?&style=for-the-badge&logo=jira&logoColor=white"/>
+
+<img alt="Gitlab" src ="https://img.shields.io/badge/gitlab-3776AB.svg?&style=for-the-badge&logo=gitlab&logoColor=white&color=orange"/>
+
+<img alt="Mattermost" src ="https://img.shields.io/badge/Mattermost-3776AB.svg?&style=for-the-badge&logo=Mattermost&logoColor=white"/>
+
+<img alt="figma" src ="https://img.shields.io/badge/figma-3776AB.svg?&style=for-the-badge&logo=figma&logoColor=white&color=red"/>
+
+<img alt="notion" src ="https://img.shields.io/badge/notion-3776AB.svg?&style=for-the-badge&logo=notion&logoColor=white&color=black"/>
+
+### 💻 IDE
+
+<img alt="vscode" src ="https://img.shields.io/badge/vscode-3776AB.svg?&style=for-the-badge&logo=visualstudiocode&logoColor=white&"/>
+
+### 🔑 Infra
+<img alt="amazonAWS" src ="https://img.shields.io/badge/amazon aws-3776AB.svg?&style=for-the-badge&logo=amazonAWS&logoColor=white&color=232F3E"/>
+
+<img alt="Static Badge" src="https://img.shields.io/badge/jenkins-3776AB.svg?&style=for-the-badge&logo=jenkins&logoColor=white& color=D24939"/>
+
+<img alt="docker" src ="https://img.shields.io/badge/docker-3776AB.svg?&style=for-the-badge&logo=docker&logoColor=white&color=2496ED"/>
+
+<img alt="nginx" src ="https://img.shields.io/badge/nginx-3776AB.svg?&style=for-the-badge&logo=nginx&logoColor=white&color=009639"/>
+
+### 🥽 Embedded
+
+<img alt="python" src ="https://img.shields.io/badge/python-3776AB.svg?&style=for-the-badge&logo=python&logoColor=white&color=3776AB"/>
+
+<img alt="c" src ="https://img.shields.io/badge/c-3776AB.svg?&style=for-the-badge&logo=c&logoColor=white&color=A8B9CC"/>
+
+<img alt="raspberrypi" src ="https://img.shields.io/badge/RaspberryPi-3776AB.svg?&style=for-the-badge&logo=RaspberryPi&logoColor=white&color=A22846"/>
+
+<img alt="arduino" src ="https://img.shields.io/badge/Arduino-3776AB.svg?&style=for-the-badge&logo=Arduino&logoColor=white&color=00878F"/>
+
+<img alt="RealVNC" src ="https://img.shields.io/badge/RealVNC-3776AB.svg?&style=for-the-badge&logo=RealVNC&logoColor=white&color=blue"/>
+
+### 📱 FrontEnd
+
+<img alt="react" src ="https://img.shields.io/badge/react-3776AB.svg?&style=for-the-badge&logo=react&logoColor=black&color=61DAFB"/>
+
+<img alt="css" src ="https://img.shields.io/badge/css-3776AB.svg?&style=for-the-badge&logo=css3&logoColor=white&color=1572B6"/>
+
+<img alt="tailwind" src ="https://img.shields.io/badge/tailwind-3776AB.svg?&style=for-the-badge&logo=tailwind css&logoColor=white&color=06B6D4"/>
+
+<img alt="redux" src ="https://img.shields.io/badge/redux-3776AB.svg?&style=for-the-badge&logo=redux&logoColor=white&color=764ABC"/>
+
+### 📋 BackEnd
+
+<img alt="nodejs" src ="https://img.shields.io/badge/nodejs-3776AB.svg?&style=for-the-badge&logo=Node.js&logoColor=white&color=339933"/>
+
+<img alt="nestjs" src ="https://img.shields.io/badge/nestjs-3776AB.svg?&style=for-the-badge&logo=nest.js&logoColor=white&color=E0234E"/>
+
+<img alt="typeorm" src ="https://img.shields.io/badge/typeorm-3776AB.svg?&style=for-the-badge&logo=typeorm&logoColor=white&color=262627"/>
+
+<img alt="mysql" src ="https://img.shields.io/badge/mysql-3776AB.svg?&style=for-the-badge&logo=mysql&logoColor=blue&color=4479A1"/>
+
+<img alt="swagger" src ="https://img.shields.io/badge/swagger-3776AB.svg?&style=for-the-badge&logo=swagger&logoColor=white&swagger=85EA2D"/>
