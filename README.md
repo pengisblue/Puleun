@@ -19,7 +19,29 @@
 가까이 다가가면 손을들어 인사해줍니다.!<br>
 아주아주 귀엽습니다.
 
-## 카테고리
+# 2. 아키텍처, 사용한 기술
+[아키텍처 img]
+## 2.1 stt, tts
+
+## 2.2 nest js
+
+## 2.3 웹소켓 통신 socket.io
+
+# 3. 팀소개
+|이름|담당|
+|:--:|:--:|
+|김해인<br>(팀장)|Frontend|
+|한성주<br>(팀원)|Embedded|
+|김연빈<br>(팀원)|Embedded|
+|이동호<br>(팀원)|Frontend|
+|최진우<br>(팀원)|Backend|
+|박종국<br>(팀원)|Backend|
+
+# 4. 산출물
+## 4.1 UCC
+## 4.2 PPT
+
+# 5.  카테고리
 | Application | Domain | Language | Framework |
 | ---- | ---- | ---- | ---- |
 | :black_square_button: Desktop Web | :black_square_button: AI | :white_check_mark: JavaScript | :black_square_button: Vue.js |
@@ -30,15 +52,6 @@
 | :black_square_button: Desktop App | :black_square_button: Game | :black_square_button: Java | :black_square_button: Spring/Springboot |
 | | | :black_square_button: Kotlin | |
 
-## 팀소개
-|이름|담당|
-|:--:|:--:|
-|김해인<br>(팀장)|Frontend|
-|한성주<br>(팀원)|Embedded|
-|김연빈<br>(팀원)|Embedded|
-|이동호<br>(팀원)|Frontend|
-|최진우<br>(팀원)|Backend|
-|박종국<br>(팀원)|Backend|
 
 ## Commit Convention
 |Tag Name|Description|
