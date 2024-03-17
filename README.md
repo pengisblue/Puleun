@@ -20,7 +20,7 @@
 아주아주 귀엽습니다.
 
 # 2. 아키텍처, 사용한 기술
-[아키텍처 img]
+![아키텍처](https://github.com/RosaDamascena/Pureun/assets/95911613/3b6d93d8-e79c-4d4b-b3a5-d88b9eba50d6)
 ## 2.1 stt, tts
 
 ## 2.2 nest js
@@ -38,7 +38,10 @@
 |박종국<br>(팀원)|Backend|
 
 # 4. 산출물
+
 ## 4.1 UCC
+[푸른이의 하루 보러가기!](https://youtu.be/fuwtwcdx7YY?si=M9KMLYXY5HIp1sCQ)
+![UCC](https://github.com/RosaDamascena/Pureun/assets/95911613/5e15007d-d553-4105-ab99-c0b7be9c03ed)
 ## 4.2 PPT
 
 # 5.  카테고리
