@@ -33,9 +33,9 @@
 ## 2.2 핵심 기술
 ![presentation-12](https://github.com/RosaDamascena/Pureun/assets/95911613/fd942ef8-996a-4756-bdf3-f561e52ab5cb)
 
-## 2.3 nest js
+## 2.3 통신 환경
 
-## 2.4 웹소켓 통신 socket.io
+![기술](https://github.com/RosaDamascena/Pureun/assets/95911613/802bcba0-8e69-4aab-b6a0-3ad38a3cc661)
 
 # 3. 팀소개
 
