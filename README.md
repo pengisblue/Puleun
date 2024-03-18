@@ -40,13 +40,7 @@
 
 # 3. 팀소개
 
-![presentation-19](https://github.com/RosaDamascena/Pureun/assets/95911613/9ca5988b-d2ec-41ec-9726-8018645ec770)
-
-|담당|이름|
-|---|---|
-|Embedded|한성주 (팀원), 김연빈 (팀원)|
-|Backend|최진우 (팀원), 박종국 (팀원)|
-|Frontend|김해인 (팀장), 이동호 (팀원)|
+![팀원 소개](https://github.com/RosaDamascena/Pureun/assets/95911613/b636c43c-87bf-4bc3-8f92-39bdd09a3479)
 
 # 4. 프로젝트 관리
 
