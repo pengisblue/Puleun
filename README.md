@@ -1,4 +1,3 @@
-# 말하는 화분 푸른 ( E101 / 웹 / 모바일 / 웹 IoT )
 ![푸른](https://github.com/RosaDamascena/Pureun/assets/95911613/6be7f9ef-f5d5-49c1-afc6-97594f23f227)
 
 # 1. 서비스 소개
