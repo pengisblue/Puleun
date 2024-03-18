@@ -1,6 +1,9 @@
 # 말하는 화분 푸른 ( E101 / 웹 / 모바일 / 웹 IoT )
 [Main Img]
-# 1. 주요 기능
+
+# 1. 서비스 소개
+
+![presentation-7](https://github.com/RosaDamascena/Pureun/assets/95911613/b91509fa-2059-4978-8bb9-44b6cdf367a6)
 
 ![presentation-8](https://github.com/RosaDamascena/Pureun/assets/95911613/92d15122-5f44-4f1f-9e65-20b5d01fe1e8)
 
@@ -22,19 +25,22 @@
 가까이 다가가면 손을들어 인사해줍니다.!<br>
 아주아주 귀엽습니다.
 
-# 2. 아키텍처, 사용한 기술
+# 2. 기술 소개
 
-# 2.1 아키텍처
+## 2.1 아키텍처
 ![아키텍처](https://github.com/RosaDamascena/Pureun/assets/95911613/3b6d93d8-e79c-4d4b-b3a5-d88b9eba50d6)
 
-## 2.1 핵심 기술
+## 2.2 핵심 기술
 ![presentation-12](https://github.com/RosaDamascena/Pureun/assets/95911613/fd942ef8-996a-4756-bdf3-f561e52ab5cb)
 
-## 2.2 nest js
+## 2.3 nest js
 
-## 2.3 웹소켓 통신 socket.io
+## 2.4 웹소켓 통신 socket.io
 
 # 3. 팀소개
+
+![presentation-19](https://github.com/RosaDamascena/Pureun/assets/95911613/9ca5988b-d2ec-41ec-9726-8018645ec770)
+
 |이름|담당|
 |:--:|:--:|
 |김해인<br>(팀장)|Frontend|
@@ -44,14 +50,27 @@
 |최진우<br>(팀원)|Backend|
 |박종국<br>(팀원)|Backend|
 
-# 4. 산출물
+# 4. 프로젝트 관리
 
-## 4.1 UCC
+## 4.1 진행 관리
+![1111](https://github.com/RosaDamascena/Pureun/assets/95911613/602947f2-9f28-4566-9ae1-03fbf330a5eb)
+
+![22222](https://github.com/RosaDamascena/Pureun/assets/95911613/64c40f4f-a1a1-4107-82fa-71036fb6134b)
+
+## 4.2 산출물
+![3333](https://github.com/RosaDamascena/Pureun/assets/95911613/279dc892-6b4e-482a-a0c4-557d841d4c4c)
+
+![44444](https://github.com/RosaDamascena/Pureun/assets/95911613/99884b67-0ef9-41d4-968b-36824e1c5e72)
+
+![API](https://github.com/RosaDamascena/Pureun/assets/95911613/1faa2b5b-bca2-4314-85cb-ed353377c783)
+
+
+# 5. UCC
 [푸른이의 하루 보러가기!](https://youtu.be/fuwtwcdx7YY?si=M9KMLYXY5HIp1sCQ)
-![UCC](https://github.com/RosaDamascena/Pureun/assets/95911613/5e15007d-d553-4105-ab99-c0b7be9c03ed)
-## 4.2 PPT
 
-# 5.  카테고리
+![UCC](https://github.com/RosaDamascena/Pureun/assets/95911613/5e15007d-d553-4105-ab99-c0b7be9c03ed)
+
+# 6.  카테고리
 | Application | Domain | Language | Framework |
 | ---- | ---- | ---- | ---- |
 | :black_square_button: Desktop Web | :black_square_button: AI | :white_check_mark: JavaScript | :black_square_button: Vue.js |
