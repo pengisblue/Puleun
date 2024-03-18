@@ -1,6 +1,9 @@
 # 말하는 화분 푸른 ( E101 / 웹 / 모바일 / 웹 IoT )
 [Main Img]
 # 1. 주요 기능
+
+![presentation-8](https://github.com/RosaDamascena/Pureun/assets/95911613/92d15122-5f44-4f1f-9e65-20b5d01fe1e8)
+
 ## 1.1 아이와 대화하기
 호출어 ("푸른아!")로 푸른이를 부를 수 있습니다.<br>
 
@@ -20,8 +23,12 @@
 아주아주 귀엽습니다.
 
 # 2. 아키텍처, 사용한 기술
+
+# 2.1 아키텍처
 ![아키텍처](https://github.com/RosaDamascena/Pureun/assets/95911613/3b6d93d8-e79c-4d4b-b3a5-d88b9eba50d6)
-## 2.1 stt, tts
+
+## 2.1 핵심 기술
+![presentation-12](https://github.com/RosaDamascena/Pureun/assets/95911613/fd942ef8-996a-4756-bdf3-f561e52ab5cb)
 
 ## 2.2 nest js
 
