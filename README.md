@@ -151,6 +151,6 @@
 
 <img alt="typeorm" src ="https://img.shields.io/badge/typeorm-3776AB.svg?&style=for-the-badge&logo=typeorm&logoColor=white&color=262627"/>
 
-<img alt="mysql" src ="https://img.shields.io/badge/mysql-3776AB.svg?&style=for-the-badge&logo=mysql&logoColor=blue&color=4479A1"/>
+<img alt="mysql" src ="https://img.shields.io/badge/mysql-3776AB.svg?&style=for-the-badge&logo=mysql&logoColor=white&color=4479A1"/>
 
 <img alt="swagger" src ="https://img.shields.io/badge/swagger-3776AB.svg?&style=for-the-badge&logo=swagger&logoColor=black&color=85EA2D"/>
