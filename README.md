@@ -64,7 +64,7 @@
 
 
 # 5. UCC
-[푸른이의 하루 보러가기!](https://youtu.be/fuwtwcdx7YY?si=M9KMLYXY5HIp1sCQ)
+## [푸른이의 하루 보러가기!](https://youtu.be/fuwtwcdx7YY?si=M9KMLYXY5HIp1sCQ)
 
 ![UCC](https://github.com/RosaDamascena/Pureun/assets/95911613/5e15007d-d553-4105-ab99-c0b7be9c03ed)
 
