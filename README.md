@@ -147,7 +147,7 @@
 
 <img alt="nodejs" src ="https://img.shields.io/badge/nodejs-3776AB.svg?&style=for-the-badge&logo=Node.js&logoColor=white&color=339933"/>
 
-<img alt="nestjs" src ="https://img.shields.io/badge/nestjs-3776AB.svg?&style=for-the-badge&logo=nest.js&logoColor=white&color=E0234E"/>
+<img alt="nestjs" src ="https://img.shields.io/badge/nestjs-3776AB.svg?&style=for-the-badge&logo=NestJS&logoColor=white&color=E0234E"/>
 
 <img alt="typeorm" src ="https://img.shields.io/badge/typeorm-3776AB.svg?&style=for-the-badge&logo=typeorm&logoColor=white&color=262627"/>
 
