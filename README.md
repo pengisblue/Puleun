@@ -3,9 +3,9 @@
 
 # 1. 서비스 소개
 
-![presentation-7](https://github.com/RosaDamascena/Pureun/assets/95911613/b91509fa-2059-4978-8bb9-44b6cdf367a6)
-
 ![presentation-8](https://github.com/RosaDamascena/Pureun/assets/95911613/92d15122-5f44-4f1f-9e65-20b5d01fe1e8)
+
+![푸른이](https://github.com/RosaDamascena/Pureun/assets/95911613/e61a9384-0dd5-4ca1-981e-4fe728d8684d)
 
 ## 1.1 아이와 대화하기
 호출어 ("푸른아!")로 푸른이를 부를 수 있습니다.<br>
