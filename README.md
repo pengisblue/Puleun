@@ -2,7 +2,9 @@
 
 # 1. 서비스 소개
 
-![presentation-8](https://github.com/RosaDamascena/Pureun/assets/95911613/92d15122-5f44-4f1f-9e65-20b5d01fe1e8)
+![page](https://github.com/RosaDamascena/Pureun/assets/95911613/f4f0a8b4-a70b-4ae7-8e81-8c1f874361e3)
+
+![page2](https://github.com/RosaDamascena/Pureun/assets/95911613/b972c3bb-1a0d-432d-ae52-830a34cd3cc1)
 
 ![푸른이](https://github.com/RosaDamascena/Pureun/assets/95911613/e61a9384-0dd5-4ca1-981e-4fe728d8684d)
 
